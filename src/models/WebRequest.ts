@@ -1,0 +1,54 @@
+import User from './User';
+import Supplier from './Supplier';
+import Customer from './Customer';
+import ApplicationProfile from './ApplicationProfile';
+import Menu from './Menu';
+import Unit from './Unit';
+import Product from './Product';
+import Category from './Category';
+import RegisteredRequest from './RegisteredRequest';
+import Cost from './Cost';
+import CostFlow from './CostFlow';
+import Voucher from './Voucher';
+import CustomerVoucher from './CustomerVoucher';
+import Capital from './Capital';
+import CapitalFlow from './CapitalFlow';
+import Page from './Page';
+import Filter from './Filter';
+import ProductFlow from './ProductFlow';
+import Transaction from './Transaction';
+import BaseEntity from './BaseEntity';
+
+export default class WebRequest{
+	entity?:string;
+	user?:User;
+	supplier?:Supplier;
+	customer?:Customer;
+	profile?:ApplicationProfile;
+	menu?:Menu;
+	unit?:Unit;
+	product?:Product;
+	category?:Category;
+	registeredrequest?:RegisteredRequest;
+	cost?:Cost;
+	costflow?:CostFlow;
+	voucher?:Voucher;
+	customervoucher?:CustomerVoucher;
+	capital?:Capital;
+	capitalflow?:CapitalFlow;
+	page?:Page;
+	filter?:Filter;
+	productFlow?:ProductFlow;
+	transaction?:Transaction;
+	entityObject?:BaseEntity;
+	destination?:string;
+	username?:string;
+	value?:string;
+	orderedEntities?:[];
+	productFlows?:ProductFlow[];
+	regularTransaction?:boolean;
+	imageData?:string;
+	partnerId?:string;
+	originId?:string;
+
+}
