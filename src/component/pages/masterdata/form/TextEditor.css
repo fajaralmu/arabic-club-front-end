@@ -1,15 +1,17 @@
 .palete {
     margin: 3px; 
-    font-size: 0.7em;
+    /* font-size: 0.7em; */
     padding: 3px;
-    text-decoration: none;
-    color: white;
-    background-color: green;  
+    /* text-decoration: none; */
+    /* color: white;
+    background-color: green;   */
+}
+.palete:hover {
+    cursor: pointer;
 }
 #toolBar1 select { font-size:10px; }
-#textBox {
-  width: 540px;
-  height: 200px;
+#textBox { 
+  height: 300px;
   border: 1px #000000 solid;
   padding: 12px;
   overflow: scroll;

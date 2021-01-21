@@ -1,5 +1,6 @@
 
 import EntityElement from "./EntityElement";
+import { FieldType } from "./FieldType";
 import HeaderProps from './HeaderProps'; 
 
 export default class EntityProperty{
@@ -63,6 +64,14 @@ export default class EntityProperty{
 			}
 		}
 		return null;
+	}
+
+	static hasTextEditorField = (elements:EntityElement[]) => {
+		for (let i = 0; i < elements.length; i++) {
+			if(elements[i].fieldType == FieldType.FIELD_TYPE_TEXTEDITOR) return true;
+			
+		}
+		return false;
 	}
 
 }
