@@ -17,9 +17,9 @@ import NavigationButtons from '../../navigation/NavigationButtons';
 class IState {
     lessons: Lesson[] | undefined = undefined;
     loading: boolean = false;
-    filter: Filter =  {
-        limit:3,
-        page:0
+    filter: Filter = {
+        limit: 5,
+        page: 0
     }
     totalData: number = 0;
     category: LessonCategory | undefined = undefined
@@ -27,25 +27,25 @@ class IState {
 class LessonContent extends BaseComponent {
     lessonService: LessonService = LessonService.getInstance();
     state: IState = new IState();
-    categoryCode:string = "";
+    categoryCode: string = "";
     constructor(props) {
         super(props, false);
     }
-    startLoading = () => { 
+    startLoading = () => {
         if (this.categoryCode != this.props.categoryCode) {
             this.categoryCode = this.props.categoryCode;
-            this.setState({ loading: true })  
+            this.setState({ loading: true })
         } else {
             super.startLoading(false);
         }
     }
-    endLoading = () => { 
-        if (this.categoryCode == this.props.categoryCode && this.state.loading) { 
+    endLoading = () => {
+        if (this.categoryCode == this.props.categoryCode && this.state.loading) {
             this.setState({ loading: false });
         } else {
             super.endLoading();
         }
-       
+
     }
     dataLoaded = (response: WebResponse) => {
         const lessons = response.entities;
@@ -53,7 +53,7 @@ class LessonContent extends BaseComponent {
         this.setState({ lessons: lessons, totalData: response.totalData, category: response.entity });
     }
     loadLessons = () => {
-        
+
         this.commonAjax(
             this.lessonService.getLessons,
             this.dataLoaded,
@@ -67,17 +67,22 @@ class LessonContent extends BaseComponent {
     }
     componentDidUpdate() {
         if (this.categoryCode != this.props.categoryCode) {
-            const filter = this.state.filter;
-            filter.page = 0;
-            this.setState({filter:filter});
-            this.loadLessons();
+            this.loadLessonsInPage(0);
         }
     }
-    loadLessonsInPage =(page) => {
-        const filter = this.state.filter;
-        filter.page = page;
-        this.setState({filter:filter});
+    loadLessonsInPage = (page) => {
+        this.updateFilter('page', page);
         this.loadLessons();
+    }
+    updateFilter = (key: string, value: any) => {
+        const filter = this.state.filter;
+        filter[key] = value;
+        this.setState({ filter: filter });
+        this.loadLessons();
+    }
+    updateLimit = (e) => {
+        if (!e.target.value || e.target.value < 1) return;
+        this.updateFilter('limit', e.target.value);
     }
 
     render() {
@@ -93,28 +98,35 @@ class LessonContent extends BaseComponent {
                 <SimpleError>Data not found</SimpleError>
             </div>)
         }
-        const lessons:Lesson[] = this.state.lessons;
-        const category:LessonCategory = this.state.category;
+        const lessons: Lesson[] = this.state.lessons;
+        const category: LessonCategory = this.state.category;
         return (
             <div className="container-fluid">
                 <h2>Lessons: {category.name}</h2>
-                <p>Total Data; {this.state.totalData}</p>
-                <AnchorWithIcon iconClassName="fas fa-sync-alt" onClick={this.loadLessons}>Reload</AnchorWithIcon>
-                <p></p>
-                <NavigationButtons activePage={this.state.filter.page??0}
-                limit={this.state.filter.limit??5}
-                totalData={this.state.totalData}
-                onClick={this.loadLessonsInPage} />
-                {lessons.map((lesson,id)=>{
-                    const content:String = new String(lesson.content).length > 150 ? new String(lesson.content).substring(0,150)+"..." : 
-                    new String(lesson.content);
+                <form className="row">
+
+                    <div className="input-group col-md-6">
+                        <input value="Per Page" className="form-control" disabled />
+                        <input min={0} type="number" onChange={this.updateLimit} value={this.state.filter.limit} className="form-control" />
+                        <AnchorWithIcon iconClassName="fas fa-sync-alt" onClick={this.loadLessons}>Reload</AnchorWithIcon>
+                    </div>
+                    <p className="col-md-6">Total Data; {this.state.totalData}</p>
+                </form>
+                <p/>
+                <NavigationButtons activePage={this.state.filter.page ?? 0}
+                    limit={this.state.filter.limit ?? 5}
+                    totalData={this.state.totalData}
+                    onClick={this.loadLessonsInPage} />
+                {lessons.map((lesson, id) => {
+                    const content: String = new String(lesson.content).length > 150 ? new String(lesson.content).substring(0, 150) + "..." :
+                        new String(lesson.content);
                     return (
-                        <Card attributes={{style:{marginBottom:'5px'}}} key={uniqueId()+"-lesson"}>
+                        <Card attributes={{ style: { marginBottom: '5px' } }} key={uniqueId() + "-lesson"}>
                             <h3>{lesson.title}</h3>
                             <div dangerouslySetInnerHTML={{
-                                __html:content.toString()
-                            }}/>
-                            <p/>
+                                __html: content.toString()
+                            }} />
+                            <p />
                             <AnchorWithIcon className="btn btn-info btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
                         </Card>
                     )
