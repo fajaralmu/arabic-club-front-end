@@ -12,6 +12,7 @@ import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 class IState {
     editMode: boolean = false;
     fieldValue: string = "";
+    updated: boolean = false;
 }
 class FormInputTextEditor extends BaseComponent {
     masterDataService: MasterDataService = MasterDataService.getInstance();
@@ -56,7 +57,7 @@ class FormInputTextEditor extends BaseComponent {
 
     setValue = (e) => {
         if (this.contentRef.current) {
-            this.setState({fieldValue: this.contentRef.current.innerHTML})
+            this.setState({fieldValue: this.contentRef.current.innerHTML, updated: true})
         }
        
     }
@@ -104,7 +105,7 @@ class FormInputTextEditor extends BaseComponent {
         let recordValue = this.props.recordToEdit[fieldName];
         if (!recordValue) return;
         this.contentRef.current.innerHTML = recordValue;
-        this.setState({fieldValue: recordValue});
+        this.setState({fieldValue: recordValue, updated: true});
     }
          
     componentDidUpdate(){
@@ -136,13 +137,16 @@ class FormInputTextEditor extends BaseComponent {
             }
         })
     }
+    contentOnChange = (e) => {
+       this.setState({updated: false});
+    } 
     render() {
 
         const element = this.getEntityElement();
         return (
             <div>
                 <input type="hidden" value={this.state.fieldValue} name={element.id} />
-                <div id="toolBar1">
+                <div id="toolBar1" className="input-group">
                     <FormattingList onChange={this.formatDoc} />
                     <FontList onChange={this.formatDoc} />
                     <FontSizeOption onChange={this.formatDoc} />
@@ -198,9 +202,11 @@ class FormInputTextEditor extends BaseComponent {
                     <i onMouseDown={(e)=>e.preventDefault()}  onClick={this.paleteCommand} data-command="paste" className="palete fas fa-paste"></i>
                     {/* onClick="formatDoc('paste');" src="data:image/gif;base64,R0lGODlhFgAWAIQUAD04KTRLY2tXQF9vj414WZWIbXmOrpqbmpGjudClFaezxsa0cb/I1+3YitHa7PrkIPHvbuPs+/fvrvv8/f///////////////////////////////////////////////yH5BAEAAB8ALAAAAAAWABYAAAWN4CeOZGmeaKqubGsusPvBSyFJjVDs6nJLB0khR4AkBCmfsCGBQAoCwjF5gwquVykSFbwZE+AwIBV0GhFog2EwIDchjwRiQo9E2Fx4XD5R+B0DDAEnBXBhBhN2DgwDAQFjJYVhCQYRfgoIDGiQJAWTCQMRiwwMfgicnVcAAAMOaK+bLAOrtLUyt7i5uiUhADs=" /> */}
                 </div>
-                <div className="container-fluid" ref={this.contentRef} id="textBox" contentEditable="true"><p>Fill content</p></div>
+                <div onInput={this.contentOnChange} className="container-fluid" ref={this.contentRef} id="textBox" contentEditable="true"><p>Fill content</p></div>
                 <p/>
-                <AnchorWithIcon style={{marginRight:'5px'}} iconClassName="fas fa-check" className="btn btn-primary btn-sm" onClick={this.setValue}>Finish</AnchorWithIcon>
+                <AnchorWithIcon show={this.state.updated == false} style={{marginRight:'5px'}} iconClassName="fas fa-exclamation-circle" className="btn btn-warning btn-sm" onClick={this.setValue}>Update Content</AnchorWithIcon>
+                <AnchorWithIcon show={this.state.updated == true} style={{marginRight:'5px'}} iconClassName="fas fa-check" className="btn btn-primary btn-sm"  >Content Updated</AnchorWithIcon>
+
                 <AnchorWithIcon className="btn btn-secondary btn-sm" attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(false)} show={this.state.editMode == true} >Hide Html</AnchorWithIcon>
                 <AnchorWithIcon className="btn btn-secondary btn-sm" attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(true)} show={this.state.editMode == false} >Show Html</AnchorWithIcon>
             </div>
@@ -210,7 +216,7 @@ class FormInputTextEditor extends BaseComponent {
 }
 const FontSizeOption = (props: { onChange: Function }) => {
     return (
-        <select
+        <select className="form-control"
             onChange={
                 (e) => {
                     const t = e.target;
@@ -231,7 +237,7 @@ const FontSizeOption = (props: { onChange: Function }) => {
 }
 const BackgroundColorOption = (props: { onChange: Function }) => {
     return (
-        <select
+        <select className="form-control"
             onChange={
                 (e) => {
                     const t = e.target;
@@ -248,7 +254,7 @@ const BackgroundColorOption = (props: { onChange: Function }) => {
 }
 const FontColorOption = (props: { onChange: Function }) => {
     return (
-        <select onChange={
+        <select className="form-control" onChange={
             (e) => {
                 const t = e.target;
                 props.onChange("forecolor", t.value);
@@ -266,7 +272,7 @@ const FontColorOption = (props: { onChange: Function }) => {
 }
 const FormattingList = (props: { onChange: Function }) => {
     return (
-        <select onChange={
+        <select className="form-control" onChange={
             (e) => {
                 const t = e.target;
                 props.onChange("formatblock", t.value);
@@ -287,7 +293,7 @@ const FormattingList = (props: { onChange: Function }) => {
     )
 }
 const FontList = (props: { onChange: Function }) => {
-    return (<select onChange={
+    return (<select className="form-control" onChange={
         (e) => {
             const t = e.target;
             props.onChange("fontname", t.value);

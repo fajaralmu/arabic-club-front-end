@@ -12,6 +12,7 @@ import LessonCategory from './../../../models/LessonCategory';
 import { uniqueId } from './../../../utils/StringUtil';
 import Spinner from './../../loader/Spinner';
 import SimpleError from '../../alert/SimpleError';
+import LessonContent from './LessonContent';
 
 interface IState {
     code?: string,
@@ -24,7 +25,7 @@ class LessonMain extends BaseMainMenus {
         code: undefined, loading: false
     };
     constructor(props: any) {
-        super(props, "Lessons", true);
+        super(props, "Lessons", false);
     }
     startLoading = () => { this.setState({loading:true}) }
     endLoading = () => { this.setState({loading:false}) }
@@ -63,9 +64,6 @@ class LessonMain extends BaseMainMenus {
             'lesson'
         );
     }
-    getCode = (): string => {
-        return this.props.match.params.code;
-    }
     componentDidMount() {
         super.componentDidMount();
         this.loadManagamenetPages();
@@ -73,13 +71,15 @@ class LessonMain extends BaseMainMenus {
     componentDidUpdate() {
         this.validateLoginStatus();
         this.setSidebarMenus();
-        // console.debug("this.getCode(): ", this.getCode());
-        if (this.state.code != this.getCode()) {
-            this.setState({ code: this.getCode() });
-        }
+         
     }
-
+    getCode = (): string => {
+        return this.props.match.params.categoryCode;
+    }
     render() {
+        if (this.getCode()) { 
+            return <LessonContent app={this.parentApp} categoryCode={this.getCode()} />
+        }
         const categories: LessonCategory[] = this.categoriesService.getLoadedCategories('lesson');
         if (this.state.loading) {
             return <div className="container-fluid"><Spinner/></div>
@@ -97,7 +97,7 @@ class LessonMain extends BaseMainMenus {
                     {categories.map(category => {
                         return (
                             <div className="col-md-2 text-center" style={{ marginBottom: '10px' }}>
-                                <h2 ><Link className="btn btn-warning btn-lg" to={"/lesson/" + category.code} ><i className={category.iconClassName} /></Link></h2>
+                                <h2 ><Link className="btn btn-warning btn-lg" to={"/lessons/" + category.code} ><i className={category.iconClassName} /></Link></h2>
                                 <p>{category.name}</p>
                             </div>
                         )
