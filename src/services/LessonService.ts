@@ -3,9 +3,8 @@ import WebRequest from '../models/WebRequest';
 import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls } from './Promises';
 import Filter from './../models/Filter';
-export default class LessonService
-{
-    private static instance?:LessonService;
+export default class LessonService {
+    private static instance?: LessonService;
 
     static getInstance(): LessonService {
         if (this.instance == null) {
@@ -13,13 +12,9 @@ export default class LessonService
         }
         return this.instance;
     }
-    getLessons = (categoryCode:string, filter:Filter) => {
-        
-        const request:WebRequest = {
-           filter:filter
-        }
+    getLessons = (categoryCode: string, request: WebRequest) => {
 
-        const endpoint = contextPath().concat("api/public/lessons/"+categoryCode)
+        const endpoint = contextPath().concat("api/public/lessons/" + categoryCode)
         return commonAjaxPostCalls(endpoint, request);
     }
 
