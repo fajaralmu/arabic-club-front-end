@@ -36,7 +36,7 @@ class LessonContent extends BaseComponent {
     startLoading = () => {
         if (this.categoryCode != this.props.categoryCode) {
             this.categoryCode = this.props.categoryCode;
-            this.setState({ loading: true })
+            this.setState({ loading: true, selectedLesson: undefined })
         } else {
             super.startLoading(false);
         }

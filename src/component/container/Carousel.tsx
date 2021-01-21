@@ -42,7 +42,7 @@ export default class Carousel extends Component<IProps, IState>
     }
     render() {
         return (
-            <Card className="container-fluid bg-secondary text-center">
+            <Card className="container-fluid   text-center">
                 <div className="row">
                     <div className="col-md-2">
                         <AnchorButton className="btn btn-light" iconClassName="fas fa-arrow-left" onClick={this.prev} />
