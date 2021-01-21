@@ -1,16 +1,14 @@
-import BaseEntity from './BaseEntity';
-import Page from './Page';
+import BaseEntity from './BaseEntity'; 
 import { uniqueId } from './../utils/StringUtil';
 
 export default class Menu extends BaseEntity{
 	static defaultMenuIconClassName:string = "fas fa-folder";
 
-	code:String = uniqueId();
+	code:string = uniqueId();
 	name?:string;
 	description?:string;
 	url?:string;
-	pathVariables?:string;
-	menuPage?:Page;
+	pathVariables?:string; 
 	iconUrl?:string;
 	color?:string;
 	fontColor?:string;

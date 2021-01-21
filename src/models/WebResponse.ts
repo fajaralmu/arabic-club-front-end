@@ -1,10 +1,8 @@
-import User from './User';
-import BaseEntity from './BaseEntity';
-import Filter from './Filter';
-import Transaction from './Transaction';
-import ProductFlowStock from './ProductFlowStock'; 
-import ApplicationProfile from './ApplicationProfile';
 import EntityProperty from './EntityProperty';
+import User from './User';
+import Filter from './Filter';
+import BaseEntity from './BaseEntity';
+import ApplicationProfile from './ApplicationProfile';
 
 export default class WebResponse{
 	date?:Date;
@@ -16,24 +14,17 @@ export default class WebResponse{
 	entity?:BaseEntity;
 	filter?:Filter;
 	totalData?:number;
-	transaction?:Transaction;
-	productFlowStock?:ProductFlowStock;
 	storage?:{};
+	entityProperty?:EntityProperty;
 	maxValue?:number;
-	quantity?:number; 
+	quantity?:number;
 	applicationProfile?:ApplicationProfile;
 	percentage?:number;
-	transactionYears?:number[];
+	transactionYears?:any[];
 	requestId?:string;
 	token?:string;
-	monthlyDetailIncome?:{};
-	monthlyDetailCost?:{};
-	dailyCashflow?:{};
-	loggedIn?:boolean;
+	loggedIn?:Boolean;
 	success?:boolean;
 	entityClass?:any;
-	purchasings?:any[];
-	sellings?:any[];
-	entityProperty?:EntityProperty;
 
 }

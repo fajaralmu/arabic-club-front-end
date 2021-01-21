@@ -69,16 +69,31 @@ export const menus: Menu[] = [
         code: EVENTS,
         name: "Events",
         url: "/events",
-        menuClass: "fa fa-home",
+        menuClass: "fa fa-calendar-week",
         active: false,
         authenticated: false,
-        showSidebar: true
+        showSidebar: true,
+        subMenus: [
+            {
+                code: 'e_public_speaking',
+                name: 'Public Speaking',
+                url: 'publicspeaking',
+                menuClass: 'fas fa-broadcast-tower'
+
+            },
+            {
+                code: 'e_skills',
+                name: 'Skill',
+                url: 'skill',
+                menuClass: 'fas fa-basketball-ball'
+            }
+        ]
     },
     {
         code: GALLERY,
         name: "Gallery",
         url: "/gallery",
-        menuClass: "fa fa-home",
+        menuClass: "fa fa-photo-video",
         active: false,
         authenticated: false,
         showSidebar: true,
@@ -87,14 +102,14 @@ export const menus: Menu[] = [
                 code: 'gallery_picture',
                 name: 'Pictures',
                 url: 'picture',
-                menuClass: 'fas fa-chart-bar'
+                menuClass: 'fas fa-images'
 
             },
             {
                 code: 'gallery_video',
                 name: 'Videos',
                 url: 'video',
-                menuClass: 'fas fa-chart-line'
+                menuClass: 'fas fa-video'
             }
         ]
     },

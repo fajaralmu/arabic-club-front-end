@@ -15,6 +15,7 @@ import SettingsMain from '../pages/settings/SettingsMain';
 import UserProfile from '../pages/settings/UserProfile';
 import EditApplicationProfile from '../pages/settings/EditApplicationProfile';
 import AboutUs from './../pages/home/AboutUs';
+import LessonMain from '../pages/lesson/LessonMain';
 
 class ApplicationContent extends BaseComponent {
 
@@ -45,6 +46,11 @@ class ApplicationContent extends BaseComponent {
                    <Route exact path="/about" render={
                         (props: any) =>
                             <AboutUs app={this.parentApp} />
+                    } />
+                      {/* -------- masterdata -------- */}
+                      <Route exact path="/lessons" render={
+                        (props: any) =>
+                            <LessonMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
                     } />
                     {/* -------- dashboard -------- */}
                     <Route exact path="/dashboard" render={
