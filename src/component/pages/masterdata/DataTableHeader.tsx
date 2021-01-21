@@ -29,10 +29,10 @@ export default class DataTableHeader extends Component<any, any>
                                         className="input-filter" name={headerProp.value} />
                                 }</div>
                             <div className="btn-group">
-                                <button data-orderType="asc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="btn btn-outline-secondary btn-sm">
-                                    <i data-orderType="asc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="fas fa-angle-up" /></button>
-                                <button data-orderType="desc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="btn btn-outline-secondary btn-sm">
-                                    <i data-orderType="desc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="fas fa-angle-down" /></button>
+                                <button data-ordertype="asc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="btn btn-outline-secondary btn-sm">
+                                    <i data-ordertype="asc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="fas fa-angle-up" /></button>
+                                <button data-ordertype="desc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="btn btn-outline-secondary btn-sm">
+                                    <i data-ordertype="desc" onClick={props.orderButtonOnClick} data-orderby={headerProp.value} className="fas fa-angle-down" /></button>
                             </div>
                         </th>
                     )

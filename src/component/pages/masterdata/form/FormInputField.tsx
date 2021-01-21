@@ -4,23 +4,20 @@ import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../constant/stores';
-import EntityElement from '../../../../models/EntityElement';
-import MasterDataService from '../../../../services/MasterDataService';
-import { FieldType } from '../../../../models/FieldType';
-import WebResponse from '../../../../models/WebResponse';
+import EntityElement from '../../../../models/EntityElement'; 
+import { FieldType } from '../../../../models/FieldType'; 
 import FormInputImage from './FormInputImage';
 import FormInputImageMultiple from './FormInputImageMultiple';
 import BaseComponent from './../../../BaseComponent';
 import FormGroup from './../../../form/FormGroup';
-interface IState {
-    inputList: any[],
+import FormInputDropDown from './FormInputDropDown';
+import FormInputTextEditor from './FormInputTextEditor';
+interface IState { 
     singlePreviewData?: string,
     inputElements: number[]
 }
-class FormInputField extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
-    state: IState = {
-        inputList: [],
+class FormInputField extends BaseComponent { 
+    state: IState = { 
         singlePreviewData: undefined,
         inputElements: [1]
     }
@@ -38,42 +35,8 @@ class FormInputField extends BaseComponent {
             requiredAttr
         )
     }
-    inputListLoaded = (response: WebResponse) => {
-        if (!response.entities || response.entities.length == 0) {
-            throw new Error("Not found");
-        }
-        this.setState({ inputList: response.entities });
-        this.prepopulateForm();
-    }
-    loadInputList = () => {
-        const element = this.getEntityElement();
-        const code = element.entityReferenceClass;
-        this.commonAjax(
-            this.masterDataService.loadAllEntities,
-            this.inputListLoaded,
-            this.showCommonErrorAlert,
-            code
-        )
-    }
-    hasInputList = () => {
-        if (this.getEntityElement().fieldType == FieldType.FIELD_TYPE_FIXED_LIST || this.getEntityElement().fieldType == FieldType.FIELD_TYPE_DYNAMIC_LIST) {
-            return true;
-        }
-        return false;
-    }
-    hasInputListAndNotReady = () => {
-        return this.hasInputList() && this.state.inputList.length == 0;
-    }
-    validateInputType = () => {
-        if (this.hasInputListAndNotReady()) {
-            this.loadInputList();
-        }
-    }
-    componentDidUpdate() {
-        this.validateInputType();
-    }
-    componentDidMount() {
-        this.validateInputType();
+
+    componentDidMount() { 
         this.prepopulateForm();
     }
 
@@ -89,16 +52,6 @@ class FormInputField extends BaseComponent {
         const fieldType: FieldType = this.getEntityElement().fieldType;
         let defaultInputValue = undefined;
         switch (fieldType) {
-            case FieldType.FIELD_TYPE_DYNAMIC_LIST:
-            case FieldType.FIELD_TYPE_FIXED_LIST:
-                if (this.state.inputList.length == 0) {
-                    break;
-                }
-                const optionValueName = this.getEntityElement().optionValueName;
-                if (!optionValueName) break;
-                defaultInputValue = recordValue[optionValueName];
-                break;
-
             default:
                 defaultInputValue = recordValue;
                 break;
@@ -111,9 +64,7 @@ class FormInputField extends BaseComponent {
     render() {
         const element = this.getEntityElement();
         const requiredAttr = this.getRequiredAttr();
-        if (this.hasInputListAndNotReady()) {
-            return <div className="form-group">Loading...</div>
-        }
+        
         if (element.idField == true) {
             return (
                 <FormGroup orientation="vertical" label={element.lableName}>
@@ -121,21 +72,14 @@ class FormInputField extends BaseComponent {
                 </FormGroup>
             )
         }
-        let input = <Fragment />;
+        let input = <p>{element.fieldType}</p>;
         switch (element.fieldType) {
             case FieldType.FIELD_TYPE_DYNAMIC_LIST:
             case FieldType.FIELD_TYPE_FIXED_LIST:
-                const options = this.state.inputList;
-                input = <select ref={this.ref} className="form-control" name={element.id} >
-                    {options.map(option => {
-                        const optionItemValue = element.optionValueName;
-                        const optionItemName = element.optionItemName;
-                        if (!optionItemName || !optionItemValue) { return null; }
-                        return (
-                            <option value={option[optionItemValue]} >{option[optionItemName]}</option>
-                        )
-                    })}
-                </select>
+                input = <FormInputDropDown recordToEdit={this.props.recordToEdit} app={this.props.app} entityElement={element} />
+                break;
+            case FieldType.FIELD_TYPE_TEXTEDITOR:
+                input = <FormInputTextEditor recordToEdit={this.props.recordToEdit} app={this.props.app} entityElement={element} />
                 break;
             case FieldType.FIELD_TYPE_IMAGE:
                 input = element.multiple ?
@@ -157,13 +101,7 @@ class FormInputField extends BaseComponent {
         )
     }
 
-}
-
-const ImagePreview = (props) => {
-    if (props.show == false || !props.imageData) return null;
-    return <img className="image" style={{ margin: '3px' }} src={props.imageData} width="50" height="50" />
-}
-
+} 
 export default withRouter(connect(
     mapCommonUserStateToProps,
 )(FormInputField))

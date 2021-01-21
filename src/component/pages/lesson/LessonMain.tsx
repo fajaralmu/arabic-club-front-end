@@ -24,7 +24,7 @@ class LessonMain extends BaseMainMenus {
         code: undefined, loading: false
     };
     constructor(props: any) {
-        super(props, "Master Data", true);
+        super(props, "Lessons", true);
     }
     startLoading = () => { this.setState({loading:true}) }
     endLoading = () => { this.setState({loading:false}) }
@@ -92,7 +92,7 @@ class LessonMain extends BaseMainMenus {
         
         return (
             <div className="container-fluid">
-                <h2>Master Data Page</h2>
+                <h2>Lessons</h2>
                 <div className="row">
                     {categories.map(category => {
                         return (
