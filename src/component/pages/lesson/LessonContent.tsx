@@ -14,6 +14,7 @@ import Card from './../../container/Card';
 import { uniqueId } from './../../../utils/StringUtil';
 import AnchorWithIcon from '../../navigation/AnchorWithIcon';
 import NavigationButtons from '../../navigation/NavigationButtons';
+import LessonDetail from './LessonDetail';
 class IState {
     lessons: Lesson[] | undefined = undefined;
     loading: boolean = false;
@@ -21,6 +22,7 @@ class IState {
         limit: 5,
         page: 0
     }
+    selectedLesson: Lesson|undefined;
     totalData: number = 0;
     category: LessonCategory | undefined = undefined
 }
@@ -84,7 +86,12 @@ class LessonContent extends BaseComponent {
         if (!e.target.value || e.target.value < 1) return;
         this.updateFilter('limit', e.target.value);
     }
-
+    setSelectedLesson = (lesson:Lesson|undefined) => {
+        this.setState({selectedLesson:lesson});
+    }
+    setSelectedLessonUndefined = ()=> {
+        this.setSelectedLesson(undefined);
+    }
     render() {
         if (this.state.loading) {
             return (<div className="container-fluid">
@@ -97,6 +104,9 @@ class LessonContent extends BaseComponent {
                 <h2>Lessons</h2>
                 <SimpleError>Data not found</SimpleError>
             </div>)
+        }
+        if (this.state.selectedLesson) {
+            return <LessonDetail lesson={this.state.selectedLesson} back={this.setSelectedLessonUndefined} />
         }
         const lessons: Lesson[] = this.state.lessons;
         const category: LessonCategory = this.state.category;
@@ -112,28 +122,34 @@ class LessonContent extends BaseComponent {
                     </div>
                     <p className="col-md-6">Total Data; {this.state.totalData}</p>
                 </form>
-                <p/>
+                <p />
                 <NavigationButtons activePage={this.state.filter.page ?? 0}
                     limit={this.state.filter.limit ?? 5}
                     totalData={this.state.totalData}
                     onClick={this.loadLessonsInPage} />
                 {lessons.map((lesson, id) => {
-                    const content: String = new String(lesson.content).length > 150 ? new String(lesson.content).substring(0, 150) + "..." :
-                        new String(lesson.content);
+
                     return (
-                        <Card attributes={{ style: { marginBottom: '5px' } }} key={uniqueId() + "-lesson"}>
-                            <h3>{lesson.title}</h3>
-                            <div dangerouslySetInnerHTML={{
-                                __html: content.toString()
-                            }} />
-                            <p />
-                            <AnchorWithIcon className="btn btn-info btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
-                        </Card>
+                        <LessonItem setSelectedLesson={this.setSelectedLesson} key={uniqueId() + "-lesson"} lesson={lesson} />
                     )
                 })}
             </div>
         )
     }
+}
+const LessonItem = (props: { lesson: Lesson, setSelectedLesson:Function }) => {
+    const lesson: Lesson = props.lesson;
+    const content: String = new String(lesson.content).length > 150 ? new String(lesson.content).substring(0, 150) + "..." :
+        new String(lesson.content);
+    return (<Card attributes={{ style: { marginBottom: '5px' } }}>
+        <h3>{lesson.title}</h3>
+        <p className="text-dark"><i className="fas fa-edit"/>{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toString() : ""}</p>
+        <div dangerouslySetInnerHTML={{
+            __html: content.toString()
+        }} />
+        <p />
+        <AnchorWithIcon onClick={(e)=>props.setSelectedLesson(lesson)} className="btn btn-info btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
+    </Card>)
 }
 
 export default withRouter(connect(
