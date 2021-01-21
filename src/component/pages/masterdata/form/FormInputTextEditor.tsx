@@ -11,6 +11,7 @@ import BaseComponent from '../../../BaseComponent';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 class IState {
     editMode: boolean = false;
+    fieldValue: string = "";
 }
 class FormInputTextEditor extends BaseComponent {
     masterDataService: MasterDataService = MasterDataService.getInstance();
@@ -51,6 +52,13 @@ class FormInputTextEditor extends BaseComponent {
             this.contentRef.current.focus();
         }
         return false;
+    }
+
+    setValue = (e) => {
+        if (this.contentRef.current) {
+            this.setState({fieldValue: this.contentRef.current.innerHTML})
+        }
+       
     }
 
     setDocMode = (bToSource) => {
@@ -96,6 +104,7 @@ class FormInputTextEditor extends BaseComponent {
         let recordValue = this.props.recordToEdit[fieldName];
         if (!recordValue) return;
         this.contentRef.current.innerHTML = recordValue;
+        this.setState({fieldValue: recordValue});
     }
          
     componentDidUpdate(){
@@ -132,7 +141,7 @@ class FormInputTextEditor extends BaseComponent {
         const element = this.getEntityElement();
         return (
             <div>
-                <input type="hidden" name="myDoc" />
+                <input type="hidden" value={this.state.fieldValue} name={element.id} />
                 <div id="toolBar1">
                     <FormattingList onChange={this.formatDoc} />
                     <FontList onChange={this.formatDoc} />
@@ -191,8 +200,9 @@ class FormInputTextEditor extends BaseComponent {
                 </div>
                 <div className="container-fluid" ref={this.contentRef} id="textBox" contentEditable="true"><p>Fill content</p></div>
                 <p/>
-                <AnchorWithIcon attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(false)} show={this.state.editMode == true} >Hide Html</AnchorWithIcon>
-                <AnchorWithIcon attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(true)} show={this.state.editMode == false} >Show Html</AnchorWithIcon>
+                <AnchorWithIcon style={{marginRight:'5px'}} iconClassName="fas fa-check" className="btn btn-primary btn-sm" onClick={this.setValue}>Finish</AnchorWithIcon>
+                <AnchorWithIcon className="btn btn-secondary btn-sm" attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(false)} show={this.state.editMode == true} >Hide Html</AnchorWithIcon>
+                <AnchorWithIcon className="btn btn-secondary btn-sm" attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(true)} show={this.state.editMode == false} >Show Html</AnchorWithIcon>
             </div>
              
         )

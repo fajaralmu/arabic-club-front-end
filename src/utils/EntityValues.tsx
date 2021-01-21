@@ -35,6 +35,13 @@ export default class EntityValues {
 				case FieldType.FIELD_TYPE_NUMBER:
 					value = beautifyNominal(value);
 					break;
+				case FieldType.FIELD_TYPE_TEXTEDITOR:
+					value = <div dangerouslySetInnerHTML={{
+						__html : new String(value).length > 100 ? 
+						(new String(value).substring(0, 100)+"...") 
+						: value
+					}}></div>;
+					break;
 				default:
 					value = object[elementid];
 			}
