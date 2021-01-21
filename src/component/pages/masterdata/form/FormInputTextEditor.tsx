@@ -8,6 +8,7 @@ import EntityElement from '../../../../models/EntityElement';
 import MasterDataService from '../../../../services/MasterDataService';
 import './TextEditor.css'
 import BaseComponent from '../../../BaseComponent';
+import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 class IState {
     editMode: boolean = false;
 }
@@ -94,23 +95,16 @@ class FormInputTextEditor extends BaseComponent {
         const fieldName = this.getEntityElement().id;
         let recordValue = this.props.recordToEdit[fieldName];
         if (!recordValue) return;
-
-        let defaultInputValue = undefined;
-        const optionValueName = this.getEntityElement().optionValueName;
-        if (!optionValueName) return;
-        defaultInputValue = recordValue[optionValueName];
-
-        if (defaultInputValue) {
-            this.contentRef.current.innerHTML = defaultInputValue;
-        }
+        this.contentRef.current.innerHTML = recordValue;
     }
+         
     componentDidUpdate(){
         console.debug("component updated");
     }
 
-    setEditMode = (e) => {
-        this.setDocMode(e.target.checked);
-        this.setState({ editMode: e.target.checked == true });
+    setEditMode = (mode:boolean) => {
+        this.setDocMode(mode);
+        this.setState({ editMode: mode});
     }
     paleteCommand = (e:any ) => {
         const anchor:HTMLAnchorElement = e.target as HTMLAnchorElement;
@@ -195,11 +189,12 @@ class FormInputTextEditor extends BaseComponent {
                     <i onMouseDown={(e)=>e.preventDefault()}  onClick={this.paleteCommand} data-command="paste" className="palete fas fa-paste"></i>
                     {/* onClick="formatDoc('paste');" src="data:image/gif;base64,R0lGODlhFgAWAIQUAD04KTRLY2tXQF9vj414WZWIbXmOrpqbmpGjudClFaezxsa0cb/I1+3YitHa7PrkIPHvbuPs+/fvrvv8/f///////////////////////////////////////////////yH5BAEAAB8ALAAAAAAWABYAAAWN4CeOZGmeaKqubGsusPvBSyFJjVDs6nJLB0khR4AkBCmfsCGBQAoCwjF5gwquVykSFbwZE+AwIBV0GhFog2EwIDchjwRiQo9E2Fx4XD5R+B0DDAEnBXBhBhN2DgwDAQFjJYVhCQYRfgoIDGiQJAWTCQMRiwwMfgicnVcAAAMOaK+bLAOrtLUyt7i5uiUhADs=" /> */}
                 </div>
-                <div className="container-fluid" ref={this.contentRef} id="textBox" contentEditable="true"><p>Lorem ipsum</p></div>
-                <p id="editMode"><input   { ...{checked:this.state.editMode == true}} autoComplete="off" type="checkbox" onChange={this.setEditMode} name="switchMode" id="switchBox"
-                // onChange="setDocMode(this.checked);" 
-                /> <label  >Show HTML</label></p>
+                <div className="container-fluid" ref={this.contentRef} id="textBox" contentEditable="true"><p>Fill content</p></div>
+                <p/>
+                <AnchorWithIcon attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(false)} show={this.state.editMode == true} >Hide Html</AnchorWithIcon>
+                <AnchorWithIcon attributes={{onMouseDown:(e)=>e.preventDefault()}} onClick={(e)=>this.setEditMode(true)} show={this.state.editMode == false} >Show Html</AnchorWithIcon>
             </div>
+             
         )
     }
 }
