@@ -14,6 +14,7 @@ import QuizChoice from './../../../models/QuizChoice';
 import QuizService from './../../../services/QuizService';
 import WebResponse from './../../../models/WebResponse';
 import AnchorButton from './../../navigation/AnchorButton';
+import { baseImageUrl } from './../../../constant/Url';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -101,6 +102,7 @@ class QuizDetail extends BaseComponent {
                         return (
                             <Card key={"qdl-" + i} attributes={{style:{marginBottom:'5px'}}}>
                                 <h4>{i + 1}. {question.statement}</h4>
+                                {question.image? <img src={baseImageUrl+question.image} height="100" />:null}
                                 {choices.map((choice, c) => {
                                     const rightAnswer = choice.answerCode == question.answerCode;
                                     return (
