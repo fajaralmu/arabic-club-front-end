@@ -13,6 +13,7 @@ import AnchorButton from './../../navigation/AnchorButton';
 import QuizService from './../../../services/QuizService';
 import WebResponse from './../../../models/WebResponse';
 import { QuestionForm, QuizInformationForm } from './QuizFormCompontnes';
+import { toBase64v2 } from './../../../utils/ComponentUtil';
 
 class IState {
     quiz: Quiz = new Quiz();
@@ -61,10 +62,21 @@ class QuizManagementForm extends BaseComponent {
 
         const index = parseInt(target.dataset['index'] ?? "0");
         const quiz: Quiz = this.state.quiz;
+        const app = this;
         if (quiz.questions == undefined) return;
 
-        quiz.questions[index][target.name] = target.value;
-        this.setState({ quiz: quiz });
+        if (target.name == 'image') {
+            toBase64v2(target).then(
+                function(imageString) {
+                    if (quiz.questions == undefined) return;
+                    quiz.questions[index][target.name] = imageString;
+                    app.setState({ quiz: quiz });
+                }
+            )
+        } else {
+            quiz.questions[index][target.name] = target.value;
+            this.setState({ quiz: quiz });
+        }
     }
     updateChoiceField = (e: ChangeEvent) => {
         const target = e.target as any;

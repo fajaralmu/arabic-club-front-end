@@ -4,6 +4,7 @@ import QuizChoice from './../../../models/QuizChoice';
 import QuizQuestion from './../../../models/QuizQuestion';
 import FormGroup from './../../form/FormGroup';
 import AnchorButton from './../../navigation/AnchorButton';
+import { baseImageUrl } from './../../../constant/Url';
 
 
 export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField: any, index: number, questionIndex: number }) => {
@@ -26,6 +27,10 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
         <div className="alert alert-info" key={"quiz-quest-form-" + i}>
             <FormGroup label={"Question #" + (i + 1)}>
                 <input required onChange={props.updateField} value={props.question.statement} className="form-control" name="statement" data-index={i} />
+            </FormGroup>
+            <FormGroup label="Image">
+                <input type="file" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
+                <ImagePreview name={props.question.image} />
             </FormGroup>
             <FormGroup label="Choices">
                 {choices.map((choice, c) => {
@@ -66,4 +71,12 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
             }
         </Fragment>
     )
+}
+
+const ImagePreview = (props:{name:string|undefined}) => {
+    if (!props.name ) return null;
+    const link = props.name.includes("data:image")?props.name:baseImageUrl+props.name;
+    return <div>
+        <img width="100" src={link} />
+    </div>
 }
