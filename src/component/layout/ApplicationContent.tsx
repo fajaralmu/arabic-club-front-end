@@ -17,6 +17,8 @@ import EditApplicationProfile from '../pages/settings/EditApplicationProfile';
 import AboutUs from './../pages/home/AboutUs';
 import LessonMain from '../pages/lesson/LessonMain';
 import LessonContent from '../pages/lesson/LessonContent';
+import QuizManagementMain from '../pages/quizmanagement/QuizManagementMain';
+import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
 
 class ApplicationContent extends BaseComponent {
 
@@ -61,6 +63,15 @@ class ApplicationContent extends BaseComponent {
                     <Route exact path="/dashboard" render={
                         (props: any) =>
                             <DashboardMain  app={this.parentApp} />
+                    } /> 
+                     {/* -------- quiz management -------- */}
+                     <Route exact path="/quizmanagement" render={
+                        (props: any) =>
+                            <QuizManagementMain  app={this.parentApp} />
+                    } /> 
+                     <Route exact path="/quizmanagement/form" render={
+                        (props: any) =>
+                            <QuizManagementForm app={this.parentApp} />
                     } /> 
                     {/* -------- masterdata -------- */}
                     <Route exact path="/management" render={

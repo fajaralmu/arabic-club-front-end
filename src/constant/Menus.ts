@@ -13,7 +13,8 @@ export const LESSONS = "lessons";
 export const CLUB = "language_club";
 export const EVENTS = "events";
 export const GALLERY = "gallery"; 
-export const CHATROOM = "chatroom"; 
+export const CHATROOM = "chatroom";
+export const QUIZ_MANAGEMENT = "quiz_management";
 
 export const getMenus = () => {
     let menuSet: Menu[] = [];
@@ -135,6 +136,24 @@ export const menus: Menu[] = [
                 url: 'productsales',
                 menuClass: 'fas fa-chart-line'
             }
+        ]
+    }, 
+    {
+        code: QUIZ_MANAGEMENT,
+        name: "Quiz Management",
+        url: "/quizmanagement",
+        menuClass: "fas fa-chalkboard",
+        active: false,
+        authenticated: true,
+        showSidebar: true,
+        subMenus: [
+            {
+                code: 'quiz_management_form',
+                name: 'Quiz Form',
+                url: 'form',
+                menuClass: 'fas fa-keyboard'
+
+            }, 
         ]
     }, 
     {

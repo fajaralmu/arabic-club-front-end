@@ -3,6 +3,7 @@ import User from './User';
 import Filter from './Filter';
 import BaseEntity from './BaseEntity';
 import ApplicationProfile from './ApplicationProfile';
+import Quiz from './Quiz';
 
 export default class WebResponse{
 	date?:Date;
@@ -26,5 +27,6 @@ export default class WebResponse{
 	loggedIn?:Boolean;
 	success?:boolean;
 	entityClass?:any;
+	quiz?:Quiz
 
 }

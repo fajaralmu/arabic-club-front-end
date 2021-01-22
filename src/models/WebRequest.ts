@@ -10,6 +10,7 @@ import Filter from './Filter';
 import Documents from './Documents';
 import LessonCategory from './LessonCategory';
 import ApplicationProfile from './ApplicationProfile';
+import Quiz from './Quiz';
 
 export default class WebRequest{
 	entity?:string;
@@ -28,5 +29,5 @@ export default class WebRequest{
 	orderedEntities?:any[];
 	regularTransaction?:boolean;
 	imageData?:string;
-
+	quiz?:Quiz
 }
