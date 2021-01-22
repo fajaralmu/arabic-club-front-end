@@ -114,7 +114,8 @@ class QuizManagementForm extends BaseComponent {
     }
     dataSaved = (response:WebResponse) => {
         this.showInfo("Success");
-        this.setState({saved:true})
+        if (response.quiz)
+            this.props.history.push("/quizmanagement/detail/"+response.quiz?.id);
     }
     render() {
         const quiz: Quiz = this.state.quiz;

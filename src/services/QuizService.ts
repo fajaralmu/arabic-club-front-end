@@ -13,9 +13,12 @@ export default class QuizService {
         return this.instance;
     }
     addQuiz = (quiz: Quiz) => {
-
         const endpoint = contextPath().concat("api/app/quiz/add")
         return commonAjaxPostCalls(endpoint, {quiz:quiz});
+    }
+    getQuiz = (id: number) => {
+        const endpoint = contextPath().concat("api/app/quiz/getquiz/"+id)
+        return commonAjaxPostCalls(endpoint, {});
     }
 
 }

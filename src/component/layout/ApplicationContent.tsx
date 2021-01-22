@@ -19,6 +19,7 @@ import LessonMain from '../pages/lesson/LessonMain';
 import LessonContent from '../pages/lesson/LessonContent';
 import QuizManagementMain from '../pages/quizmanagement/QuizManagementMain';
 import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
+import QuizDetail from '../pages/quizmanagement/QuizDetail';
 
 class ApplicationContent extends BaseComponent {
 
@@ -72,6 +73,10 @@ class ApplicationContent extends BaseComponent {
                      <Route exact path="/quizmanagement/form" render={
                         (props: any) =>
                             <QuizManagementForm app={this.parentApp} />
+                    } /> 
+                     <Route exact path="/quizmanagement/detail/:id" render={
+                        (props: any) =>
+                            <QuizDetail app={this.parentApp} />
                     } /> 
                     {/* -------- masterdata -------- */}
                     <Route exact path="/management" render={
