@@ -22,6 +22,7 @@ import EditDeleteAction from './EditDeleteAction';
 import DataTableHeader from './DataTableHeader';
 import SimpleError from './../../alert/SimpleError';
 import Spinner from './../../loader/Spinner';
+import ExternalEditForm from './ExternalEditForm';
 interface IState { recordData?: WebResponse, showForm: boolean, filter: Filter, loading: boolean }
 class MasterDataList extends BaseComponent {
     masterDataService: MasterDataService = MasterDataService.getInstance();
@@ -195,7 +196,10 @@ class MasterDataList extends BaseComponent {
                                                         return (<td>-</td>)
                                                     }
                                                 })}
-                                                <td><EditDeleteAction show={this.entityProperty.editable == true} showEditForm={this.showEditForm} record={result} entityProperty={this.entityProperty} reload={() => this.loadEntities(undefined)} app={this.parentApp} /></td>
+                                                <td>
+                                                    <EditDeleteAction show={this.entityProperty.editable == true} showEditForm={this.showEditForm} record={result} entityProperty={this.entityProperty} reload={() => this.loadEntities(undefined)} app={this.parentApp} />
+                                                    <ExternalEditForm show={this.entityProperty.editable == false} record={result} entityProperty={this.entityProperty} />
+                                                </td>
                                             </tr>)
                                         })}
                                 </tbody>

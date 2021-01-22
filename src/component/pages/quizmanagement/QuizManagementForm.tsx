@@ -20,14 +20,23 @@ class IState {
 }
 
 class QuizManagementForm extends BaseComponent {
-    quizService:QuizService = QuizService.getInstance();
+    quizService: QuizService = QuizService.getInstance();
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
     }
     componentDidMount() {
         this.validateLoginStatus();
+        this.validateQuizFromProps();
         document.title = "Quiz Form";
+    }
+    validateQuizFromProps = () => {
+        if (!this.props.location.state) return;
+        const quiz = this.props.location.state.quiz;
+        
+        if (quiz) {
+            this.setState({quiz:quiz});
+        }
     }
     updateQuizField = (e) => {
         const name = e.target.name;
@@ -41,8 +50,8 @@ class QuizManagementForm extends BaseComponent {
         if (quiz.questions == undefined) {
             quiz.questions = [];
         }
-        const question:QuizQuestion = QuizQuestion.publicQuizQuestion();
-        question.statement = "Question "+ quiz.questions.length;
+        const question: QuizQuestion = QuizQuestion.publicQuizQuestion();
+        question.statement = "Question " + (quiz.questions.length+1);
         quiz.questions.push(question);
         this.setState({ quiz: quiz });
     }
@@ -98,7 +107,7 @@ class QuizManagementForm extends BaseComponent {
         const quiz: Quiz = this.state.quiz;
         console.debug("QUIZ: ", quiz);
         const app = this;
-        this.showConfirmation("Submit quiz?").then(function (ok) {
+        this.showConfirmation( quiz.id?"Update Quiz?":"Create Quiz?").then(function (ok) {
             if (ok) {
                 app.doSubmitQuiz();
             }
@@ -106,16 +115,17 @@ class QuizManagementForm extends BaseComponent {
     }
     doSubmitQuiz = () => {
         this.commonAjaxWithProgress(
-            this.quizService.addQuiz,
+            this.quizService.submit,
             this.dataSaved,
             this.showCommonErrorAlert,
             this.state.quiz
         )
     }
-    dataSaved = (response:WebResponse) => {
+    dataSaved = (response: WebResponse) => {
         this.showInfo("Success");
-        if (response.quiz)
-            this.props.history.push("/quizmanagement/detail/"+response.quiz?.id);
+        if (response.quiz) {
+            this.props.history.push("/quizmanagement/detail/" + response.quiz?.id);
+        }
     }
     render() {
         const quiz: Quiz = this.state.quiz;
@@ -123,9 +133,7 @@ class QuizManagementForm extends BaseComponent {
         return (
             <div id="QuizManagementForm" className="container-fluid">
                 <h2>Quiz Form</h2>
-                <div className="alert alert-info">
-                    Welcome, <strong>{this.getLoggedUser()?.displayName}</strong>
-                </div>
+                
                 <form onSubmit={this.submitQuiz} >
                     <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateField={this.updateQuizField} />
                     </Card>
@@ -144,7 +152,7 @@ class QuizManagementForm extends BaseComponent {
                     </Card>
                     <p />
                     <FormGroup>
-                        {quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-primary" value="Submit" /> : null}
+                        {quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-primary" value={quiz.id?"Update":"Create"} /> : null}
                     </FormGroup>
                 </form>
             </div>

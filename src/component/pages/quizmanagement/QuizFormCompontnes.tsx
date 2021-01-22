@@ -15,6 +15,7 @@ export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, upda
                 </div>
                 <input name='statement' onChange={props.updateField} className="form-control" data-questionindex={props.questionIndex} data-index={props.index} value={props.choice.statement} required />
             </div>
+            {props.choice.id? <label>Record Id: {props.choice.id}</label>:null}
         </div>
     )
 }
@@ -38,6 +39,11 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
                     })}
                 </select>
             </FormGroup>
+            {props.question.id?
+            <FormGroup label="Record ID">
+                {props.question.id}
+            </FormGroup>:null
+            }
             <FormGroup>
                 <AnchorButton iconClassName="fas fa-times" className="btn btn-danger" onClick={(e) => { props.remove(props.index) }} ></AnchorButton>
             </FormGroup>
@@ -53,7 +59,11 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
             <FormGroup label="Description">
                 <textarea required onChange={props.updateField} className="form-control" name="description" value={props.quiz.description} />
             </FormGroup>
-
+            {props.quiz.id?
+            <FormGroup label="Record ID">
+                {props.quiz.id}
+            </FormGroup>:null
+            }
         </Fragment>
     )
 }
