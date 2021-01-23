@@ -14,6 +14,7 @@ import QuizService from './../../../services/QuizService';
 import WebResponse from './../../../models/WebResponse';
 import { QuestionForm, QuizInformationForm } from './QuizFormCompontnes';
 import { toBase64v2 } from './../../../utils/ComponentUtil';
+import QuizChoice from './../../../models/QuizChoice';
 
 class IState {
     quiz: Quiz = new Quiz();
@@ -84,7 +85,7 @@ class QuizManagementForm extends BaseComponent {
 
         const questionIndex = parseInt(target.dataset['questionindex'] ?? "0");
         const choiceIndex = parseInt(target.dataset['index'] ?? "0");
-
+        const app = this;
         const quiz: Quiz = this.state.quiz;
         if (quiz.questions == undefined) return;
 
@@ -97,9 +98,17 @@ class QuizManagementForm extends BaseComponent {
 
         //update selected choice
         question.choices[choiceIndex][target.name] = target.value;
-
-        quiz.questions = questions;
-        this.setState({ quiz: quiz });
+        if (target.name == 'image') {
+            toBase64v2(target).then(
+                function(imageString) {
+                    if (question.choices == undefined) return;
+                    question.choices[choiceIndex][target.name] = imageString;
+                    app.setState({ quiz: quiz });
+                }
+            )
+        } else {
+            this.setState({ quiz: quiz });
+        }
     }
     removeQuestion = (index: number) => {
         const quiz: Quiz = this.state.quiz;
@@ -111,7 +120,40 @@ class QuizManagementForm extends BaseComponent {
                 if (ok) {
                     app.setState({ quiz: quiz });
                 }
-            })
+            });
+    }
+    removeImage = (index:number) => {
+        const quiz: Quiz = this.state.quiz;
+        if (!quiz.questions) return;
+        if(quiz.questions[index] ) {
+            quiz.questions[index].nulledFields = ["image"]; 
+            quiz.questions[index].image = undefined;
+        }
+        const app = this;
+        this.showConfirmationDanger("Remove Image?")
+            .then(function (ok) {
+                if (ok) {
+                    app.setState({ quiz: quiz });
+                }
+            });
+    }
+    removeChoiceImage = (index:number, questionIndex:number) => {
+        const quiz: Quiz = this.state.quiz;
+        if (quiz.questions == undefined) return;
+
+        //get selected question
+        const questions: QuizQuestion[] = quiz.questions ?? [];
+        if (0 == questions.length) return;
+
+        const question: QuizQuestion = questions[questionIndex];
+        if (question.choices == undefined) return;
+
+        const choice:QuizChoice = question.choices[index];
+        if (!choice) return;
+
+        choice.image = undefined;
+        choice.nulledFields = ["image"];
+        this.setState({ quiz: quiz });
 
     }
     submitQuiz = (e) => {
@@ -158,6 +200,8 @@ class QuizManagementForm extends BaseComponent {
                                     question={question} index={i}
                                     updateField={this.updateQuestionField}
                                     remove={this.removeQuestion}
+                                    removeImage={this.removeImage}
+                                    removeChoiceImage={this.removeChoiceImage}
                                 />
                             )
                         })}

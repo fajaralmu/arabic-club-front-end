@@ -109,6 +109,8 @@ class QuizDetail extends BaseComponent {
                                         <div key={"qdc-" + i + c}>
                                             <b className={rightAnswer ? "border rounded border-primary text-primary" : "text-dark"}>{choice.answerCode}</b>
                                             <span style={{ marginLeft: '5px' }}>{choice.statement}</span>
+                                            <p/>
+                                            {choice.image? <img src={baseImageUrl+choice.image} height="100" />:null}
                                         </div>
                                     )
                                 })}

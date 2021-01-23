@@ -7,20 +7,23 @@ import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
 
 
-export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField: any, index: number, questionIndex: number }) => {
+export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField: any, removeImage:any, index: number, questionIndex: number }) => {
     return (
         <div>
+
             <div className={"input-group " + (props.answerCode == props.choice.answerCode ? "border border-primary" : "")}>
                 <div className="input-group-prepend">
                     <span className="input-group-text" ><b>{props.choice.answerCode}</b></span>
                 </div>
                 <input name='statement' onChange={props.updateField} className="form-control" data-questionindex={props.questionIndex} data-index={props.index} value={props.choice.statement} required />
             </div>
+            <input type="file" name="image"  onChange={props.updateField}  data-questionindex={props.questionIndex} data-index={props.index} className="form-control" />
+            <ImagePreview name={props.choice.image} index={props.index} remove={props.removeImage} />
             {props.choice.id? <label>Record Id: {props.choice.id}</label>:null}
         </div>
     )
 }
-export const QuestionForm = (props: { question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any }) => {
+export const QuestionForm = (props: { question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any }) => {
     const i = props.index;
     const choices: QuizChoice[] = props.question.choices ?? [];
     return (
@@ -30,11 +33,15 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
             </FormGroup>
             <FormGroup label="Image">
                 <input type="file" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
-                <ImagePreview name={props.question.image} />
+               
+                <ImagePreview name={props.question.image} index={i} remove={props.removeImage} />
             </FormGroup>
             <FormGroup label="Choices">
                 {choices.map((choice, c) => {
-                    return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"statement-choice-" + c + i} updateField={props.updateChoiceField} questionIndex={i} index={c} choice={choice} />
+                    return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"statement-choice-" + c + i}
+                     updateField={props.updateChoiceField}
+                     removeImage={(choiceIndex)=>{props.removeChoiceImage(choiceIndex, i)}}
+                     questionIndex={i} index={c} choice={choice} />
                 })}
             </FormGroup>
             <FormGroup label="Answer">
@@ -73,10 +80,11 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
     )
 }
 
-const ImagePreview = (props:{name:string|undefined}) => {
+const ImagePreview = (props:{name:string|undefined, index:number, remove:any}) => {
     if (!props.name ) return null;
     const link = props.name.includes("data:image")?props.name:baseImageUrl+props.name;
     return <div>
         <img width="100" src={link} />
+        <a style={{marginLeft:'5px'}} onClick={(e)=>props.remove(props.index)} className="btn btn-danger btn-sm"  ><i className="fas fa-times"/></a>
     </div>
 }
