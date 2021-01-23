@@ -23,7 +23,7 @@ class HomeMain extends BaseComponent {
             <div className="container-fluid" style={{padding:0}}>
                 <div className="jumbotron"
                     style={{
-                        margin:'opx',
+                        margin:'0px',
                         marginTop: '20px',
                         backgroundImage: 'url("' + imageUrl + '")',
                         backgroundSize: 'cover',

@@ -15,6 +15,7 @@ export const EVENTS = "events";
 export const GALLERY = "gallery"; 
 export const CHATROOM = "chatroom";
 export const QUIZ_MANAGEMENT = "quiz_management";
+export const PUBLIC_QUIZ = "public_quiz";
 
 export const getMenus = () => {
     let menuSet: Menu[] = [];
@@ -89,6 +90,16 @@ export const menus: Menu[] = [
                 menuClass: 'fas fa-basketball-ball'
             }
         ]
+    },
+    {
+        code: PUBLIC_QUIZ,
+        name: "Quiz",
+        url: "/quiz",
+        menuClass: "fas fa-book",
+        active: false,
+        authenticated: true,
+        showSidebar: false,
+        subMenus: []
     },
     {
         code: GALLERY,

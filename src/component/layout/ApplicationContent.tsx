@@ -20,6 +20,7 @@ import LessonContent from '../pages/lesson/LessonContent';
 import QuizManagementMain from '../pages/quizmanagement/QuizManagementMain';
 import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
 import QuizDetail from '../pages/quizmanagement/QuizDetail';
+import PublicQuizMain from '../pages/publicquiz/PublicQuizMain';
 
 class ApplicationContent extends BaseComponent {
 
@@ -60,6 +61,11 @@ class ApplicationContent extends BaseComponent {
                         (props: any) =>
                             <LessonMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
                     } />
+                    {/* -------- dashboard -------- */}
+                    <Route exact path="/quiz" render={
+                        (props: any) =>
+                            <PublicQuizMain  app={this.parentApp} />
+                    } /> 
                     {/* -------- dashboard -------- */}
                     <Route exact path="/dashboard" render={
                         (props: any) =>
