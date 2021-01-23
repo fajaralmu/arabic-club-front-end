@@ -83,8 +83,8 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
 const ImagePreview = (props:{name:string|undefined, index:number, remove:any}) => {
     if (!props.name ) return null;
     const link = props.name.includes("data:image")?props.name:baseImageUrl+props.name;
-    return <div>
+    return <div  >
         <img width="100" src={link} />
-        <a style={{marginLeft:'5px'}} onClick={(e)=>props.remove(props.index)} className="btn btn-danger btn-sm"  ><i className="fas fa-times"/></a>
+        <a style={{marginLeft:'5px' }} onClick={(e)=>props.remove(props.index)} className="btn btn-danger btn-sm"  ><i className="fas fa-times"/></a>
     </div>
 }

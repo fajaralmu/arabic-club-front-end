@@ -60,8 +60,7 @@ class QuizManagementForm extends BaseComponent {
         if (!target) return;
 
         const index = parseInt(target.dataset['index'] ?? "0");
-        const quiz: Quiz = this.state.quiz;
-        const app = this;
+        const quiz: Quiz = this.state.quiz, app = this;
         if (quiz.questions == undefined) return;
 
         if (target.name == 'image') {
@@ -83,8 +82,7 @@ class QuizManagementForm extends BaseComponent {
 
         const questionIndex = parseInt(target.dataset['questionindex'] ?? "0");
         const choiceIndex = parseInt(target.dataset['index'] ?? "0");
-        const app = this;
-        const quiz: Quiz = this.state.quiz;
+        const quiz: Quiz = this.state.quiz, app = this;
         const questions: QuizQuestion[] = quiz.questions ?? [];
         const question: QuizQuestion = questions[questionIndex];
         if (0 == questions.length || !question.choices) {
@@ -105,30 +103,28 @@ class QuizManagementForm extends BaseComponent {
         }
     }
     removeQuestion = (index: number) => {
-        const quiz: Quiz = this.state.quiz;
+        const quiz: Quiz = this.state.quiz, app = this;
         if (quiz.questions == undefined) return;
         quiz.questions.splice(index, 1);
-        const app = this;
         this.showConfirmationDanger("Remove Question?")
             .then(function (ok) {
                 if (ok) { app.setState({ quiz: quiz }); }
             });
     }
     removeQuestionImage = (index: number) => {
-        const quiz: Quiz = this.state.quiz;
+        const quiz: Quiz = this.state.quiz, app = this;
         if (!quiz.questions) return;
         if (quiz.questions[index]) {
             quiz.questions[index].nulledFields = ["image"];
             quiz.questions[index].image = undefined;
         }
-        const app = this;
         this.showConfirmationDanger("Remove Question Image?")
             .then(function (ok) {
                 if (ok) { app.setState({ quiz: quiz }); }
             });
     }
     removeChoiceImage = (index: number, questionIndex: number) => {
-        const quiz: Quiz = this.state.quiz;
+        const quiz: Quiz = this.state.quiz, app = this;
         const questions: QuizQuestion[] = quiz.questions ?? []
         const question: QuizQuestion = questions[questionIndex];
         if (0 == questions.length || !question.choices || !question.choices[index]) {
@@ -136,12 +132,19 @@ class QuizManagementForm extends BaseComponent {
         }
         question.choices[index].image = undefined;
         question.choices[index].nulledFields = ["image"];
-        const app = this;
         this.showConfirmationDanger("Remove Choice Image?")
             .then(function (ok) {
                 if (ok) { app.setState({ quiz: quiz }); }
             });
 
+    }
+    removeAllQuestion = (e) => {
+        const quiz: Quiz = this.state.quiz, app = this;
+        this.showConfirmationDanger("Remove All Question?")
+            .then(function (ok) {
+                quiz.questions = [];
+                if (ok) { app.setState({ quiz: quiz }); }
+            });
     }
     submitQuiz = (e) => {
         e.preventDefault();
@@ -175,14 +178,17 @@ class QuizManagementForm extends BaseComponent {
                 <form onSubmit={this.submitQuiz} >
                     <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateField={this.updateQuizField} />
                     </Card>
-                    <AnchorButton style={{ marginTop: '5px', marginBottom: '5px' }} iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>
-                    <Card title="Quiz Questions">
+                    <div className="btn-group" style={{ marginBottom: '5px', marginTop: '5px' }}>
+                        <AnchorButton className="btn btn-secondary" iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>
+                        <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.removeAllQuestion} >Remove All Question</AnchorButton>
+                    </div>
+                    <Card title={"Quiz Questions :" + (questions.length)}>
                         {questions.map((question, i) => {
                             return (
                                 <QuestionForm key={"quest-form-" + i}
                                     question={question} index={i}
-                                    updateField={this.updateQuestionField}  updateChoiceField={this.updateChoiceField}
-                                    remove={this.removeQuestion} 
+                                    updateField={this.updateQuestionField} updateChoiceField={this.updateChoiceField}
+                                    remove={this.removeQuestion}
                                     removeImage={this.removeQuestionImage} removeChoiceImage={this.removeChoiceImage}
                                 />
                             )
