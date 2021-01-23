@@ -147,6 +147,7 @@ class LessonContent extends BaseComponent {
                     limit={this.state.filter.limit ?? 5}
                     totalData={this.state.totalData}
                     onClick={this.loadLessonsInPage} />
+                {lessons.length == 0? <SimpleError>No Data</SimpleError>:null}
                 {lessons.map((lesson, id) => {
 
                     return (
