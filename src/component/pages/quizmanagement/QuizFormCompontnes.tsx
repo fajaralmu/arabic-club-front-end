@@ -32,7 +32,7 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
                 <input required onChange={props.updateField} value={props.question.statement} className="form-control" name="statement" data-index={i} />
             </FormGroup>
             <FormGroup label="Image">
-                <input type="file" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
+                <input type="file"  accept="image/*" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
                
                 <ImagePreview name={props.question.image} index={i} remove={props.removeImage} />
             </FormGroup>

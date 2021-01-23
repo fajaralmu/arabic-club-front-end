@@ -1,5 +1,3 @@
-
-
 import React, { ChangeEvent, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -35,9 +33,9 @@ class QuizManagementForm extends BaseComponent {
     validateQuizFromProps = () => {
         if (!this.props.location.state) return;
         const quiz = this.props.location.state.quiz;
-        
+
         if (quiz) {
-            this.setState({quiz:Object.assign(new Quiz(), quiz)});
+            this.setState({ quiz: Object.assign(new Quiz(), quiz) });
         }
     }
     updateQuizField = (e) => {
@@ -53,7 +51,7 @@ class QuizManagementForm extends BaseComponent {
             quiz.questions = [];
         }
         const question: QuizQuestion = QuizQuestion.publicQuizQuestion();
-        question.statement = "Question " + (quiz.questions.length+1);
+        question.statement = "Question " + (quiz.questions.length + 1);
         quiz.questions.push(question);
         this.setState({ quiz: quiz });
     }
@@ -68,7 +66,7 @@ class QuizManagementForm extends BaseComponent {
 
         if (target.name == 'image') {
             toBase64v2(target).then(
-                function(imageString) {
+                function (imageString) {
                     if (!quiz.questions || !imageString.startsWith("data:image")) return;
                     quiz.questions[index][target.name] = imageString;
                     app.setState({ quiz: quiz });
@@ -90,13 +88,12 @@ class QuizManagementForm extends BaseComponent {
         const questions: QuizQuestion[] = quiz.questions ?? [];
         const question: QuizQuestion = questions[questionIndex];
         if (0 == questions.length || !question.choices) {
-            return; 
+            return;
         }
         //update selected choice
-       
         if (target.name == 'image') {
             toBase64v2(target).then(
-                function(imageString) {
+                function (imageString) {
                     if (!question.choices || !imageString.startsWith("data:image")) return;
                     question.choices[choiceIndex][target.name] = imageString;
                     app.setState({ quiz: quiz });
@@ -114,53 +111,43 @@ class QuizManagementForm extends BaseComponent {
         const app = this;
         this.showConfirmationDanger("Remove Question?")
             .then(function (ok) {
-                if (ok) {
-                    app.setState({ quiz: quiz });
-                }
+                if (ok) { app.setState({ quiz: quiz }); }
             });
     }
-    removeImage = (index:number) => {
+    removeQuestionImage = (index: number) => {
         const quiz: Quiz = this.state.quiz;
         if (!quiz.questions) return;
-        if(quiz.questions[index] ) {
-            quiz.questions[index].nulledFields = ["image"]; 
+        if (quiz.questions[index]) {
+            quiz.questions[index].nulledFields = ["image"];
             quiz.questions[index].image = undefined;
         }
         const app = this;
         this.showConfirmationDanger("Remove Question Image?")
             .then(function (ok) {
-                if (ok) {
-                    app.setState({ quiz: quiz });
-                }
+                if (ok) { app.setState({ quiz: quiz }); }
             });
     }
-    removeChoiceImage = (index:number, questionIndex:number) => {
+    removeChoiceImage = (index: number, questionIndex: number) => {
         const quiz: Quiz = this.state.quiz;
         const questions: QuizQuestion[] = quiz.questions ?? []
         const question: QuizQuestion = questions[questionIndex];
-        if (0 == questions.length || !question.choices) {
-            return; 
+        if (0 == questions.length || !question.choices || !question.choices[index]) {
+            return;
         }
-        const choice:QuizChoice = question.choices[index];
-        if (!choice) return;
-
-        choice.image = undefined;
-        choice.nulledFields = ["image"];
+        question.choices[index].image = undefined;
+        question.choices[index].nulledFields = ["image"];
         const app = this;
         this.showConfirmationDanger("Remove Choice Image?")
             .then(function (ok) {
-                if (ok) {
-                    app.setState({ quiz: quiz });
-                }
+                if (ok) { app.setState({ quiz: quiz }); }
             });
 
     }
     submitQuiz = (e) => {
         e.preventDefault();
-        const quiz: Quiz = this.state.quiz;
-        console.debug("QUIZ: ", quiz);
+        console.debug("QUIZ: ", this.state.quiz);
         const app = this;
-        this.showConfirmation( quiz.id?"Update Quiz?":"Create Quiz?").then(function (ok) {
+        this.showConfirmation(this.state.quiz.id ? "Update Quiz?" : "Create Quiz?").then(function (ok) {
             if (ok) {
                 app.doSubmitQuiz();
             }
@@ -168,10 +155,8 @@ class QuizManagementForm extends BaseComponent {
     }
     doSubmitQuiz = () => {
         this.commonAjaxWithProgress(
-            this.quizService.submit,
-            this.dataSaved,
-            this.showCommonErrorAlert,
-            this.state.quiz
+            this.quizService.submit, this.dataSaved,
+            this.showCommonErrorAlert, this.state.quiz
         )
     }
     dataSaved = (response: WebResponse) => {
@@ -186,7 +171,7 @@ class QuizManagementForm extends BaseComponent {
         return (
             <div id="QuizManagementForm" className="container-fluid">
                 <h2>Quiz Form</h2>
-                
+
                 <form onSubmit={this.submitQuiz} >
                     <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateField={this.updateQuizField} />
                     </Card>
@@ -195,19 +180,17 @@ class QuizManagementForm extends BaseComponent {
                         {questions.map((question, i) => {
                             return (
                                 <QuestionForm key={"quest-form-" + i}
-                                    updateChoiceField={this.updateChoiceField}
                                     question={question} index={i}
-                                    updateField={this.updateQuestionField}
-                                    remove={this.removeQuestion}
-                                    removeImage={this.removeImage}
-                                    removeChoiceImage={this.removeChoiceImage}
+                                    updateField={this.updateQuestionField}  updateChoiceField={this.updateChoiceField}
+                                    remove={this.removeQuestion} 
+                                    removeImage={this.removeQuestionImage} removeChoiceImage={this.removeChoiceImage}
                                 />
                             )
                         })}
                     </Card>
                     <p />
                     <FormGroup>
-                        {quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-primary" value={quiz.id?"Update":"Create"} /> : null}
+                        {quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-primary" value={quiz.id ? "Update" : "Create"} /> : null}
                     </FormGroup>
                 </form>
             </div>
