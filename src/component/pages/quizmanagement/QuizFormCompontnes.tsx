@@ -17,7 +17,7 @@ export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, upda
                 </div>
                 <input name='statement' onChange={props.updateField} className="form-control" data-questionindex={props.questionIndex} data-index={props.index} value={props.choice.statement} required />
             </div>
-            <input type="file" name="image"  onChange={props.updateField}  data-questionindex={props.questionIndex} data-index={props.index} className="form-control" />
+            <input type="file" name="image" accept="image/*" onChange={props.updateField}  data-questionindex={props.questionIndex} data-index={props.index} className="form-control" />
             <ImagePreview name={props.choice.image} index={props.index} remove={props.removeImage} />
             {props.choice.id? <label>Record Id: {props.choice.id}</label>:null}
         </div>

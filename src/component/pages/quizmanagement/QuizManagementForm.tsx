@@ -37,7 +37,7 @@ class QuizManagementForm extends BaseComponent {
         const quiz = this.props.location.state.quiz;
         
         if (quiz) {
-            this.setState({quiz:quiz});
+            this.setState({quiz:Object.assign(new Quiz(), quiz)});
         }
     }
     updateQuizField = (e) => {
@@ -69,7 +69,7 @@ class QuizManagementForm extends BaseComponent {
         if (target.name == 'image') {
             toBase64v2(target).then(
                 function(imageString) {
-                    if (quiz.questions == undefined) return;
+                    if (!quiz.questions || !imageString.startsWith("data:image")) return;
                     quiz.questions[index][target.name] = imageString;
                     app.setState({ quiz: quiz });
                 }
@@ -87,26 +87,23 @@ class QuizManagementForm extends BaseComponent {
         const choiceIndex = parseInt(target.dataset['index'] ?? "0");
         const app = this;
         const quiz: Quiz = this.state.quiz;
-        if (quiz.questions == undefined) return;
-
-        //get selected question
         const questions: QuizQuestion[] = quiz.questions ?? [];
-        if (0 == questions.length) return;
-
         const question: QuizQuestion = questions[questionIndex];
-        if (question.choices == undefined) return;
-
+        if (0 == questions.length || !question.choices) {
+            return; 
+        }
         //update selected choice
-        question.choices[choiceIndex][target.name] = target.value;
+       
         if (target.name == 'image') {
             toBase64v2(target).then(
                 function(imageString) {
-                    if (question.choices == undefined) return;
+                    if (!question.choices || !imageString.startsWith("data:image")) return;
                     question.choices[choiceIndex][target.name] = imageString;
                     app.setState({ quiz: quiz });
                 }
             )
         } else {
+            question.choices[choiceIndex][target.name] = target.value;
             this.setState({ quiz: quiz });
         }
     }
@@ -130,7 +127,7 @@ class QuizManagementForm extends BaseComponent {
             quiz.questions[index].image = undefined;
         }
         const app = this;
-        this.showConfirmationDanger("Remove Image?")
+        this.showConfirmationDanger("Remove Question Image?")
             .then(function (ok) {
                 if (ok) {
                     app.setState({ quiz: quiz });
@@ -139,21 +136,23 @@ class QuizManagementForm extends BaseComponent {
     }
     removeChoiceImage = (index:number, questionIndex:number) => {
         const quiz: Quiz = this.state.quiz;
-        if (quiz.questions == undefined) return;
-
-        //get selected question
-        const questions: QuizQuestion[] = quiz.questions ?? [];
-        if (0 == questions.length) return;
-
+        const questions: QuizQuestion[] = quiz.questions ?? []
         const question: QuizQuestion = questions[questionIndex];
-        if (question.choices == undefined) return;
-
+        if (0 == questions.length || !question.choices) {
+            return; 
+        }
         const choice:QuizChoice = question.choices[index];
         if (!choice) return;
 
         choice.image = undefined;
         choice.nulledFields = ["image"];
-        this.setState({ quiz: quiz });
+        const app = this;
+        this.showConfirmationDanger("Remove Choice Image?")
+            .then(function (ok) {
+                if (ok) {
+                    app.setState({ quiz: quiz });
+                }
+            });
 
     }
     submitQuiz = (e) => {

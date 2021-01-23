@@ -12,12 +12,12 @@ export function toBase64(file, referer, callback) {
  
 
 export function toBase64v2(fileInput) {
-    return new Promise<any>(function (resolve, reject) {
+    return new Promise<string>(function (resolve, reject) {
         try {
             const reader = new FileReader();
             reader.readAsDataURL(fileInput.files[0]);
             console.debug("fileInput.files[0]: ", fileInput.files[0]);
-            reader.onload = function () { resolve(reader.result); }
+            reader.onload = function () { resolve(new String(reader.result).toString()); }
             reader.onerror = function (error) {
                 reject(error);
             }
