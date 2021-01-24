@@ -1,6 +1,4 @@
-
-
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import BaseComponent from './../../BaseComponent';
 import PublicQuizService from './../../../services/PublicQuizService';
@@ -83,12 +81,14 @@ class PublicQuizChallenge extends BaseComponent {
         this.showConfirmation("Submit Answers?")
         .then(function(ok){
             if (ok) {
+               
                 app.commonAjaxWithProgress(
                     app.publicQuizService.submitAnswers,
                     app.quizSubmitted,
                     app.showCommonErrorAlert,
                     app.state.quiz
                 )
+                app.setState({ quiz: undefined});
             }
         })
     }
@@ -104,8 +104,7 @@ class PublicQuizChallenge extends BaseComponent {
                 <div className="alert alert-primary">
                     <QuizResult quizResult={this.state.quizResult} />
                 </div>
-                : null
-                }
+                : null}
                 {this.state.loading != true && quiz == undefined ? <SimpleError>No Data</SimpleError> : null}
                 {this.state.loading ? <Spinner /> : null}
                 {quiz ? <QuizBody submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> : null}
