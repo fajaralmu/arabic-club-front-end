@@ -15,11 +15,12 @@ class IState {
     updated: boolean = false;
 }
 class FormInputTextEditor extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     state: IState = new IState();
     contentRef: React.RefObject<HTMLDivElement> = React.createRef();
     constructor(props: any) {
         super(props, false);
+        this.masterDataService = this.getSerivices().masterDataService;
     }
     getEntityElement = (): EntityElement => {
         return this.props.entityElement;

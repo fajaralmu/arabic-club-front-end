@@ -10,9 +10,7 @@ import Quiz from '../../../models/Quiz';
 import Filter from '../../../models/Filter';
 import WebResponse from '../../../models/WebResponse';
 import Spinner from '../../loader/Spinner';
-import Card from '../../container/Card';
 import NavigationButtons from '../../navigation/NavigationButtons';
-import AnchorWithIcon from '../../navigation/AnchorWithIcon';
 import QuizList from '../quizshared/QuizList';
 
 class IState {
@@ -22,10 +20,11 @@ class IState {
     totalData: number = 0;
 }
 class PublicQuizMain extends BaseMainMenus {
-    publicQuizService: PublicQuizService = PublicQuizService.getInstance();
+    publicQuizService: PublicQuizService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, "Take Quiz", false);
+        this.publicQuizService = this.getSerivices().publicQuizService;
     }
     startLoading = () => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }

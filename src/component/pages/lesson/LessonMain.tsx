@@ -19,13 +19,14 @@ interface IState {
     loading: boolean
 }
 class LessonMain extends BaseMainMenus {
-    categoriesService: CategoriesService = CategoriesService.getInstance();
+    categoriesService: CategoriesService;
      
     state: IState = {
         code: undefined, loading: false
     };
     constructor(props: any) {
         super(props, "Lessons", false);
+        this.categoriesService = this.getSerivices().categoriesService;
     }
     startLoading = () => { this.setState({loading:true}) }
     endLoading = () => { this.setState({loading:false}) }

@@ -8,7 +8,6 @@ import Card from '../../container/Card';
 import FormGroup from '../../form/FormGroup';
 import { baseImageUrl } from '../../../constant/Url';
 import { setApplicationProfile } from '../../../redux/actionCreators';
-import AnchorButton from '../../navigation/AnchorButton';
 import WebResponse from '../../../models/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
 import { EditField, EditImage } from './settingHelper';
@@ -34,10 +33,11 @@ class IState {
 }
 class EditApplicationProfile extends BaseComponent {
 
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
+        this.masterDataService = this.getSerivices().masterDataService;
         this.state.applicationProfile = Object.assign(new ApplicationProfile(), this.getApplicationProfile());
     }
     componentDidMount() {

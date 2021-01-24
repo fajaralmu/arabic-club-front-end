@@ -11,9 +11,10 @@ import EntityProperty from '../../../models/EntityProperty';
 import WebResponse from './../../../models/WebResponse';
 
 class EditDeleteAction extends BaseComponent {
-    masterDataService:MasterDataService = MasterDataService.getInstance();
+    masterDataService:MasterDataService;
     constructor(props: any) {
         super(props, true);
+        this.masterDataService = this.getSerivices().masterDataService;
     }
     delete = (e) => {
         const app = this;

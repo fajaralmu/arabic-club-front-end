@@ -22,10 +22,11 @@ class IState {
     loading: boolean = false;
 }
 class QuizDetail extends BaseComponent {
-    quizService: QuizService = QuizService.getInstance();
+    quizService: QuizService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
+        this.quizService = this.getSerivices().quizSerivce;
     }
     startLoading = (withProgress: boolean) => {
         super.startLoading(withProgress);

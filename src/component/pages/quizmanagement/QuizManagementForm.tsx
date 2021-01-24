@@ -18,10 +18,11 @@ class IState {
 }
 
 class QuizManagementForm extends BaseComponent {
-    quizService: QuizService = QuizService.getInstance();
+    quizService: QuizService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
+        this.quizService = this.getSerivices().quizSerivce;
     }
     componentDidMount() {
         this.validateLoginStatus();

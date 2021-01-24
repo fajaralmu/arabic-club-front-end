@@ -8,7 +8,6 @@ import Card from '../../container/Card';
 import FormGroup from '../../form/FormGroup';
 import { baseImageUrl } from '../../../constant/Url';
 import { setLoggedUser } from './../../../redux/actionCreators';
-import AnchorButton from '../../navigation/AnchorButton';
 import UserService from './../../../services/UserService';
 import WebResponse from './../../../models/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
@@ -33,10 +32,11 @@ class IState {
 }
 class UserProfile extends BaseComponent {
 
-    userService: UserService = UserService.getInstance();
+    userService: UserService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
+        this.userService = this.getSerivices().userService;
         this.state.user = Object.assign(new User(), this.getLoggedUser());
     }
     componentDidMount() {

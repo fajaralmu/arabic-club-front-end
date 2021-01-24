@@ -20,10 +20,11 @@ class IState {
 }
 
 class QuizManagementMain extends BaseMainMenus {
-    publicQuizService: PublicQuizService = PublicQuizService.getInstance();
+    publicQuizService: PublicQuizService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, "Quiz Management", true);
+        this.publicQuizService = this.getSerivices().publicQuizService;
     }
     startLoading = () => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }

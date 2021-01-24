@@ -25,7 +25,7 @@ import Spinner from './../../loader/Spinner';
 import ExternalEditForm from './ExternalEditForm';
 interface IState { recordData?: WebResponse, showForm: boolean, filter: Filter, loading: boolean }
 class MasterDataList extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     state: IState = {
         showForm: false, loading: false,
         filter: { limit: 5, page: 0, fieldsFilter: {} }
@@ -34,6 +34,7 @@ class MasterDataList extends BaseComponent {
     entityProperty: EntityProperty;
     constructor(props: any) {
         super(props, true);
+        this.masterDataService = this.getSerivices().masterDataService;
         this.entityProperty = this.props.entityProperty;
     }
     /**

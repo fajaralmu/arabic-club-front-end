@@ -21,11 +21,12 @@ class IState {
 }
 
 class PublicQuizChallenge extends BaseComponent {
-    publicQuizService: PublicQuizService = PublicQuizService.getInstance();
+    publicQuizService: PublicQuizService;
     state: IState = new IState();
 
     constructor(props: any) {
         super(props, false);
+        this.publicQuizService = this.getSerivices().publicQuizService;
     }
     startLoading = (withProgress: boolean) => {
         super.startLoading(withProgress);

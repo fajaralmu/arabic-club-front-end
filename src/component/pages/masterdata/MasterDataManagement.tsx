@@ -13,13 +13,13 @@ interface IState {
     entityProperty?: EntityProperty
 }
 class MasterDataManagement extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     code: string = "";
     loadingEntityProperty: boolean = false;
     entityProperty: undefined
     constructor(props: any) {
         super(props, true);
-
+        this.masterDataService = this.getSerivices().masterDataService;
     }
     entityPropertyLoaded = (response: WebResponse) => {
         this.loadingEntityProperty = false;

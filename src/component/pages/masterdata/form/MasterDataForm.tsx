@@ -16,11 +16,12 @@ import { toBase64FromFile } from '../../../../utils/ComponentUtil';
 import FormInputField from './FormInputField';
 
 class MasterDataForm extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     editMode:boolean = false;
     recordToEdit?:{} = undefined;
     constructor(props: any) {
         super(props, true);
+        this.masterDataService = this.getSerivices().masterDataService;
         if (props.recordToEdit) {
             this.editMode = true;
             this.recordToEdit = props.recordToEdit;

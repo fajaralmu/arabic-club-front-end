@@ -29,11 +29,12 @@ class IState {
     filterValue?: string
 }
 class LessonContent extends BaseComponent {
-    lessonService: LessonService = LessonService.getInstance();
+    lessonService: LessonService;
     state: IState = new IState();
     categoryCode: string = "";
     constructor(props) {
         super(props, false);
+        this.lessonService = this.getSerivices().lessonService;
     }
     startLoading = () => {
         if (this.categoryCode != this.props.categoryCode) {

@@ -13,7 +13,7 @@ interface IState {
     singlePreviewData?: string, 
 }
 class FormInputDropDown extends BaseComponent {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     state: IState = {
         inputList: [],
         singlePreviewData: undefined, 
@@ -21,6 +21,7 @@ class FormInputDropDown extends BaseComponent {
     ref: React.RefObject<any> = React.createRef();
     constructor(props: any) {
         super(props, false);
+        this.masterDataService = this.getSerivices().masterDataService;
     }
     getEntityElement = (): EntityElement => {
         return this.props.entityElement;

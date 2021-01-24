@@ -16,12 +16,13 @@ interface IState {
     // managementProperties:ManagementProperty[]
 }
 class MasterDataMain extends BaseMainMenus {
-    masterDataService: MasterDataService = MasterDataService.getInstance();
+    masterDataService: MasterDataService;
     state: IState = {
         code: undefined
     };
     constructor(props: any) {
         super(props, "Master Data", true);
+        this.masterDataService = this.getSerivices().masterDataService;
     }
 
     managementPropertiesLoaded = (response: WebResponse) => {

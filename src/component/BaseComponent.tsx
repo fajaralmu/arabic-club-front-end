@@ -3,6 +3,7 @@ import { byId } from '../utils/ComponentUtil';
 import WebResponse from './../models/WebResponse';
 import ApplicationProfile from './../models/ApplicationProfile';
 import User from './../models/User';
+import Services from './../services/Services';
 
 export default class BaseComponent extends Component<any, any> {
     parentApp: any;
@@ -156,5 +157,9 @@ export default class BaseComponent extends Component<any, any> {
             console.debug(typeof this , "BACK TO LOGIN");
             this.validateLoginStatus();
         }
+    }
+
+    getSerivices = () : Services => {
+        return this.props.services;
     }
 }
