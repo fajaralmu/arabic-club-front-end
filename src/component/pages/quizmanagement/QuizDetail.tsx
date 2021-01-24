@@ -26,7 +26,7 @@ class QuizDetail extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.quizService = this.getSerivices().quizSerivce;
+        this.quizService = this.getServices().quizSerivce;
     }
     startLoading = (withProgress: boolean) => {
         super.startLoading(withProgress);

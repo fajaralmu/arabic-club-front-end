@@ -36,7 +36,7 @@ class UserProfile extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.userService = this.getSerivices().userService;
+        this.userService = this.getServices().userService;
         this.state.user = Object.assign(new User(), this.getLoggedUser());
     }
     componentDidMount() {

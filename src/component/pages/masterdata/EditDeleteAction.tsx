@@ -14,7 +14,7 @@ class EditDeleteAction extends BaseComponent {
     masterDataService:MasterDataService;
     constructor(props: any) {
         super(props, true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
     }
     delete = (e) => {
         const app = this;

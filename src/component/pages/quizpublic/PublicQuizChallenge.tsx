@@ -13,6 +13,8 @@ import QuizChoice from '../../../models/QuizChoice';
 import { baseImageUrl } from '../../../constant/Url';
 import Modal from '../../container/Modal';
 import QuizResult from '../../../models/QuizResult'; 
+import { connect } from 'react-redux';
+import { mapCommonUserStateToProps } from './../../../constant/stores';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -26,7 +28,7 @@ class PublicQuizChallenge extends BaseComponent {
 
     constructor(props: any) {
         super(props, false);
-        this.publicQuizService = this.getSerivices().publicQuizService;
+        this.publicQuizService = this.getServices().publicQuizService;
     }
     startLoading = (withProgress: boolean) => {
         super.startLoading(withProgress);
@@ -204,5 +206,7 @@ const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice: any, 
         </div>
     )
 }
-
-export default withRouter(PublicQuizChallenge) 
+ 
+export default withRouter(connect(
+    mapCommonUserStateToProps
+)(PublicQuizChallenge))

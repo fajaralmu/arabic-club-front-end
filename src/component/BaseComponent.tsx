@@ -159,7 +159,7 @@ export default class BaseComponent extends Component<any, any> {
         }
     }
 
-    getSerivices = () : Services => {
+    getServices = () : Services => {
         return this.props.services;
     }
 }

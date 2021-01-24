@@ -37,7 +37,7 @@ class EditApplicationProfile extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
         this.state.applicationProfile = Object.assign(new ApplicationProfile(), this.getApplicationProfile());
     }
     componentDidMount() {

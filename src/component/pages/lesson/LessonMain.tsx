@@ -26,7 +26,7 @@ class LessonMain extends BaseMainMenus {
     };
     constructor(props: any) {
         super(props, "Lessons", false);
-        this.categoriesService = this.getSerivices().categoriesService;
+        this.categoriesService = this.getServices().categoriesService;
     }
     startLoading = () => { this.setState({loading:true}) }
     endLoading = () => { this.setState({loading:false}) }

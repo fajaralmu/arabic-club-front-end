@@ -22,7 +22,7 @@ class MasterDataMain extends BaseMainMenus {
     };
     constructor(props: any) {
         super(props, "Master Data", true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
     }
 
     managementPropertiesLoaded = (response: WebResponse) => {

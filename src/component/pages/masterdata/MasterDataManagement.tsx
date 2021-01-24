@@ -19,7 +19,7 @@ class MasterDataManagement extends BaseComponent {
     entityProperty: undefined
     constructor(props: any) {
         super(props, true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
     }
     entityPropertyLoaded = (response: WebResponse) => {
         this.loadingEntityProperty = false;

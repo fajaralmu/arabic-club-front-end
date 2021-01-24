@@ -34,7 +34,7 @@ class MasterDataList extends BaseComponent {
     entityProperty: EntityProperty;
     constructor(props: any) {
         super(props, true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
         this.entityProperty = this.props.entityProperty;
     }
     /**

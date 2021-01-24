@@ -34,7 +34,7 @@ class LessonContent extends BaseComponent {
     categoryCode: string = "";
     constructor(props) {
         super(props, false);
-        this.lessonService = this.getSerivices().lessonService;
+        this.lessonService = this.getServices().lessonService;
     }
     startLoading = () => {
         if (this.categoryCode != this.props.categoryCode) {

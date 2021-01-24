@@ -21,7 +21,7 @@ class FormInputDropDown extends BaseComponent {
     ref: React.RefObject<any> = React.createRef();
     constructor(props: any) {
         super(props, false);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
     }
     getEntityElement = (): EntityElement => {
         return this.props.entityElement;

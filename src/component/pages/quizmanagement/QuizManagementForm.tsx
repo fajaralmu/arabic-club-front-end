@@ -22,7 +22,7 @@ class QuizManagementForm extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.quizService = this.getSerivices().quizSerivce;
+        this.quizService = this.getServices().quizSerivce;
     }
     componentDidMount() {
         this.validateLoginStatus();

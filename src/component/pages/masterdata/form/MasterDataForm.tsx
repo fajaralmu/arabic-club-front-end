@@ -21,7 +21,7 @@ class MasterDataForm extends BaseComponent {
     recordToEdit?:{} = undefined;
     constructor(props: any) {
         super(props, true);
-        this.masterDataService = this.getSerivices().masterDataService;
+        this.masterDataService = this.getServices().masterDataService;
         if (props.recordToEdit) {
             this.editMode = true;
             this.recordToEdit = props.recordToEdit;
