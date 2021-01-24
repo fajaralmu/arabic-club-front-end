@@ -20,8 +20,8 @@ import LessonContent from '../pages/lesson/LessonContent';
 import QuizManagementMain from '../pages/quizmanagement/QuizManagementMain';
 import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
 import QuizDetail from '../pages/quizmanagement/QuizDetail';
-import PublicQuizMain from '../pages/publicquiz/PublicQuizMain';
-import PublicQuizChallenge from '../pages/publicquiz/PublicQuizChallenge';
+import PublicQuizMain from '../pages/quizpublic/PublicQuizMain';
+import PublicQuizChallenge from '../pages/quizpublic/PublicQuizChallenge';
 
 class ApplicationContent extends BaseComponent {
 

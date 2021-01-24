@@ -15,9 +15,11 @@ import QuizService from './../../../services/QuizService';
 import WebResponse from './../../../models/WebResponse';
 import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
+import Spinner from '../../loader/Spinner';
 
 class IState {
     quiz: Quiz | undefined = undefined;
+    loading: boolean = false;
 }
 class QuizDetail extends BaseComponent {
     quizService: QuizService = QuizService.getInstance();
@@ -25,7 +27,14 @@ class QuizDetail extends BaseComponent {
     constructor(props: any) {
         super(props, true);
     }
-
+    startLoading = (withProgress: boolean) => {
+        super.startLoading(withProgress);
+        this.setState({ loading: true });
+    }
+    endLoading = () => {
+        super.endLoading();
+        this.setState({ loading: false });
+    }
     componentDidMount() {
         this.validateLoginStatus();
         this.loadQuiz();
@@ -65,7 +74,7 @@ class QuizDetail extends BaseComponent {
             });
     }
     doDeleteQuiz = () => {
-        if (! this.state.quiz) return;
+        if (!this.state.quiz) return;
         this.commonAjaxWithProgress(
             this.quizService.deleteQuiz,
             this.dataDeleted,
@@ -73,15 +82,20 @@ class QuizDetail extends BaseComponent {
             this.state.quiz.id
         )
     }
-    dataDeleted = (response:WebResponse) => {
+    dataDeleted = (response: WebResponse) => {
         this.showInfo("Record Deleted");
-        this.setState({quiz:undefined});
+        this.setState({ quiz: undefined });
     }
 
     render() {
-
+        
         if (!this.state.quiz) {
-            return <SimpleError>No Data</SimpleError>
+            return (
+                <div id="QuizDetail" className="container-fluid">
+                    <h2>Quiz Detail</h2>
+                    {this.state.loading?<Spinner/>:<SimpleError children="No Data"/>}
+                </div>
+            )
         }
         const quiz: Quiz = Object.assign(new Quiz, this.state.quiz);
         const questions: QuizQuestion[] = quiz.questions ?? [];
@@ -100,17 +114,17 @@ class QuizDetail extends BaseComponent {
                     {questions.map((question, i) => {
                         const choices: QuizChoice[] = question.choices ?? [];
                         return (
-                            <Card key={"qdl-" + i} attributes={{style:{marginBottom:'5px'}}}>
+                            <Card key={"qdl-" + i} attributes={{ style: { marginBottom: '5px' } }}>
                                 <h4>{i + 1}. {question.statement}</h4>
-                                {question.image? <img src={baseImageUrl+question.image} height="100" />:null}
+                                {question.image ? <img src={baseImageUrl + question.image} height="100" /> : null}
                                 {choices.map((choice, c) => {
                                     const rightAnswer = choice.answerCode == question.answerCode;
                                     return (
                                         <div key={"qdc-" + i + c}>
-                                            <b className={rightAnswer ? "border rounded border-primary text-primary" : "text-dark"}>{choice.answerCode}</b>
+                                            <b className={rightAnswer ? "border rounded border-success text-success" : "text-dark"}>{choice.answerCode}</b>
                                             <span style={{ marginLeft: '5px' }}>{choice.statement}</span>
-                                            <p/>
-                                            {choice.image? <img src={baseImageUrl+choice.image} height="100" />:null}
+                                            <p />
+                                            {choice.image ? <img src={baseImageUrl + choice.image} height="100" /> : null}
                                         </div>
                                     )
                                 })}

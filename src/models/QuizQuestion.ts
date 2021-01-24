@@ -5,6 +5,7 @@ import QuizChoice from './QuizChoice';
 export default class QuizQuestion extends BaseEntity {
 	static public_choices: Array<string> = ["A", "B", "C", "D"];
 	answerCode?: string;
+	correctChoice?: string;
 	statement?: string;
 	quiz?: Quiz;
 	image?: string;

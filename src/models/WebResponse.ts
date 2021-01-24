@@ -4,6 +4,7 @@ import Filter from './Filter';
 import BaseEntity from './BaseEntity';
 import ApplicationProfile from './ApplicationProfile';
 import Quiz from './Quiz';
+import QuizResult from './QuizResult';
 
 export default class WebResponse{
 	date?:Date;
@@ -28,6 +29,6 @@ export default class WebResponse{
 	success?:boolean;
 	entityClass?:any;
 	quiz?:Quiz;
-	quizResult:any;
+	quizResult?:QuizResult;
 
 }

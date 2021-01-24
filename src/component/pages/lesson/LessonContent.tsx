@@ -169,7 +169,7 @@ const LessonItem = (props: { lesson: Lesson, setSelectedLesson: Function }) => {
             __html: content.toString()
         }} />
         <p />
-        <AnchorWithIcon onClick={(e) => props.setSelectedLesson(lesson)} className="btn btn-info btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
+        <AnchorWithIcon onClick={(e) => props.setSelectedLesson(lesson)} className="btn btn-success btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
     </Card>)
 }
 
