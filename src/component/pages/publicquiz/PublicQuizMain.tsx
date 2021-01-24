@@ -12,6 +12,7 @@ import WebResponse from '../../../models/WebResponse';
 import Spinner from '../../loader/Spinner';
 import Card from '../../container/Card';
 import NavigationButtons from '../../navigation/NavigationButtons';
+import AnchorWithIcon from '../../navigation/AnchorWithIcon';
 
 class IState {
     quizList: Quiz[] = new Array();
@@ -51,6 +52,21 @@ class PublicQuizMain extends BaseMainMenus {
         this.setState({ filter: filter });
         this.loadQuizes();
     }
+    takeQuiz = (quiz:Quiz) => {
+        const app = this;
+        this.showConfirmation("Take Quiz: "+quiz.title+"?")
+        .then(function(ok) {
+            if (ok) {
+                app.openQuiz(quiz);
+            }
+        })
+    }
+    openQuiz = (quiz:Quiz) => {
+        this.props.history.push({
+            pathname: "/quiz/challenge/"+quiz.id,
+            // state: { quiz: quiz }
+        })
+    }
 
     render() {
         const filter: Filter = this.state.filter;
@@ -65,13 +81,13 @@ class PublicQuizMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadQuizesAtPage}
                 />
-                {this.state.loading ? <Spinner /> : <QuizList startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                {this.state.loading ? <Spinner /> : <QuizList buttonTakeQuizOnClick={this.takeQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
             </div>
         )
     }
 }
 
-const QuizList = (props: { quizList: Quiz[], startingNumber: number }) => {
+const QuizList = (props: { quizList: Quiz[], startingNumber: number, buttonTakeQuizOnClick:any }) => {
 
     return (
         <Card>
@@ -81,6 +97,7 @@ const QuizList = (props: { quizList: Quiz[], startingNumber: number }) => {
                         <th>No</th>
                         <th>Title</th>
                         <th>Description</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,6 +108,11 @@ const QuizList = (props: { quizList: Quiz[], startingNumber: number }) => {
                                 <td>{i + props.startingNumber + 1}</td>
                                 <td>{quiz.title}</td>
                                 <td>{quiz.description}</td>
+                                <td>
+                                    <AnchorWithIcon onClick={(e)=>props.buttonTakeQuizOnClick(quiz)} className="btn btn-dark" iconClassName="fas fa-clipboard">
+                                        Take Quiz
+                                    </AnchorWithIcon>
+                                </td>
                             </tr>
                         )
                     })}

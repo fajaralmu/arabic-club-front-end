@@ -97,7 +97,7 @@ export const menus: Menu[] = [
         url: "/quiz",
         menuClass: "fas fa-book",
         active: false,
-        authenticated: true,
+        authenticated: false,
         showSidebar: false,
         subMenus: []
     },

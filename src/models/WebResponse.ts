@@ -27,6 +27,7 @@ export default class WebResponse{
 	loggedIn?:Boolean;
 	success?:boolean;
 	entityClass?:any;
-	quiz?:Quiz
+	quiz?:Quiz;
+	quizResult:any;
 
 }

@@ -21,6 +21,7 @@ import QuizManagementMain from '../pages/quizmanagement/QuizManagementMain';
 import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
 import QuizDetail from '../pages/quizmanagement/QuizDetail';
 import PublicQuizMain from '../pages/publicquiz/PublicQuizMain';
+import PublicQuizChallenge from '../pages/publicquiz/PublicQuizChallenge';
 
 class ApplicationContent extends BaseComponent {
 
@@ -65,6 +66,10 @@ class ApplicationContent extends BaseComponent {
                     <Route exact path="/quiz" render={
                         (props: any) =>
                             <PublicQuizMain  app={this.parentApp} />
+                    } /> 
+                    <Route exact path="/quiz/challenge/:id" render={
+                        (props: any) =>
+                            <PublicQuizChallenge  app={this.parentApp} />
                     } /> 
                     {/* -------- dashboard -------- */}
                     <Route exact path="/dashboard" render={
