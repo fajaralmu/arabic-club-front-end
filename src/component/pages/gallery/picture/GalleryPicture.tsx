@@ -13,11 +13,13 @@ import NavigationButtons from './../../../navigation/NavigationButtons';
 import Spinner from './../../../loader/Spinner';
 import { baseImageUrl } from './../../../../constant/Url';
 import Card from '../../../container/Card';
+import GalleryPictureDetail from './GalleryPictureDetail';
 class IState {
     imageList: Images[] = new Array();
     loading: boolean = false;
     filter: Filter = new Filter();
     totalData: number = 0;
+    selectedImage?: Images
 }
 class GalleryPicture extends BaseComponent {
     state: IState = new IState();;
@@ -51,8 +53,19 @@ class GalleryPicture extends BaseComponent {
         this.setState({ filter: filter });
         this.loadPictures();
     }
+    onImageClick = (image: Images) => {
+        this.setState({ selectedImage: image });
+    }
+    removeSelectedImage = () => {
+        this.setState({ selectedImage: undefined });
+    }
     render() {
         const filter: Filter = this.state.filter;
+        const selectedImage: Images | undefined = this.state.selectedImage;
+        if (selectedImage) {
+            return (
+                <GalleryPictureDetail image={selectedImage} back={this.removeSelectedImage} />)
+        }
         return (
             <div id="GalleryPicture" className="container-fluid">
                 <h2>Gallery</h2>
@@ -64,33 +77,34 @@ class GalleryPicture extends BaseComponent {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadPicturesAtPage}
                 />
-                {this.state.loading ? <Spinner /> : <ImageList images={this.state.imageList} />}
+                {this.state.loading ? <Spinner /> : <ImageList onClick={this.onImageClick} images={this.state.imageList} />}
             </div>
         )
     }
 }
 
-const ImageList = (props: { images: Images[] }) => {
+const ImageList = (props: { images: Images[], onClick(image: Images): void }) => {
     const images: Images[] = props.images;
     return (
         <div className="row">
             {images.map((image, i) => {
-                return <ImageItem image={image} key={"ii-" + i} />
+                return <ImageItem onClick={props.onClick} image={image} key={"ii-" + i} />
             })}
         </div>
     )
 }
 
-const ImageItem = (props: { image: Images }) => {
-    const image: Images = props.image;
-    const firstImage: string = Images.getFirstImage(image);
+const ImageItem = (props: { image: Images, onClick(image: Images): void }) => {
+    const image: Images = Object.assign(new Images(), props.image);
+    const firstImage: string = image.getFirstImage();
     return (
-        <div className="col-2">
+        <div className="col-3">
             <div className="card">
-                <img src={baseImageUrl + firstImage} className="card-img-top" />
+                <img onClick={(e) => props.onClick(image)} src={baseImageUrl + firstImage} className="card-img-top" />
                 <div className="card-body">
                     <h5 className="card-title">{image.title}</h5>
                     <p className="card-text">{image.description}</p>
+                    <span className="badge badge-dark">{image.imageCount()}</span>
                 </div>
             </div>
         </div>
