@@ -2,7 +2,7 @@
 
 import React, { ChangeEvent } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';  
+import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from './../../../../constant/stores';
 import BaseComponent from './../../../BaseComponent';
 import GalleryService from './../../../../services/GalleryService';
@@ -12,6 +12,7 @@ import WebResponse from './../../../../models/WebResponse';
 import NavigationButtons from './../../../navigation/NavigationButtons';
 import Spinner from './../../../loader/Spinner';
 import { baseImageUrl } from './../../../../constant/Url';
+import Card from '../../../container/Card';
 class IState {
     imageList: Images[] = new Array();
     loading: boolean = false;
@@ -19,8 +20,8 @@ class IState {
     totalData: number = 0;
 }
 class GalleryPicture extends BaseComponent {
-    state:IState = new IState();;
-    galleryService:GalleryService;
+    state: IState = new IState();;
+    galleryService: GalleryService;
     constructor(props: any) {
         super(props, false);
         this.galleryService = this.getServices().galleryService;
@@ -51,7 +52,7 @@ class GalleryPicture extends BaseComponent {
         this.loadPictures();
     }
     render() {
-        const filter:Filter = this.state.filter;
+        const filter: Filter = this.state.filter;
         return (
             <div id="GalleryPicture" className="container-fluid">
                 <h2>Gallery</h2>
@@ -63,32 +64,35 @@ class GalleryPicture extends BaseComponent {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadPicturesAtPage}
                 />
-                {this.state.loading ? <Spinner />:<ImageList images={this.state.imageList}/>}
+                {this.state.loading ? <Spinner /> : <ImageList images={this.state.imageList} />}
             </div>
         )
     }
 }
 
-const ImageList= (props:{images:Images[]}) => {
-    const images:Images[] = props.images;
+const ImageList = (props: { images: Images[] }) => {
+    const images: Images[] = props.images;
     return (
         <div className="row">
-            {images.map((image,i)=> {
-                return <ImageItem image={image} key={"ii-"+i} />
+            {images.map((image, i) => {
+                return <ImageItem image={image} key={"ii-" + i} />
             })}
         </div>
     )
 }
 
-const ImageItem = (props:{image:Images}) => {
-    const image:Images = props.image;
-    const firstImage:string = Images.getFirstImage(image);
+const ImageItem = (props: { image: Images }) => {
+    const image: Images = props.image;
+    const firstImage: string = Images.getFirstImage(image);
     return (
-        <div className="col-4">
-            <a  className="thumbnail">
-            <img src={baseImageUrl+firstImage} width="200" />
-            </a>
-            <p>{image.title}</p>
+        <div className="col-2">
+            <div className="card">
+                <img src={baseImageUrl + firstImage} className="card-img-top" />
+                <div className="card-body">
+                    <h5 className="card-title">{image.title}</h5>
+                    <p className="card-text">{image.description}</p>
+                </div>
+            </div>
         </div>
     )
 }

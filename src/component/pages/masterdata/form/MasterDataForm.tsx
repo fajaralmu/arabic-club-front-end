@@ -75,14 +75,14 @@ class MasterDataForm extends BaseComponent {
                         console.debug("NULLED VALUE ADDED: ", key);
                         nulledFields.push(key);
                    
-                    } else if(value.constructor.name == "File") {
-                        hasImageField = true;
-                        let promise = toBase64FromFile(value).then(data => {
-                            
-                            object[key].push(data);
-                        }).catch(console.error)
-                            .finally(function () { console.debug("finish") });
-                        promises.push(promise);
+                    // } else if(value.constructor.name == "File") {
+                        
+                    //     let promise = toBase64FromFile(value).then(data => {
+                    //         hasImageField = true;
+                    //         object[key].push(data);
+                    //     }).catch(console.error)
+                    //         .finally(function () { console.debug("finish") });
+                    //     promises.push(promise);
                     } else {
                         if (new String(value).startsWith("data:image")) {
                             hasImageField = true;
