@@ -5,11 +5,14 @@ import AnchorButton from '../../../navigation/AnchorButton';
 import EntityElement from '../../../../models/EntityElement';
 import { baseImageUrl } from '../../../../constant/Url';
 import BaseComponent from '../../../BaseComponent';
+import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { mapCommonUserStateToProps } from './../../../../constant/stores';
 interface IState {
     singlePreviewData?: string,
     showInputFile: boolean
 }
-export default class FormInputImage extends BaseComponent {
+  class FormInputImage extends BaseComponent {
     state: IState = {
         singlePreviewData: undefined,
         showInputFile: false
@@ -84,3 +87,6 @@ const ImagePreview = (props) => {
     if (props.show == false || !props.imageData) return null;
     return <img className="image" style={{ margin: '3px' }} src={props.imageData} width="50" height="50" />
 }
+export default withRouter(connect(
+    mapCommonUserStateToProps,
+)(FormInputImage))

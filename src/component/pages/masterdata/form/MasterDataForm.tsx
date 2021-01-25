@@ -49,9 +49,11 @@ class MasterDataForm extends BaseComponent {
     }
     submit = (form: HTMLFormElement) => {
         const formData: FormData = new FormData(form);
-        const object: {} = {}, app = this;
+        const object: {} = {};
         const promises: Promise<any>[] = new Array();
         const nulledFields:any[] = [];
+        let hasImageField:boolean = false;
+
         formData.forEach((value, key) => {
             console.debug("Form data ", key);
             if (!object[key]) {
@@ -70,16 +72,21 @@ class MasterDataForm extends BaseComponent {
                 case FieldType.FIELD_TYPE_IMAGE:
                     console.debug(key, " is image");
                     if (value == "NULLED") {
-                        console.debug("NULLED VALUE ADD: ", key);
+                        console.debug("NULLED VALUE ADDED: ", key);
                         nulledFields.push(key);
                    
                     } else if(value.constructor.name == "File") {
+                        hasImageField = true;
                         let promise = toBase64FromFile(value).then(data => {
+                            
                             object[key].push(data);
                         }).catch(console.error)
                             .finally(function () { console.debug("finish") });
                         promises.push(promise);
                     } else {
+                        if (new String(value).startsWith("data:image")) {
+                            hasImageField = true;
+                        }
                         object[key].push(value);
                     }
                     break;
@@ -88,12 +95,14 @@ class MasterDataForm extends BaseComponent {
                     break;
             }
             return true;
-        }); 
-        Promise.all(promises).then(function (val) {
-            const objectPayload = app.generateRequestPayload(object, nulledFields);
-            console.debug("Record object to save: ", objectPayload);
-            app.ajaxSubmit(objectPayload);
+            
+        });  
+        Promise.all(promises).then( (val) => {
+            const objectPayload = this.generateRequestPayload(object, nulledFields);
+            console.debug("Record object to save: ", objectPayload, "realtimeProgress: ", hasImageField);
+            this.ajaxSubmit(objectPayload, hasImageField);
         });
+        
     }
 
     generateRequestPayload = (rawObject: {}, nulledFields:any[]): {} => { 
@@ -113,11 +122,18 @@ class MasterDataForm extends BaseComponent {
         return result;
     }
 
-    ajaxSubmit = (object: any) => {
-        this.commonAjax(
-            this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
-            this.getEntityProperty().entityName, object, this.editMode
-        )
+    ajaxSubmit = (object: any, realtimeProgress: boolean) => {
+        if (realtimeProgress){
+            this.commonAjaxWithProgress(
+                this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
+                this.getEntityProperty().entityName, object, this.editMode
+            )
+        } else{
+            this.commonAjax(
+                this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
+                this.getEntityProperty().entityName, object, this.editMode
+            )
+        }
     }
     recordSaved = (response: WebResponse) => {
         this.showInfo("Record saved");
