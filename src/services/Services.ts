@@ -5,11 +5,13 @@ import LessonService from './LessonService';
 import MasterDataService from './MasterDataService';
 import PublicQuizService from './PublicQuizService';
 import QuizService from './QuizService';
+import GalleryService from './GalleryService';
 export default interface Services {
     userService: UserService,
     categoriesService: CategoriesService,
     lessonService: LessonService,
     masterDataService: MasterDataService,
     publicQuizService: PublicQuizService,
-    quizSerivce: QuizService
+    quizSerivce: QuizService,
+    galleryService: GalleryService,
 }

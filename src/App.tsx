@@ -52,7 +52,8 @@ class App extends Component<any, IState> {
       showAlert: false,
       realtime: false,
     };
-    console.debug("set main app: " , this);
+    
+    this.props.setMainApp(this);
    
 
   }
@@ -138,7 +139,7 @@ class App extends Component<any, IState> {
   }
 
   componentDidMount() {
-    this.props.setMainApp(this);
+    
     this.requestAppId();
     this.setState({ loadingPercentage: 0 });
   }

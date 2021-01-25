@@ -6,15 +6,17 @@ import MasterDataService from '../services/MasterDataService';
 import PublicQuizService from '../services/PublicQuizService';
 import QuizService from '../services/QuizService';
 import Services from './../services/Services';
+import GalleryService from './../services/GalleryService';
 
-export const initState :{services:Services} = {
-    services  :  {
+export const initState: { services: Services } = {
+    services: {
         userService: UserService.getInstance(),
         categoriesService: CategoriesService.getInstance(),
         lessonService: LessonService.getInstance(),
         masterDataService: MasterDataService.getInstance(),
         publicQuizService: PublicQuizService.getInstance(),
-        quizSerivce: QuizService.getInstance()
+        quizSerivce: QuizService.getInstance(),
+        galleryService: GalleryService.getInstance()
     }
 
 };

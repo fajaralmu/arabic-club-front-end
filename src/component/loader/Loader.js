@@ -29,17 +29,13 @@ class Loader extends Component {
 
     render() {
         let className = "message message-" + this.props.type;
-        let messageText = this.props.text;
 
-        let msgStyle = {};
-        if (this.props.realtime == true) {  
-            className = "message-loading progress";
-            messageText = <span className="loader">{this.props.progress + "%"}</span>   
-            msgStyle.zIndex = 100;
+        if (this.props.realtime == true) {
+            return <LoaderContent progress={this.props.progress} realtime={this.props.realtime} />
         }
 
         return (
-            <div style={msgStyle} className={className} >
+            <div className={className} >
                 <LoaderContent progress={this.props.progress} realtime={this.props.realtime} />
             </div>
         )
@@ -47,13 +43,21 @@ class Loader extends Component {
 
 }
 
-function LoaderContent(props){
-    if(props.realtime){
+function LoaderContent(props) {
+    if (props.realtime) {
         return (
-            <div className="progress-bar progress-bar-striped" role="progressbar" style={{ 
-                width: props.progress + "%",
-                transitionDuration: '300ms'
-                }}>
+            <div className="row container-fluid bg-light" style={{margin:0, position: 'fixed', zIndex: 100 }}>
+                <div className="col-1">
+                <span style={{marginBottom:'3px'}} className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                </div>
+                <div className="col-11 progress" style={{padding:0, marginTop: '7px', height:'10px'}}  >
+                    <div className="progress-bar progress-bar-striped" role="progressbar" style={{
+                        width: props.progress + "%",
+                        transitionDuration: '300ms',
+                        margin: 0,
+                    }}>
+                    </div>
+                </div>
             </div>
         );
     }

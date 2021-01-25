@@ -165,7 +165,7 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice:
             <div className="row">
                 <h2 className="col-1 text-dark">{props.index + 1}</h2>
                 <div className="col-11"><h4 className="text-dark">{question.statement}</h4>
-                    <p>CA: {question.correctChoice}</p>
+                    
                     {question.image ? <img height="150" src={baseImageUrl + question.image} /> : null}
                     <hr />
                     {choices.map((choice, i) => {
