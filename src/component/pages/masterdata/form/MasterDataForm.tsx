@@ -131,7 +131,7 @@ class MasterDataForm extends BaseComponent {
                 <AnchorButton style={{ marginBottom: '5px' }} onClick={this.props.onClose} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <form onSubmit={this.onSubmit} id="record-form">
                 <Modal title={<span>{entityProperty.alias} Record Form {editModeStr}</span>} footerContent={<SubmitReset />}>
-                        <InputFields recordToEdit={this.recordToEdit} app={this.parentApp} entityProperty={entityProperty} />
+                        <InputFields app={this.parentApp} recordToEdit={this.recordToEdit}  entityProperty={entityProperty} />
                     </Modal>
                 </form>
             </div>
@@ -169,7 +169,7 @@ const InputFields = (props: { app: any, entityProperty: EntityProperty, recordTo
                 return (
                     <div className={hasTextEditor?"col-lg-12":"col-lg-6"}>
                         {elements.map(element => {
-                            return <FormInputField recordToEdit={props.recordToEdit} app={props.app} entityElement={element} />
+                            return <FormInputField recordToEdit={props.recordToEdit} entityElement={element} />
                         })}
                     </div>
                 )

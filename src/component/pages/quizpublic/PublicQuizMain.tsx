@@ -38,6 +38,7 @@ class PublicQuizMain extends BaseMainMenus {
     }
 
     loadQuizes = () => {
+        if (this.state.loading) return;
         this.commonAjax(
             this.publicQuizService.getQuizList,
             this.dataLoaded,

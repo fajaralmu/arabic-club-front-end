@@ -76,16 +76,16 @@ class FormInputField extends BaseComponent {
         switch (element.fieldType) {
             case FieldType.FIELD_TYPE_DYNAMIC_LIST:
             case FieldType.FIELD_TYPE_FIXED_LIST:
-                input = <FormInputDropDown recordToEdit={this.props.recordToEdit} app={this.props.app} entityElement={element} />
+                input = <FormInputDropDown recordToEdit={this.props.recordToEdit}   entityElement={element} />
                 break;
             case FieldType.FIELD_TYPE_TEXTEDITOR:
-                input = <FormInputTextEditor recordToEdit={this.props.recordToEdit} app={this.props.app} entityElement={element} />
+                input = <FormInputTextEditor recordToEdit={this.props.recordToEdit}   entityElement={element} />
                 break;
             case FieldType.FIELD_TYPE_IMAGE:
                 input = element.multiple ?
-                    <FormInputImageMultiple app={this.parentApp} recordToEdit={this.props.recordToEdit} element={element} />
+                    <FormInputImageMultiple  recordToEdit={this.props.recordToEdit} element={element} />
                     :
-                    <FormInputImage app={this.parentApp} recordToEdit={this.props.recordToEdit} element={element} />
+                    <FormInputImage  recordToEdit={this.props.recordToEdit} element={element} />
                 break;
             case FieldType.FIELD_TYPE_TEXTAREA:
                 input = <textarea {...requiredAttr} ref={this.ref} className="form-control" name={element.id} />

@@ -160,7 +160,7 @@ class App extends Component<any, IState> {
             onYes={this.alertOnYesCallback} onNo={this.alertOnCancelCallback}
           >{this.alertBody}</Alert> :
           null}
-        <MainLayout app={this} />
+        <MainLayout />
         <SockJsClient url={usedHost + 'realtime-app'} topics={['/wsResp/progress/' + this.props.requestId]}
           onMessage={(msg: WebResponse) => { this.handleMessage(msg) }}
           ref={(client) => { this.clientRef = client }} />

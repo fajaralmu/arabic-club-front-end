@@ -79,7 +79,7 @@ class LessonMain extends BaseMainMenus {
     }
     render() {
         if (this.getCode()) { 
-            return <LessonContent app={this.parentApp} categoryCode={this.getCode()} />
+            return <LessonContent  categoryCode={this.getCode()} />
         }
         const categories: LessonCategory[] = this.categoriesService.getLoadedCategories('lesson');
         if (this.state.loading) {

@@ -22,6 +22,7 @@ import QuizManagementForm from '../pages/quizmanagement/QuizManagementForm';
 import QuizDetail from '../pages/quizmanagement/QuizDetail';
 import PublicQuizMain from '../pages/quizpublic/PublicQuizMain';
 import PublicQuizChallenge from '../pages/quizpublic/PublicQuizChallenge';
+import GalleryMain from '../pages/gallery/GalleryMain';
 
 class ApplicationContent extends BaseComponent {
 
@@ -38,79 +39,84 @@ class ApplicationContent extends BaseComponent {
                 <Switch>
                     <Route exact path="/login" render={
                         (props: any) =>
-                            <Login app={this.parentApp} />
+                            <Login  />
                     } />
                     {/* -------- home -------- */}
                     <Route exact path="/home" render={
                         (props: any) =>
-                            <HomeMain app={this.parentApp} />
+                            <HomeMain  />
                     } />
                     <Route exact path="/" render={
                         (props: any) =>
-                            <HomeMain app={this.parentApp} />
+                            <HomeMain  />
                     } />
                    <Route exact path="/about" render={
                         (props: any) =>
-                            <AboutUs app={this.parentApp} />
+                            <AboutUs  />
                     } />
                       {/* -------- masterdata -------- */}
                       <Route exact path="/lessons" render={
                         (props: any) =>
-                            <LessonMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
+                            <LessonMain setSidebarMenus={this.setSidebarMenus}  />
                     } />
                      <Route exact path="/lessons/:categoryCode" render={
                         (props: any) =>
-                            <LessonMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
+                            <LessonMain setSidebarMenus={this.setSidebarMenus}  />
                     } />
-                    {/* -------- dashboard -------- */}
+                    {/* ---------- gallery --------- */}
+                     <Route exact path="/gallery" render={
+                        (props: any) =>
+                            <GalleryMain   />
+                    } /> 
+                    {/* -------- quiz challenge-------- */}
                     <Route exact path="/quiz" render={
                         (props: any) =>
-                            <PublicQuizMain  app={this.parentApp} />
+                            <PublicQuizMain   />
                     } /> 
                     <Route exact path="/quiz/challenge/:id" render={
                         (props: any) =>
-                            <PublicQuizChallenge  app={this.parentApp} />
+                            <PublicQuizChallenge   />
                     } /> 
                     {/* -------- dashboard -------- */}
                     <Route exact path="/dashboard" render={
                         (props: any) =>
-                            <DashboardMain  app={this.parentApp} />
+                            <DashboardMain   />
                     } /> 
                      {/* -------- quiz management -------- */}
                      <Route exact path="/quizmanagement" render={
                         (props: any) =>
-                            <QuizManagementMain  app={this.parentApp} />
+                            <QuizManagementMain   />
                     } /> 
                      <Route exact path="/quizmanagement/form" render={
                         (props: any) =>
-                            <QuizManagementForm app={this.parentApp} />
+                            <QuizManagementForm  />
                     } /> 
                      <Route exact path="/quizmanagement/detail/:id" render={
                         (props: any) =>
-                            <QuizDetail app={this.parentApp} />
+                            <QuizDetail  />
                     } /> 
                     {/* -------- masterdata -------- */}
                     <Route exact path="/management" render={
                         (props: any) =>
-                            <MasterDataMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
+                            <MasterDataMain setSidebarMenus={this.setSidebarMenus}  />
                     } />
                     <Route exact path="/management/:code" render={
                         (props: any) =>
-                            <MasterDataMain setSidebarMenus={this.setSidebarMenus} app={this.parentApp} />
+                            <MasterDataMain setSidebarMenus={this.setSidebarMenus}  />
                     } />
                      
                     {/* -------- settings --------- */}
                     <Route exact path="/settings" render={
                         (props: any) =>
-                            <SettingsMain app={this.parentApp} />
+                            <SettingsMain  />
                     } />
                     <Route exact path="/settings/user-profile" render={
                         (props: any) =>
-                            <UserProfile app={this.parentApp} />
+                            <UserProfile  />
                     } />
                     <Route exact path="/settings/app-profile" render={
                         (props: any) =>
-                            <EditApplicationProfile app={this.parentApp} />
+                            <EditApplicationProfile  />
                     } />
                     {/* ///////// PUBLIC ///////// */}
                  

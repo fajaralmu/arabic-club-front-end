@@ -11,7 +11,7 @@ export default class BaseComponent extends Component<any, any> {
     state: any = { updated: new Date() };
     constructor(props: any, authenticated = false) {
         super(props);
-        this.parentApp = props.app;
+        this.parentApp = this.props.mainApp;
         this.authenticated = authenticated
         this.state = {
             ...this.state

@@ -155,7 +155,7 @@ class MasterDataList extends BaseComponent {
         }
 
         if (this.state.showForm == true) {
-            return <MasterDataForm recordToEdit={this.recordToEdit} entityProperty={this.entityProperty} onClose={(e) => { this.setState({ showForm: false }) }} app={this.parentApp} />
+            return <MasterDataForm recordToEdit={this.recordToEdit} entityProperty={this.entityProperty} onClose={(e) => { this.setState({ showForm: false }) }}  />
         }
 
         return (
@@ -198,7 +198,7 @@ class MasterDataList extends BaseComponent {
                                                     }
                                                 })}
                                                 <td>
-                                                    <EditDeleteAction show={this.entityProperty.editable == true} showEditForm={this.showEditForm} record={result} entityProperty={this.entityProperty} reload={() => this.loadEntities(undefined)} app={this.parentApp} />
+                                                    <EditDeleteAction show={this.entityProperty.editable == true} showEditForm={this.showEditForm} record={result} entityProperty={this.entityProperty} reload={() => this.loadEntities(undefined)}  />
                                                     <ExternalEditForm show={this.entityProperty.editable == false} record={result} entityProperty={this.entityProperty} />
                                                 </td>
                                             </tr>)

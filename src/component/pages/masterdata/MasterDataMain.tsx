@@ -76,7 +76,7 @@ class MasterDataMain extends BaseMainMenus {
 
     render() {
         if (this.getCode() != undefined && this.getCode() != null && this.getCode() != "") {
-            return <MasterDataManagement app={this.parentApp} code={this.getCode()} />
+            return <MasterDataManagement  code={this.getCode()} />
         }
         if (this.masterDataService.managementProperties.length == 0) {
             return <div className="container-fluid"><h3>Loading</h3></div>

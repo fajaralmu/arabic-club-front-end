@@ -6,7 +6,7 @@ import { combineReducers } from "redux";
 
 export const rootReducer = combineReducers(
     {
-        shopState: shopReducer.reducer,
+        appState: shopReducer.reducer,
         userState: userReducer.reducer,
         transactionState: transactionReducer.reducer, 
         servicesState: servicesReducers.reducer
@@ -14,7 +14,7 @@ export const rootReducer = combineReducers(
 );
 
 export const initialState = {
-    shopState: shopReducer.initState,
+    appState: shopReducer.initState,
     userState: userReducer.initState,
     transactionState: transactionReducer.initState, 
     servicesState: servicesReducers.initState

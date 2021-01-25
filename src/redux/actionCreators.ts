@@ -8,109 +8,7 @@ const usedHost = url.contextPath();
 const apiBaseUrl = usedHost + "api/public/"
 const apiEntityBaseUrl = usedHost + "api/app/entity/"
 const apiAccount = usedHost + "api/app/account/"
-const apiAdmin = usedHost + "api/app/admin/"
-const apiTransaction = usedHost + "api/app/transaction/";
- 
- 
-
-export const removeManagedEntity = () => {
-    return {
-        type: types.REMOVE_MANAGED_ENTITY,
-        payload: {},
-        meta: { type: types.REMOVE_MANAGED_ENTITY }
-    };
-}
-
-export const updateEntity = (request, referer, callback) => {
-    referer.props.app.startLoading();
-    let requested = {
-        type: types.UPDATE_ENTITY,
-        payload: {
-            "entity": request.entityName
-        },
-        meta: {
-            type: types.UPDATE_ENTITY,
-            url: request.isNewRecord ? apiEntityBaseUrl.concat("add") : apiEntityBaseUrl.concat("update"),
-            app: referer.props.app,
-            callback: callback,
-            referer: referer
-        }
-    };
-    requested.payload[request.entityName] = request.entity;
-    return requested;
-}
-
-export const getEntitiesWithCallback = (request, referer, callback) => {
-    referer.props.app.startLoading();
-    let requested = {
-        type: types.GET_ENTITY_WITH_CALLBACK,
-        payload: {
-            "entity": request.entityName,
-            "filter": {
-                "limit": 10,
-                'fieldsFilter': {}
-            }
-        },
-        meta: {
-            type: types.GET_ENTITY_WITH_CALLBACK,
-            url: apiEntityBaseUrl.concat("get"),
-            app: referer.props.app,
-            referer: referer,
-            callback: callback
-        }
-    };
-    requested.payload.filter.fieldsFilter[request.fieldName] = request.fieldValue;
-    return requested;
-}
-
-export const getEntityById = (name, id, app) => {
-    app.startLoading();
-    let requested = {
-        type: types.GET_ENTITY_BY_ID,
-        payload: {
-            "entity": name,
-            "filter": {
-                "limit": 1,
-                "page": 0,
-                "exacts": true,
-                "contains": false,
-                "fieldsFilter": { "id": id }
-            }
-        },
-        meta: {
-            type: types.GET_ENTITY_BY_ID,
-            url: apiEntityBaseUrl.concat("get"),
-            app: app
-        }
-    };
-    return requested;
-}
-
-export const getEntityList = (request, app) => {
-    app.startLoading();
-    let requested = {
-        type: types.GET_ENTITY,
-        payload: {
-            entity: request.entityName,
-            filter: {
-                limit: request.limit,
-                page: request.page,
-                fieldsFilter: request.fieldsFilter,
-                orderBy: request.orderBy,
-                orderType: request.orderType,
-            },
-
-        },
-        meta: {
-            type: types.GET_ENTITY,
-            url: apiEntityBaseUrl.concat("get"),
-            app: app,
-            entityConfig: request.entityConfig
-        }
-    };
-    return requested;
-}
-
+const apiAdmin = usedHost + "api/app/admin/"    
 
 export const getEntityProperty = (entityName, app) => {
     app.startLoading();
@@ -179,57 +77,7 @@ export const storeMessageLocally = (messages) => {
         }
     };
 }
-
-export const getProductSalesDetail = (request, app) => {
-    app.startLoading(true);
-    return {
-        type: types.GET_PRODUCT_SALES_DETAIL,
-        payload: {
-            filter:
-                { page: request.page, limit: 10, month: request.fromMonth, year: request.fromYear, monthTo: request.toMonth, yearTo: request.toYear }
-        },
-        meta: {
-            app: app,
-            type: types.GET_PRODUCT_SALES_DETAIL,
-            loadMore: request.loadMore == true, url: apiTransaction.concat("productsalesdetail/" + request.productId)
-        }
-    };
-}
-
-export const getProductSales = (request) => {
-    request.referrer.props.app.startLoading(true);
-    return {
-        type: types.GET_PRODUCT_SALES,
-        payload: {
-            product: { name: request.productName },
-            filter:
-                { page: request.page, limit: request.limit, month: request.fromMonth, year: request.fromYear, monthTo: request.toMonth, yearTo: request.toYear }
-        },
-        meta: {
-            referrer: request.referrer, type: types.GET_PRODUCT_SALES, loadMore: request.loadMore == true, url: apiTransaction.concat("productsales")
-        }
-    };
-}
-export const getCashflowDetail = (request, app) => {
-    app.startLoading(true);
-    return {
-        type: types.GET_CASHFLOW_DETAIL,
-        payload: { filter: { month: request.fromMonth, year: request.fromYear, monthTo: request.toMonth, yearTo: request.toYear } },
-        meta: {
-            app: app, type: types.GET_CASHFLOW_DETAIL, url: apiTransaction.concat("cashflowdetail")
-        }
-    };
-}
-export const getCashflowInfo = (month, year, type, app) => {
-    app.startLoading();
-    return {
-        type: types.GET_CASHFLOW_INFO,
-        payload: { filter: { year: year, month: month, module: type } },
-        meta: {
-            app: app, type: types.GET_CASHFLOW_INFO, url: apiTransaction.concat("cashflowinfo")
-        }
-    };
-}
+    
 
 export const performLogout = (app) => {
     app.startLoading();
@@ -290,4 +138,10 @@ export const removeEntity = () => ({
     meta: { type: types.REMOVE_SHOP_ENTITY }
 })
 
+
+export const  setMainApp = (mainApp:any) => ({
+    type: types.SET_APPLICATION_PROFILE,
+    palyoad: mainApp,
+    meta: { type: types.SET_APPLICATION_PROFILE }
+})
 
