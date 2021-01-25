@@ -140,8 +140,8 @@ export const removeEntity = () => ({
 
 
 export const  setMainApp = (mainApp:any) => ({
-    type: types.SET_APPLICATION_PROFILE,
-    palyoad: mainApp,
-    meta: { type: types.SET_APPLICATION_PROFILE }
+    type: types.SET_MAIN_APP,
+    payload: mainApp,
+    meta: { type: types.SET_MAIN_APP }
 })
 

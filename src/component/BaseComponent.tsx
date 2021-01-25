@@ -11,13 +11,14 @@ export default class BaseComponent extends Component<any, any> {
     state: any = { updated: new Date() };
     constructor(props: any, authenticated = false) {
         super(props);
-        this.parentApp = this.props.mainApp;
+        
         this.authenticated = authenticated
         this.state = {
             ...this.state
         }
-
+        this.parentApp = this.props.mainApp;
     }
+    
     validateLoginStatus = () => {
         if (this.authenticated == false) return;
         if (this.isLoggedUserNull()) {

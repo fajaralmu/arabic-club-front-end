@@ -23,6 +23,7 @@ import QuizDetail from '../pages/quizmanagement/QuizDetail';
 import PublicQuizMain from '../pages/quizpublic/PublicQuizMain';
 import PublicQuizChallenge from '../pages/quizpublic/PublicQuizChallenge';
 import GalleryMain from '../pages/gallery/GalleryMain';
+import GalleryPicture from '../pages/gallery/picture/GalleryPicture';
 
 class ApplicationContent extends BaseComponent {
 
@@ -65,9 +66,11 @@ class ApplicationContent extends BaseComponent {
                     } />
                     {/* ---------- gallery --------- */}
                      <Route exact path="/gallery" render={
-                        (props: any) =>
-                            <GalleryMain   />
+                        (props: any) => <GalleryMain   />
                     } /> 
+                    <Route exact path="/gallery/picture" render={
+                        (props: any) => <GalleryPicture   />
+                    } />
                     {/* -------- quiz challenge-------- */}
                     <Route exact path="/quiz" render={
                         (props: any) =>

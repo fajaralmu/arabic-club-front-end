@@ -52,6 +52,8 @@ class App extends Component<any, IState> {
       showAlert: false,
       realtime: false,
     };
+    console.debug("set main app: " , this);
+   
 
   }
   refresh() {
@@ -136,6 +138,7 @@ class App extends Component<any, IState> {
   }
 
   componentDidMount() {
+    this.props.setMainApp(this);
     this.requestAppId();
     this.setState({ loadingPercentage: 0 });
   }
@@ -194,6 +197,7 @@ function updateFavicon(profile: any) {
 
 const mapDispatchToProps = (dispatch: Function) => ({
   requestAppId: (app: App) => dispatch(actions.requestAppId(app)),
+  setMainApp: (app: App) => dispatch(actions.setMainApp(app))
 })
 
 export default withRouter(connect(
