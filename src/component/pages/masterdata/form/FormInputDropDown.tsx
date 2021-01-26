@@ -8,6 +8,7 @@ import EntityElement from '../../../../models/EntityElement';
 import MasterDataService from '../../../../services/MasterDataService';
 import WebResponse from '../../../../models/WebResponse';
 import BaseComponent from '../../../BaseComponent'; 
+import { uniqueId } from './../../../../utils/StringUtil';
 interface IState {
     inputList: any[],
     singlePreviewData?: string, 
@@ -105,7 +106,7 @@ class FormInputDropDown extends BaseComponent {
                 const optionItemName = element.optionItemName;
                 if (!optionItemName || !optionItemValue) { return null; }
                 return (
-                    <option value={option[optionItemValue]} >{option[optionItemName]}</option>
+                    <option key={"fid-"+uniqueId()+"-"} value={option[optionItemValue]} >{option[optionItemName]}</option>
                 )
             })}
         </select>)

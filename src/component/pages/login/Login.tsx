@@ -54,7 +54,7 @@ class Login extends BaseComponent{
                     </div>
                     <UsernameField value={this.state.username} onChange={this.updateCredentialProperty}/>
                     <PasswordField value={this.state.password} onChange={this.updateCredentialProperty}/>
-                    {this.state.loading ? <Spinner/>:<button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>}
+                    {this.state.loading ? <Spinner/>:<button className="btn btn-lg btn-success btn-block" type="submit">Sign in</button>}
                     <input name="transport_type" type="hidden" value="rest" />
                 </form>
             </div>

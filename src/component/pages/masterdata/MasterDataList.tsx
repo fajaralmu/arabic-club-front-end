@@ -1,7 +1,7 @@
 
 
 
-import React, { Component, Fragment } from 'react';
+import React, { ChangeEvent, Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
@@ -23,6 +23,7 @@ import DataTableHeader from './DataTableHeader';
 import SimpleError from './../../alert/SimpleError';
 import Spinner from './../../loader/Spinner';
 import ExternalEditForm from './ExternalEditForm';
+import { uniqueId } from './../../../utils/StringUtil';
 interface IState { recordData?: WebResponse, showForm: boolean, filter: Filter, loading: boolean }
 class MasterDataList extends BaseComponent {
     masterDataService: MasterDataService;
@@ -98,9 +99,11 @@ class MasterDataList extends BaseComponent {
         let page = this.state.filter.useExistingFilterPage ? this.state.filter.page : 0;
         this.loadEntities(page);
     }
-    filterOnChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
+    filterOnChange = (e:ChangeEvent) => {
+        e.preventDefault();
+        const input  = e.target as any;
+        const name = input.name;
+        const value = input.value;
         const filter = this.state.filter;
         if (filter.fieldsFilter == undefined) {
             filter.fieldsFilter = {};
@@ -182,19 +185,19 @@ class MasterDataList extends BaseComponent {
                             <Loading loading={this.state.loading} /> : null}
                         <div className="container-fluid" style={{ overflow: 'scroll' }}>
                             <table className="table" >
-                                <DataTableHeader orderButtonOnClick={this.orderButtonOnClick} filterOnChange={this.filterOnChange} headerProps={headerProps} />
+                                <DataTableHeader fieldsFilter={this.state.filter.fieldsFilter} orderButtonOnClick={this.orderButtonOnClick} filterOnChange={this.filterOnChange} headerProps={headerProps} />
                                 <tbody>
                                     {
                                         resultList.map((result, i) => {
                                             const number = this.getRecordNumber(i);
                                             const values: Array<any> = EntityValues.parseValues(result, this.props.entityProperty);
-                                            return (<tr>
+                                            return (<tr key={"tr-result-"+i}>
                                                 <td>{number}</td>
                                                 {values.map(value => {
                                                     try {
-                                                        return (<td>{value}</td>)
+                                                        return (<td key={"td-u-"+uniqueId()}>{value}</td>)
                                                     } catch (error) {
-                                                        return (<td>-</td>)
+                                                        return (<td key={"td-u-"+uniqueId()}>-</td>)
                                                     }
                                                 })}
                                                 <td>
