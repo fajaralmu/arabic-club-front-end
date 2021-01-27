@@ -145,7 +145,12 @@ const QuizBody = (props: { quiz: Quiz, setChoice: any, submit: any }) => {
     return (
         <div>
             <h1>Quiz : {quiz.title}</h1>
-            <div className='alert alert-info'>{quiz.description}</div>
+            <div className='alert alert-info'>
+                <h4>Duration</h4>
+                <p>{quiz.duration ?? "0"} Seconds</p>
+                <h4>Description</h4>
+                <p>{quiz.description}</p>
+            </div>
 
             {questions.map((question, i) => {
                 return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)

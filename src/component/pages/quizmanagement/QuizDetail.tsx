@@ -107,6 +107,7 @@ class QuizDetail extends BaseComponent {
                     <div className="alert alert-info">
                         <FormGroup label="Title">{quiz.title}</FormGroup>
                         <FormGroup label="Description">{quiz.description}</FormGroup>
+                        <FormGroup label="Duration (Second)">{quiz.duration}</FormGroup>
                         <FormGroup>
                             <AnchorButton className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
                             <AnchorButton className="btn btn-danger" onClick={this.deleteRecord}>Delete</AnchorButton>

@@ -26,7 +26,7 @@ export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, upda
         </div>
     )
 }
-export const QuestionForm = (props: { question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
+export const QuestionForm = (props: {showChoices:boolean, question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
     const i = props.index;
     const choices: QuizChoice[] = props.question.choices ?? [];
     return (
@@ -39,15 +39,17 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
                
                 <ImagePreview name={props.question.image} index={i} remove={props.removeImage} />
             </FormGroup>
+            
             <FormGroup label="Choices">
-                {choices.map((choice, c) => {
+                {props.showChoices?choices.map((choice, c) => {
                     return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"qst-choice-" + c +"-" + i}
                      updateField={props.updateChoiceField}
                      setAnswer={props.setAnswer}
                      removeImage={(choiceIndex)=>{props.removeChoiceImage(choiceIndex, i)}}
                      questionIndex={i} index={c} choice={choice} />
-                })}
+                }):<label>Hidden</label>}
             </FormGroup>
+             
             <FormGroup label="Answer">
                 <select required className="form-control" value={props.question.answerCode} onChange={(e)=>{
                     props.setAnswer(e.target.value, i);
@@ -76,6 +78,9 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
             </FormGroup>
             <FormGroup label="Description">
                 <textarea required onChange={props.updateField} className="form-control" name="description" value={props.quiz.description} />
+            </FormGroup>
+            <FormGroup label="Duration (Second)">
+                <input type="number" min={45} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
             </FormGroup>
             {props.quiz.id?
             <FormGroup label="Record ID">

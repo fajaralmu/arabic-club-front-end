@@ -12,6 +12,7 @@ import WebResponse from '../../../models/WebResponse';
 import Spinner from '../../loader/Spinner';
 import NavigationButtons from '../../navigation/NavigationButtons';
 import QuizList from '../quizshared/QuizList';
+import Card from './../../container/Card';
 
 class IState {
     quizList: Quiz[] = new Array();
@@ -73,7 +74,7 @@ class PublicQuizMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadQuizesAtPage}
                 />
-                {this.state.loading ? <Spinner /> : <QuizList quizOnClick={this.takeQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.takeQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
             </div>
         )
     }

@@ -12,6 +12,7 @@ import WebResponse from './../../../models/WebResponse';
 import NavigationButtons from './../../navigation/NavigationButtons';
 import Spinner from './../../loader/Spinner';
 import QuizList from './../quizshared/QuizList';
+import Card from './../../container/Card';
 class IState {
     quizList: Quiz[] = new Array();
     loading: boolean = false;
@@ -71,7 +72,7 @@ class QuizManagementMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadQuizesAtPage}
                 />
-                {this.state.loading ? <Spinner /> : <QuizList quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
             </div>
         )
     }

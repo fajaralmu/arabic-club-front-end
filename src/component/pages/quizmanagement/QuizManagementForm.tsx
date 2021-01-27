@@ -15,6 +15,7 @@ import { toBase64v2 } from './../../../utils/ComponentUtil';
 class IState {
     quiz: Quiz = new Quiz();
     saved: boolean = false;
+    showChoices: boolean = true;
 }
 
 class QuizManagementForm extends BaseComponent {
@@ -179,6 +180,8 @@ class QuizManagementForm extends BaseComponent {
             this.props.history.push("/quizmanagement/detail/" + response.quiz?.id);
         }
     }
+    showChoices = () => { this.setState({showChoices:true}); }
+    hideChoices = () => { this.setState({showChoices:false});  }
     render() {
         const quiz: Quiz = this.state.quiz;
         const questions: QuizQuestion[] = quiz.questions ?? [];
@@ -197,9 +200,13 @@ class QuizManagementForm extends BaseComponent {
                     <Card title={"Quiz Questions :" + (questions.length)}
                         footerContent={quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-success" value={quiz.id ? "Update" : "Create"} /> : null}
                     >
-                        {questions.map((question, i) => {
+                        <AnchorButton show={this.state.showChoices == true} onClick={this.hideChoices} iconClassName="fas fa-angle-up">Hide Choices</AnchorButton>
+                        <AnchorButton show={this.state.showChoices == false} onClick={this.showChoices} iconClassName="fas fa-angle-down">Show Choices</AnchorButton>
+                        <p/>
+                        { questions.map((question, i) => {
                             return (
                                 <QuestionForm
+                                    showChoices={this.state.showChoices}
                                     setAnswer={this.setAnswer}
                                     key={"quest-form-" + i}
                                     question={question} index={i}
@@ -208,7 +215,7 @@ class QuizManagementForm extends BaseComponent {
                                     removeImage={this.removeQuestionImage} removeChoiceImage={this.removeChoiceImage}
                                 />
                             )
-                        })}
+                        }) }
                     </Card>
                     <p />
                 </form>
