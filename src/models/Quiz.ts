@@ -2,10 +2,10 @@ import BaseEntity from './BaseEntity';
 import QuizQuestion from './QuizQuestion';
 
 export default class Quiz extends BaseEntity{
-	title?:string;
-	description?:string;
-	publicQuiz?:boolean;
-	questions?:QuizQuestion[];
+	title?:string = "";
+	description?:string = "";
+	publicQuiz?:boolean = true;
+	questions?:QuizQuestion[] = [];
 
 	questionCount = () : number => {
 		return this.questions?this.questions.length : 0;

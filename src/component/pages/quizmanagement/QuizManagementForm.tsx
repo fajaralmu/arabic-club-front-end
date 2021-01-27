@@ -37,6 +37,9 @@ class QuizManagementForm extends BaseComponent {
             this.setState({ quiz: Object.assign(new Quiz(), quiz) });
         }
     }
+    reset = () => {
+        this.setState({quiz:new Quiz()});
+    }
     updateQuizField = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -180,6 +183,7 @@ class QuizManagementForm extends BaseComponent {
                     <div className="btn-group" style={{ marginBottom: '5px', marginTop: '5px' }}>
                         <AnchorButton className="btn btn-secondary" iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>
                         <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.removeAllQuestion} >Remove All Question</AnchorButton>
+                        <AnchorButton className="btn btn-warning" onClick={this.reset}>Reset</AnchorButton>
                     </div>
                     <Card title={"Quiz Questions :" + (questions.length)}
                         footerContent={quiz.questions && quiz.questions.length > 0 ? <input type="submit" className="btn btn-success" value={quiz.id ? "Update" : "Create"} /> : null}
