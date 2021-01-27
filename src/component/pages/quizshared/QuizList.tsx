@@ -16,17 +16,19 @@ export default class QuizList extends Component<any, IProps>{
                             <th>No</th>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>Question</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {props.quizList.map((quiz, i) => {
-
+                        {props.quizList.map((quiz:Quiz, i: number) => {
+                            quiz = Object.assign(new Quiz(), quiz);
                             return (
                                 <tr key={"quiz-public-list-" + i}>
                                     <td>{i + props.startingNumber + 1}</td>
                                     <td>{quiz.title}</td>
                                     <td>{quiz.description}</td>
+                                    <td>{quiz.questionCount()}</td>
                                     <td>
                                         <AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
                                             className="btn btn-dark" iconClassName="fas fa-clipboard">
