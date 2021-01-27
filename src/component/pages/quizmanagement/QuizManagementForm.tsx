@@ -38,7 +38,10 @@ class QuizManagementForm extends BaseComponent {
         }
     }
     reset = () => {
-        this.setState({quiz:new Quiz()});
+        this.showConfirmationDanger("Reset Quiz?").then((ok) => {
+            this.setState({ quiz: new Quiz() });
+        })
+
     }
     updateQuizField = (e) => {
         const name = e.target.name;
@@ -55,6 +58,12 @@ class QuizManagementForm extends BaseComponent {
         const question: QuizQuestion = QuizQuestion.publicQuizQuestion();
         question.statement = "Question " + (quiz.questions.length + 1);
         quiz.questions.push(question);
+        this.setState({ quiz: quiz });
+    }
+    setAnswer = (code: string, questionIndex: number) => {
+        const quiz: Quiz = this.state.quiz;
+        if (quiz.questions == undefined) return;
+        quiz.questions[questionIndex].answerCode = code;
         this.setState({ quiz: quiz });
     }
     updateQuestionField = (e: ChangeEvent) => {
@@ -190,7 +199,9 @@ class QuizManagementForm extends BaseComponent {
                     >
                         {questions.map((question, i) => {
                             return (
-                                <QuestionForm key={"quest-form-" + i}
+                                <QuestionForm
+                                    setAnswer={this.setAnswer}
+                                    key={"quest-form-" + i}
                                     question={question} index={i}
                                     updateField={this.updateQuestionField} updateChoiceField={this.updateChoiceField}
                                     remove={this.removeQuestion}

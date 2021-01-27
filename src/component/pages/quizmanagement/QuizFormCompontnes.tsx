@@ -7,13 +7,16 @@ import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
 
 
-export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField: any, removeImage:any, index: number, questionIndex: number }) => {
+export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField(e:any):void, setAnswer (code:string, index:number):void, removeImage:any, index: number, questionIndex: number }) => {
     return (
         <div>
-
             <div className={"input-group " + (props.answerCode == props.choice.answerCode ? "border border-primary" : "")}>
                 <div className="input-group-prepend">
-                    <span className="input-group-text" ><b>{props.choice.answerCode}</b></span>
+                    <span
+                    onClick={(e)=>{
+                        props.setAnswer(props.choice.answerCode??"", props.questionIndex)
+                    }}
+                    className={"clickable input-group-text "+(props.answerCode == props.choice.answerCode ? "bg-primary text-white":"")} ><b>{props.choice.answerCode}</b></span>
                 </div>
                 <input name='statement' onChange={props.updateField} className="form-control" data-questionindex={props.questionIndex} data-index={props.index} value={props.choice.statement} required />
             </div>
@@ -23,7 +26,7 @@ export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, upda
         </div>
     )
 }
-export const QuestionForm = (props: { question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any }) => {
+export const QuestionForm = (props: { question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
     const i = props.index;
     const choices: QuizChoice[] = props.question.choices ?? [];
     return (
@@ -38,14 +41,17 @@ export const QuestionForm = (props: { question: QuizQuestion, index: number, upd
             </FormGroup>
             <FormGroup label="Choices">
                 {choices.map((choice, c) => {
-                    return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"statement-choice-" + c + i}
+                    return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"qst-choice-" + c +"-" + i}
                      updateField={props.updateChoiceField}
+                     setAnswer={props.setAnswer}
                      removeImage={(choiceIndex)=>{props.removeChoiceImage(choiceIndex, i)}}
                      questionIndex={i} index={c} choice={choice} />
                 })}
             </FormGroup>
             <FormGroup label="Answer">
-                <select required className="form-control" value={props.question.answerCode} onChange={props.updateField} name="answerCode" data-index={i} >
+                <select required className="form-control" value={props.question.answerCode} onChange={(e)=>{
+                    props.setAnswer(e.target.value, i);
+                }} name="answerCode" data-index={i} >
                     {QuizQuestion.public_choices.map((code, c) => {
                         return <option key={"opt-ch-ans-" + c + i} value={code} >{code}</option>
                     })}
