@@ -1,7 +1,7 @@
 
 import EntityElement from "./EntityElement";
-import { FieldType } from "./FieldType";
-import HeaderProps from './HeaderProps'; 
+import { FieldType } from "../FieldType";
+import HeaderProps from '../HeaderProps'; 
 
 export default class EntityProperty{
 	groupNames?:string;
@@ -9,22 +9,13 @@ export default class EntityProperty{
 	alias?:string;
 	fieldNames?:string;
 	idField?:string;
-	detailFieldName?:string;
-	imageElementsJson?:string;
-	dateElementsJson?:string;
-	multipleSelectElementsJson?:string;
-	currencyElementsJson?:string;
+	detailFieldName?:string; 
 	formInputColumn?:number;
-	editable?:boolean;
-	withDetail?:boolean;
-	dateElements?:any[];
-	imageElements?:any[];
-	currencyElements?:any[];
-	multipleSelectElements?:any[];
+	editable:boolean = true;
+	creatable:boolean = true; 
 	elements:EntityElement[] = new Array();
-	fieldNameList?:string[];
-	ignoreBaseField?:boolean;
-	isQuestionare?:boolean;
+	fieldNameList?:string[]; 
+	withProgressWhenUpdated:boolean = false;
 
 	static getEntityElement = (prop: EntityProperty, id:string) :EntityElement|undefined => {
 		for (let i = 0; i < prop.elements.length; i++) {
@@ -46,9 +37,10 @@ export default class EntityProperty{
 			
 			const element = elements[i];
 			const header:HeaderProps=  {
-				label:element.lableName,
+				label:element.labelName,
 				value:element.id,
-				isDate:element.type == 'date'
+				isDate:element.type == 'date',
+				filterable: element.filterable
 			};
 			result.push(header);
 		}
@@ -59,7 +51,7 @@ export default class EntityProperty{
 		const elements = prop.elements;
 		for (let i = 0; i < elements.length; i++) {
 			const element = elements[i];
-			if (element.idField) {
+			if (element.identity) {
 				return record[element.id];
 			}
 		}

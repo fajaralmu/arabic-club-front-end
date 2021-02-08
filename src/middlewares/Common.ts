@@ -7,6 +7,7 @@ export const commonAuthorizedHeader = () => {
     }
 };
 
+const LOGIN_KEY:string = "arabic-club-login-key";
  
 export const getAssetsPath = () :string => {
     const store = getStore(); 
@@ -29,7 +30,7 @@ export const updateAccessToken = (axiosResponse) => {
     if (axiosResponse && axiosResponse.headers && axiosResponse.headers['access-token']) {
         const accessToken = axiosResponse.headers['access-token'];
         // console.debug("update access token: ", accessToken);
-        setCookie("loginKey", accessToken);
+        setCookie(LOGIN_KEY, accessToken);
     }
 } 
 export const setCookie = function (cname, cvalue, exdays=1) {

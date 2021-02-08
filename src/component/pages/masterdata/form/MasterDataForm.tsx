@@ -6,13 +6,12 @@ import { connect } from 'react-redux';
 import BaseComponent from '../../../BaseComponent';
 import { mapCommonUserStateToProps } from '../../../../constant/stores';
 import Modal from '../../../container/Modal';
-import EntityProperty from '../../../../models/EntityProperty';
-import EntityElement from '../../../../models/EntityElement';
+import EntityProperty from '../../../../models/settings/EntityProperty';
+import EntityElement from '../../../../models/settings/EntityElement';
 import MasterDataService from '../../../../services/MasterDataService';
 import AnchorButton from '../../../navigation/AnchorButton';
 import WebResponse from '../../../../models/WebResponse'; 
 import { FieldType } from '../../../../models/FieldType';
-import { toBase64FromFile } from '../../../../utils/ComponentUtil';
 import FormInputField from './FormInputField';
 
 class MasterDataForm extends BaseComponent {
@@ -32,7 +31,7 @@ class MasterDataForm extends BaseComponent {
         return this.props.entityProperty;
     }
     componentDidUpdate() {
-        if (this.getEntityProperty().editable == false) {
+        if (this.getEntityProperty().editable == false || this.getEntityProperty().creatable == false) {
             this.props.onClose();
         }
     }
@@ -62,6 +61,9 @@ class MasterDataForm extends BaseComponent {
             const element:EntityElement|undefined = this.getEntityElement(key);
             if (!element) return false;
             switch (element.fieldType) {
+                case FieldType.FIELD_TYPE_CHECKBOX:
+                    object[key].push(value == "true");
+                    break;
                 case FieldType.FIELD_TYPE_DYNAMIC_LIST:
                 case FieldType.FIELD_TYPE_FIXED_LIST:
                     const valueAttr = element.optionValueName;
@@ -74,15 +76,6 @@ class MasterDataForm extends BaseComponent {
                     if (value == "NULLED") {
                         console.debug("NULLED VALUE ADDED: ", key);
                         nulledFields.push(key);
-                   
-                    // } else if(value.constructor.name == "File") {
-                        
-                    //     let promise = toBase64FromFile(value).then(data => {
-                    //         hasImageField = true;
-                    //         object[key].push(data);
-                    //     }).catch(console.error)
-                    //         .finally(function () { console.debug("finish") });
-                    //     promises.push(promise);
                     } else {
                         if (new String(value).startsWith("data:image")) {
                             hasImageField = true;
@@ -123,7 +116,7 @@ class MasterDataForm extends BaseComponent {
     }
 
     ajaxSubmit = (object: any, realtimeProgress: boolean) => {
-        if (realtimeProgress){
+        if (this.getEntityProperty().withProgressWhenUpdated == true || realtimeProgress){
             this.commonAjaxWithProgress(
                 this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
                 this.getEntityProperty().entityName, object, this.editMode
@@ -181,11 +174,12 @@ const InputFields = (props: { app: any, entityProperty: EntityProperty, recordTo
     }
     return (
         <div className="row">
-            {groupedElements.map(elements => {
+            {groupedElements.map((elements, ei) => {
                 return (
-                    <div className={hasTextEditor?"col-lg-12":"col-lg-6"}>
+                    <div key={"GROUPED_ELEMENT_"+ei} className={hasTextEditor?"col-lg-12":"col-lg-6"}>
                         {elements.map(element => {
-                            return <FormInputField recordToEdit={props.recordToEdit} entityElement={element} />
+                            const key = "form-input-for-"+element.id;
+                            return <FormInputField key={key} recordToEdit={props.recordToEdit} entityElement={element} />
                         })}
                     </div>
                 )

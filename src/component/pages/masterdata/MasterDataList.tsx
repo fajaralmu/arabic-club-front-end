@@ -9,7 +9,7 @@ import BaseComponent from './../../BaseComponent';
 import MasterDataService from './../../../services/MasterDataService';
 import Modal from '../../container/Modal';
 import Filter from './../../../models/Filter';
-import EntityProperty from './../../../models/EntityProperty';
+import EntityProperty from '../../../models/settings/EntityProperty';
 import WebRequest from './../../../models/WebRequest';
 import WebResponse from './../../../models/WebResponse';
 import HeaderProps from './../../../models/HeaderProps';
@@ -24,24 +24,30 @@ import SimpleError from './../../alert/SimpleError';
 import Spinner from './../../loader/Spinner';
 import ExternalEditForm from './ExternalEditForm';
 import { uniqueId } from './../../../utils/StringUtil';
+import ToggleButton from '../../navigation/ToggleButton';
 interface IState { recordData?: WebResponse, showForm: boolean, filter: Filter, loading: boolean }
 class MasterDataList extends BaseComponent {
     masterDataService: MasterDataService;
-    state: IState = {
-        showForm: false, loading: false,
-        filter: { limit: 5, page: 0, fieldsFilter: {} }
-    }
+    state: IState;
     recordToEdit?: {} = undefined;
     entityProperty: EntityProperty;
+     headerProps: HeaderProps[] ;
     constructor(props: any) {
         super(props, true);
         this.masterDataService = this.getServices().masterDataService;
         this.entityProperty = this.props.entityProperty;
+        this.headerProps = EntityProperty.getHeaderLabels(this.props.entityProperty);
+       
+        this.state  = {
+            showForm: false, loading: false,
+            filter: { limit: 5, page: 0, fieldsFilter: {}}
+        }; 
     }
     /**
      * remove fieldsfilter empty values";
      */
     adjustFilter = (filter: Filter): Filter => {
+         
         const fieldsFilter = filter.fieldsFilter;
         for (const key in fieldsFilter) {
             const element = fieldsFilter[key];
@@ -54,7 +60,7 @@ class MasterDataList extends BaseComponent {
         return filter;
     }
     loadEntities = (page: number | undefined) => {
-        const filter = this.state.filter;
+        const filter =  Object.assign( new Filter(), this.state.filter);
         const entityName = this.entityProperty.entityName;
         filter.page = page ?? filter.page;
         const request: WebRequest = {
@@ -80,6 +86,7 @@ class MasterDataList extends BaseComponent {
             return;
         }
         this.entityProperty = this.props.entityProperty;
+        this.headerProps = EntityProperty.getHeaderLabels(this.props.entityProperty);
         this.loadEntities(0);
     }
     startLoading() { this.setState({ loading: true }) }
@@ -108,7 +115,13 @@ class MasterDataList extends BaseComponent {
         if (filter.fieldsFilter == undefined) {
             filter.fieldsFilter = {};
         }
+        console.debug("update filter: ", name, filter);
         filter.fieldsFilter[name] = value;
+        this.setState({ filter: filter });
+    }
+    setExactSearch = (exacts: boolean) => {
+        const filter = this.state.filter;
+        filter.exacts = exacts;
         this.setState({ filter: filter });
     }
     filterReset = (e) => {
@@ -151,7 +164,8 @@ class MasterDataList extends BaseComponent {
         if (undefined == this.state.recordData) {
             return <Spinner/>
         }
-        const headerProps: HeaderProps[] = EntityProperty.getHeaderLabels(this.props.entityProperty);
+        const headerProps: HeaderProps[] = this.headerProps;
+        const exactsSearch:boolean = this.state.filter.exacts == true;
         const resultList: any[] = this.state.recordData.entities ? this.state.recordData.entities : [];
         if (headerProps == undefined || resultList == undefined) {
             return <SimpleError />
@@ -163,7 +177,7 @@ class MasterDataList extends BaseComponent {
 
         return (
             <div id="MasterDataList">
-                <AnchorButton show={this.entityProperty.editable == true} style={{ marginBottom: '5px' }} onClick={this.showCreateForm} iconClassName="fas fa-plus">Add Record</AnchorButton>
+                <AnchorButton show={this.entityProperty.creatable == true && this.entityProperty.editable == true} style={{ marginBottom: '5px' }} onClick={this.showCreateForm} iconClassName="fas fa-plus">Add Record</AnchorButton>
                 <form id="filter-form" onSubmit={(e) => { e.preventDefault() }}>
                     <Modal title="Filter" toggleable={true}>
                         <div>
@@ -174,8 +188,24 @@ class MasterDataList extends BaseComponent {
                                 <div className="col-6">
                                     <input value={this.state.filter.limit} onChange={(e) => this.updateFilterLimit(e.target.value)} min="1" className="form-control" type="number" placeholder="record per page" />
                                 </div>
+                                <div className="col-12"><p/></div>
+                                <div className="col-3">
+                                    <ToggleButton 
+                                    yesLabel="exact"
+                                    noLabel="not exact"
+                                    active={exactsSearch}
+                                    onClick={(val:boolean) => this.setExactSearch(val)}
+                                    />
+                                    {/* <div className="btn-group">
+                                        <a className={exactsSearch?"btn-sm btn btn-dark":"btn-sm btn btn-outline-dark"} onClick={(e) => this.setExactSearch(true)} >Exact</a>
+                                        <a className={!exactsSearch?"btn-sm btn btn-dark":"btn-sm btn btn-outline-dark"} onClick={(e) => this.setExactSearch(false)} >Not Exact</a>
+                                    </div> */}
+                                </div>
+                                <div className="col-3">
+                                <SubmitResetButton onSubmit={this.filterFormSubmit} onReset={this.filterReset} />
+                                </div>
                             </div>
-                            <SubmitResetButton onSubmit={this.filterFormSubmit} onReset={this.filterReset} />
+                            
                         </div>
                     </Modal>
                     <NavigationButtons limit={this.state.filter.limit ?? 5} totalData={this.state.recordData.totalData ?? 0}
@@ -208,7 +238,6 @@ class MasterDataList extends BaseComponent {
                                         })}
                                 </tbody>
                             </table>
-
                         </div>
                     </Modal>
                 </form>
@@ -225,8 +254,8 @@ const Loading = ({loading}) => {
 }
 const SubmitResetButton = (props: any) => {
     return (<div className="btn-group">
-        <button onClick={props.onSubmit} className="btn btn-secondary btn-sm"><span className="icon"><i className="fas fa-play" /></span>Apply Filter</button>
-        <button onClick={props.onReset} type="reset" className="btn btn-warning btn-sm"><span className="icon"><i className="fas fa-sync-alt" /></span>Reset</button>
+        <button onClick={props.onSubmit} className="btn btn-dark btn-sm"><span className="icon"><i className="fas fa-play-circle" /></span>Apply Filter</button>
+        <button onClick={props.onReset} type="reset" className="btn btn-dark btn-sm"><span className="icon"><i className="fas fa-sync-alt" /></span>Reset</button>
     </div>)
 }
 
