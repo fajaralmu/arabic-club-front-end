@@ -28,7 +28,7 @@ export default class Images extends BaseEntity {
 		const rawImages = this.images.split("~");
 		for (let i = 0; i < rawImages.length; i++) {
 			const element = rawImages[i];
-			result.push(baseImageUrl + element);
+			result.push(baseImageUrl() + element);
 		}
 		return result;
 	}

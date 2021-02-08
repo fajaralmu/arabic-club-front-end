@@ -192,7 +192,7 @@ function updateFavicon(profile: any) {
       link.setAttribute("rel", 'shortcut icon');
       document.head.appendChild(link);
     }
-    link.setAttribute("href", url.baseImageUrl + profile.pageIcon);
+    link.setAttribute("href", url.baseImageUrl() + profile.pageIcon);
   }
 }
 

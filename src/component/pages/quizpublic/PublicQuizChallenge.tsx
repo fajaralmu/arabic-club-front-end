@@ -10,7 +10,7 @@ import AnchorButton from '../../navigation/AnchorButton';
 import Card from '../../container/Card';
 import QuizQuestion from '../../../models/QuizQuestion';
 import QuizChoice from '../../../models/QuizChoice';
-import { baseImageUrl } from '../../../constant/Url';
+import { baseImageUrl  } from '../../../constant/Url';
 import Modal from '../../container/Modal';
 import QuizResult from '../../../models/QuizResult'; 
 import { connect } from 'react-redux';
@@ -171,7 +171,7 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice:
                 <h2 className="col-1 text-dark">{props.index + 1}</h2>
                 <div className="col-11"><h4 className="text-dark">{question.statement}</h4>
                     
-                    {question.image ? <img height="150" src={baseImageUrl + question.image} /> : null}
+                    {question.image ? <img height="150" src={baseImageUrl() + question.image} /> : null}
                     <hr />
                     {choices.map((choice, i) => {
                         return <ChoiceItem
@@ -206,7 +206,7 @@ const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice: any, 
             </div>
             <div className="col-11 ">
                 <p>{choice.statement}</p>
-                {choice.image ? <img height="150" src={baseImageUrl + choice.image} /> : null}
+                {choice.image ? <img height="150" src={baseImageUrl() + choice.image} /> : null}
             </div>
         </div>
     )

@@ -1,22 +1,19 @@
-import * as shopReducer from "./shopReducer"
-import * as userReducer from "./userReducer"
-import * as transactionReducer from "./transactionReducer" 
+import * as appReducer from "./appReducer"
+import * as userReducer from "./userReducer" 
 import  * as servicesReducers from './servicesReducer';
 import { combineReducers } from "redux";
 
 export const rootReducer = combineReducers(
     {
-        appState: shopReducer.reducer,
-        userState: userReducer.reducer,
-        transactionState: transactionReducer.reducer, 
+        appState: appReducer.reducer,
+        userState: userReducer.reducer, 
         servicesState: servicesReducers.reducer
     }
 );
 
 export const initialState = {
-    appState: shopReducer.initState,
-    userState: userReducer.initState,
-    transactionState: transactionReducer.initState, 
+    appState: appReducer.initState,
+    userState: userReducer.initState, 
     servicesState: servicesReducers.initState
 }
 

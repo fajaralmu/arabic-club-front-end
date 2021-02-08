@@ -118,7 +118,7 @@ class QuizDetail extends BaseComponent {
                         return (
                             <Card key={"qdl-" + i} attributes={{ style: { marginBottom: '5px' } }}>
                                 <h4>{i + 1}. {question.statement}</h4>
-                                {question.image ? <img src={baseImageUrl + question.image} height="100" /> : null}
+                                {question.image ? <img src={baseImageUrl() + question.image} height="100" /> : null}
                                 {choices.map((choice, c) => {
                                     const rightAnswer = choice.answerCode == question.answerCode;
                                     return (
@@ -126,7 +126,7 @@ class QuizDetail extends BaseComponent {
                                             <b className={rightAnswer ? "border rounded border-success text-success" : "text-dark"}>{choice.answerCode}</b>
                                             <span style={{ marginLeft: '5px' }}>{choice.statement}</span>
                                             <p />
-                                            {choice.image ? <img src={baseImageUrl + choice.image} height="100" /> : null}
+                                            {choice.image ? <img src={baseImageUrl() + choice.image} height="100" /> : null}
                                         </div>
                                     )
                                 })}

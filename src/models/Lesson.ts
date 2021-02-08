@@ -17,7 +17,7 @@ export default class Lesson extends BaseEntity{
 		const splitted = lesson.bannerImages.split("~");
 		for (let i = 0; i < splitted.length; i++) {
 			const element = splitted[i];
-			urls.push(baseImageUrl+"/"+element);
+			urls.push(baseImageUrl()+"/"+element);
 		}
 		return urls;
 	}

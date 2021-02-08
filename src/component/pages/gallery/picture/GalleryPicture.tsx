@@ -11,8 +11,7 @@ import Images from './../../../../models/Images';
 import WebResponse from './../../../../models/WebResponse';
 import NavigationButtons from './../../../navigation/NavigationButtons';
 import Spinner from './../../../loader/Spinner';
-import { baseImageUrl } from './../../../../constant/Url';
-import Card from '../../../container/Card';
+import { baseImageUrl  } from './../../../../constant/Url';
 import GalleryPictureDetail from './GalleryPictureDetail';
 class IState {
     imageList: Images[] = new Array();
@@ -100,7 +99,7 @@ const ImageItem = (props: { image: Images, onClick(image: Images): void }) => {
     return (
         <div className="col-3">
             <div className="card">
-                <img onClick={(e) => props.onClick(image)} src={baseImageUrl + firstImage} className="card-img-top" />
+                <img onClick={(e) => props.onClick(image)} src={baseImageUrl() + firstImage} className="card-img-top" />
                 <div className="card-body">
                     <h5 className="card-title">{image.title}</h5>
                     <p className="card-text">{image.description}</p>

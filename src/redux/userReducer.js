@@ -11,6 +11,7 @@ export const initState = {
     loginAttempt: false,
     requestId: null,
     applicationProfile: {},
+    assetsPath: ""
 };
 
 export const reducer = (state = initState, action) => {
@@ -18,10 +19,14 @@ export const reducer = (state = initState, action) => {
     let result = {};
     switch (action.type) {
         case types.REQUEST_ID:
+            console.debug("USER REDUCER:REQUEST_ID", action.payload.requestId);
             result = {
                 ...state, requestId: action.payload.requestId,
-                applicationProfile: action.payload.applicationProfile == null ? {} : action.payload.applicationProfile
+                masterHealthCenter: action.payload.masterHealthCenter??{},
+                applicationProfile: action.payload.applicationProfile ?? {},
+                assetsPath: action.payload.applicationProfile.assetsPath
             };
+            
             if (action.payload.loginStatus == true) {
                 result.loggedUser = action.payload.user;
                 result.loginStatus = true;
@@ -29,9 +34,8 @@ export const reducer = (state = initState, action) => {
                 result.loginStatus = false;
                 result.loggedUser = null;
             }
-            setCookie("requestId", result.requestId);
-            localStorage.setItem("assetsPath", result.applicationProfile.assetsPath);
-            console.debug("action.payload.loginStatus: ", action.payload.loginStatus);
+            console.debug("result");
+            console.debug("action.payload.requestId: ",action.payload.requestId); 
             console.debug("REQUEST_ID result.loginStatus:", result.loginStatus)
             //  action.payload.referer.refresh();
 
