@@ -109,14 +109,12 @@ class PublicQuizChallenge extends BaseComponent {
         if (!quiz || !quiz.questions || quiz.questions.length == 0) return;
         try {
             quiz.questions[questionIndex].answerCode = code;
-            this.setState({ quiz: quiz });
+            this.setState({ quiz: Object.assign(new Quiz(), quiz) });
         } catch (error) { }
     }
     quizSubmitted = (response: WebResponse) => {
         this.setState({ timeout: false, quizResult: response.quizResult, quiz: Object.assign(new Quiz(), response.quizResult?.submittedQuiz) },
-            () => this.setState({
-                tick: this.state.quiz?.duration ?? 0
-            }));
+            );
     }
     tryAgain = () => {
         this.showConfirmation("Try quiz again?")
@@ -130,12 +128,12 @@ class PublicQuizChallenge extends BaseComponent {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz) return;
         quiz.resetCorrectChoices();
-        this.setState({ quizResult: undefined, quiz: quiz, running: false });
+        this.setState({ quizResult: undefined, tick:0, quiz: Object.assign(new Quiz(), quiz), running: false });
     }
     submitAnwser = (e) => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
-        if (!quiz.allQuestionHasBeenAnswered()) {
+        if (!Object.assign(new Quiz(), quiz).allQuestionHasBeenAnswered()) {
             this.showError("Please answer all questions!");
             return;
         }

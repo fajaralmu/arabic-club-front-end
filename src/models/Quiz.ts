@@ -9,12 +9,12 @@ export default class Quiz extends BaseEntity{
 	duration:number = 0;
 	active?:boolean = true
 
-	questionCount = () : number => {
+	getQuestionCount = () : number => {
 		return this.questions?this.questions.length : 0;
 	}
 
 	resetCorrectChoices = () : void => {
-		if (!this.questions || this.questionCount() == 0) return;
+		if (!this.questions || this.getQuestionCount() == 0) return;
 		for (let i = 0; i < this.questions.length; i++) {
 			const element = this.questions[i];
 			element.correctChoice = undefined;
@@ -22,7 +22,7 @@ export default class Quiz extends BaseEntity{
 	}
 
 	allQuestionHasBeenAnswered = () : boolean => {
-		if (!this.questions || this.questionCount() == 0) return false;
+		if (!this.questions || this.getQuestionCount() == 0) return false;
 
 		for (let i = 0; i < this.questions.length; i++) {
 			const element = this.questions[i];

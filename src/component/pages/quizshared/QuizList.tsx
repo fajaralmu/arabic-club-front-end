@@ -30,7 +30,7 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{i + props.startingNumber + 1}</td>
                                     <td>{quiz.title}</td>
                                     <td>{quiz.description}</td>
-                                    <td>{quiz.questionCount()}</td>
+                                    <td>{quiz.getQuestionCount()}</td>
                                     <td>{quiz.duration} second(s)</td>
                                     <td>
                                         {quiz.active?"Active":"Not Active"}

@@ -8,14 +8,16 @@ export  const Timer = (props: { duration: number, tick: number }) => {
 
     const seconds :number = props.duration - props.tick;
     let className;
+    let iconClassName = seconds%2 == 0? "fas fa-hourglass-end" : "fas fa-hourglass-start";
     if (seconds <= 15) {
-        className="bg-danger text-warning"
+        className="bg-danger text-warning";
+        
     } else {
         className="bg-warning "
     }
     return <div className={className}style={{ fontSize: '1.7em', right: '10px', padding: '10px', position: 'fixed', zIndex: 1000 }}>
         <span style={{ marginRight: '10px' }}>
-            <i className="fas fa-stopwatch"></i>
+            <i className={iconClassName}></i>
         </span>
         <span>
             <b>{timerString(seconds)}</b>
