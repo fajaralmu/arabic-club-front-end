@@ -59,5 +59,22 @@ const twoDigits = (value:number) :string => {
     return "0"+value;
 }
 
+export const timerString = (totalSeconds:number ) => {
+    let hour = 0;
+    let minutes = 0;
+    let seconds = 0;
+    if (totalSeconds >= 3600) {
+        hour = totalSeconds/ 3600;
+        totalSeconds = totalSeconds % 3600;
+    }
+    if (totalSeconds >= 60) {
+        minutes = totalSeconds/60;
+        totalSeconds = totalSeconds%60;
+    }
+    seconds = totalSeconds;
+
+    return twoDigits(hour)+":"+twoDigits(minutes)+":"+twoDigits(seconds);
+}
+
 
 

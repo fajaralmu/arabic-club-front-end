@@ -81,7 +81,7 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, u
                 <textarea required onChange={props.updateField} className="form-control" name="description" value={props.quiz.description} />
             </FormGroup>
             <FormGroup label="Duration (Second)">
-                <input type="number" min={45} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
+                <input type="number" min={30} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
             </FormGroup>
             <FormGroup label="Active">
                 <ToggleButton active={props.quiz.active==true} onClick={props.updateActive} />
