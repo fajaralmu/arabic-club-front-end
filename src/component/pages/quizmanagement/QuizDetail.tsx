@@ -110,8 +110,9 @@ class QuizDetail extends BaseComponent {
                         <FormGroup label="Duration (Second)">{quiz.duration}</FormGroup>
                         <FormGroup label="Active">{quiz.active?"true":"false"}</FormGroup>
                         <FormGroup>
-                            <AnchorButton className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
-                            <AnchorButton className="btn btn-danger" onClick={this.deleteRecord}>Delete</AnchorButton>
+                            
+                            <AnchorButton style={{marginRight:'5px'}} iconClassName="fas fa-edit" className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
+                            <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.deleteRecord}>Delete</AnchorButton>
                         </FormGroup>
                     </div>
                     {questions.map((question, i) => {

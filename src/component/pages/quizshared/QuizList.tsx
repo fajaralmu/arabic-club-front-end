@@ -17,7 +17,8 @@ export default class QuizList extends Component<any, IProps>{
                             <th>Title</th>
                             <th>Description</th>
                             <th>Question</th>
-                            <th>Active</th>
+                            <th>Duration</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -30,6 +31,7 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{quiz.title}</td>
                                     <td>{quiz.description}</td>
                                     <td>{quiz.questionCount()}</td>
+                                    <td>{quiz.duration} second(s)</td>
                                     <td>
                                         {quiz.active?"Active":"Not Active"}
                                     </td>

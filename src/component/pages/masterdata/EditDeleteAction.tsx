@@ -9,6 +9,7 @@ import MasterDataService from './../../../services/MasterDataService';
 import AnchorButton from './../../navigation/AnchorButton';
 import EntityProperty from '../../../models/settings/EntityProperty';
 import WebResponse from './../../../models/WebResponse';
+import ExternalEditForm from './ExternalEditForm';
 
 class EditDeleteAction extends BaseComponent {
     masterDataService:MasterDataService;
@@ -71,9 +72,15 @@ class EditDeleteAction extends BaseComponent {
         this.props.reload();
     }
     render() {
+        const entityProperty:EntityProperty = this.props.entityProperty;
+        
         if (this.props.show == false) return null;
+        let additionalButton:JSX.Element =  (
+        <ExternalEditForm record={this.props.record} entityProperty={entityProperty}  />
+        ) 
         return (
             <div className="btn-group">
+                {additionalButton}
                 <AnchorButton onClick={this.getRecordById} iconClassName="fas fa-edit" className="btn btn-warning btn-sm"></AnchorButton>
                 <AnchorButton onClick={this.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
             </div>

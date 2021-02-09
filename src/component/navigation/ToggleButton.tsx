@@ -13,9 +13,9 @@ export default class ToggleButton extends Component<Props, any>{
         const active = this.props.active;
         return (
             <div className="btn-group">
-                <AnchorButton className={"btn  btn-sm " + (active ? "btn-dark" : "btn-light")} onClick={(e) => this.props.onClick(true)} >
+                <AnchorButton className={"btn  btn-sm " + (active ? "btn-dark" : "btn-outline-dark")} onClick={(e) => this.props.onClick(true)} >
                     {props.yesLabel??"Yes"}</AnchorButton>
-                <AnchorButton className={"btn  btn-sm " + (active == false ? "btn-dark" : "btn-light")} onClick={(e) => this.props.onClick(false)}  >
+                <AnchorButton className={"btn  btn-sm " + (active == false ? "btn-dark" : "btn-outline-dark")} onClick={(e) => this.props.onClick(false)}  >
                     {props.noLabel??"No"}</AnchorButton>
                 
             </div>
