@@ -1,5 +1,6 @@
 
-import Menu from './../models/Menu';
+import { AuthorityType } from '../models/AuthorityType';
+import Menu from '../models/settings/Menu';
 
 export const HOME = "home"; 
 export const ABOUT = "about";
@@ -19,10 +20,20 @@ export const PUBLIC_QUIZ = "public_quiz";
 
 export const getMenus = () => {
     let menuSet: Menu[] = [];
-    for (let i = 0; i < menus.length; i++) {
-        const element: Menu = menus[i];
-        menuSet.push(element);
+    for (let i = 0; i < _menus.length; i++) {
+        const element: Menu = _menus[i];
+        const menu:Menu = Object.assign(new Menu, element);
+        const subMenus:Menu[] = [];
+        if (element.subMenus) {
+            for (let i = 0; i < element.subMenus.length; i++) {
+                const subMenu = element.subMenus[i];
+                subMenus.push(Object.assign(new Menu, subMenu));
+            }
+            menu.subMenus = subMenus;
+        }
+        menuSet.push(menu);
     }
+    console.debug("menuSet: ", menuSet);
     return menuSet;
 }
 export const extractMenuPath = (pathName: string) => {
@@ -35,6 +46,7 @@ export const extractMenuPath = (pathName: string) => {
     return firstPath;
 }
 export const getMenuByMenuPath = (pathName: string): Menu | null => {
+    const menus = getMenus();
     try {
         for (let i = 0; i < menus.length; i++) {
             const menu: Menu = menus[i];
@@ -48,7 +60,7 @@ export const getMenuByMenuPath = (pathName: string): Menu | null => {
     }
 }
 
-export const menus: Menu[] = [
+const _menus: Menu[] = [
     {
         code: HOME,
         name: "Home",
@@ -56,7 +68,8 @@ export const menus: Menu[] = [
         menuClass: "fa fa-home",
         active: false,
         authenticated: false,
-        showSidebar: false
+        showSidebar: false,
+        role : []
     },
     {
         code: LESSONS,
@@ -65,7 +78,8 @@ export const menus: Menu[] = [
         menuClass: "fa fa-home",
         active: false,
         authenticated: false,
-        showSidebar: true
+        showSidebar: true,
+        role : []
     },
     {
         code: EVENTS,
@@ -75,32 +89,25 @@ export const menus: Menu[] = [
         active: false,
         authenticated: false,
         showSidebar: true,
+        role : [],
         subMenus: [
             {
                 code: 'e_public_speaking',
                 name: 'Public Speaking',
                 url: 'publicspeaking',
-                menuClass: 'fas fa-broadcast-tower'
-
+                menuClass: 'fas fa-broadcast-tower',
+                role : [],
             },
             {
                 code: 'e_skills',
                 name: 'Skill',
                 url: 'skill',
-                menuClass: 'fas fa-basketball-ball'
+                menuClass: 'fas fa-basketball-ball',
+                role : [],
             }
         ]
     },
-    {
-        code: PUBLIC_QUIZ,
-        name: "Quiz",
-        url: "/quiz",
-        menuClass: "fas fa-book",
-        active: false,
-        authenticated: false,
-        showSidebar: false,
-        subMenus: []
-    },
+    
     {
         code: GALLERY,
         name: "Gallery",
@@ -109,19 +116,22 @@ export const menus: Menu[] = [
         active: false,
         authenticated: false,
         showSidebar: true,
+        role: [],
         subMenus: [
             {
                 code: 'gallery_picture',
                 name: 'Pictures',
                 url: 'picture',
-                menuClass: 'fas fa-images'
+                menuClass: 'fas fa-images',
+                role: [],
 
             },
             {
                 code: 'gallery_video',
                 name: 'Videos',
                 url: 'video',
-                menuClass: 'fas fa-video'
+                menuClass: 'fas fa-video',
+                role: [],
             }
         ]
     },
@@ -133,22 +143,35 @@ export const menus: Menu[] = [
         active: false,
         authenticated: true,
         showSidebar: true,
+        role: [AuthorityType.ROLE_ADMIN, AuthorityType.ROLE_USER],
         subMenus: [
             {
                 code: 'dashboard_stat',
                 name: 'Statistic',
                 url: 'statistic',
-                menuClass: 'fas fa-chart-bar'
-
+                menuClass: 'fas fa-chart-bar',
+                role: [],
             },
             {
                 code: 'dashboard_productsales',
                 name: 'Product Sales',
                 url: 'productsales',
-                menuClass: 'fas fa-chart-line'
+                menuClass: 'fas fa-chart-line',
+                role: [],
             }
         ]
     }, 
+    {
+        code: PUBLIC_QUIZ,
+        name: "Quiz",
+        url: "/quiz",
+        menuClass: "fas fa-book",
+        active: false,
+        authenticated: true,
+        showSidebar: false,
+        subMenus: [],
+        role: [AuthorityType.ROLE_ADMIN, AuthorityType.ROLE_USER]
+    },
     {
         code: QUIZ_MANAGEMENT,
         name: "Quiz Management",
@@ -157,13 +180,14 @@ export const menus: Menu[] = [
         active: false,
         authenticated: true,
         showSidebar: true,
+        role: [AuthorityType.ROLE_ADMIN],
         subMenus: [
             {
                 code: 'quiz_management_form',
                 name: 'Quiz Form',
                 url: 'form',
-                menuClass: 'fas fa-keyboard'
-
+                menuClass: 'fas fa-keyboard',
+                role:[]
             }, 
         ]
     }, 
@@ -174,7 +198,8 @@ export const menus: Menu[] = [
         menuClass: "fa fa-database",
         active: false,
         authenticated: true,
-        showSidebar: true
+        showSidebar: true,
+        role: [AuthorityType.ROLE_ADMIN],
     },
     {
         code: MENU_SETTING,
@@ -184,18 +209,21 @@ export const menus: Menu[] = [
         active: false,
         authenticated: true,
         showSidebar: true,
+        role: [AuthorityType.ROLE_ADMIN ,AuthorityType.ROLE_USER],
         subMenus: [
             {
                 code: 'user_profile',
                 name: 'Profile',
                 menuClass: 'fas fa-user-cog',
                 url: 'user-profile',
+                role: [AuthorityType.ROLE_ADMIN, AuthorityType.ROLE_USER],
             },
             {
                 code: 'app_profile',
                 name: 'Application Setting',
                 menuClass: 'fas fa-cog',
                 url: 'app-profile',
+                role: [AuthorityType.ROLE_ADMIN ],
             },
             
         ]

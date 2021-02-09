@@ -6,7 +6,7 @@ import { mapCommonUserStateToProps } from './../../constant/stores';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { performLogout } from './../../redux/actionCreators';
-import Menu from './../../models/Menu';
+import Menu from '../../models/settings/Menu';
 import './SideBar.css'
 
 class SideBar extends BaseComponent {
@@ -37,11 +37,12 @@ class SideBar extends BaseComponent {
         const parentMenu: Menu = this.props.parentMenu;
         if (null == parentMenu) { return null }
         const menus: Menu[] = this.props.sidebarMenus == null ? [] : this.props.sidebarMenus;
-
+        const user = this.getLoggedUser();
         return (
             <ul id="sidebar" className="sidebar-nav bg-light">
                 <Brand show={parentMenu != null} brand={parentMenu} />
                 {menus.map(menu => {
+                    if (menu.userAuthorized && !menu.userAuthorized(user)) return null;
                     const isActive: boolean = this.isSidebarActive(menu);
                     const menuClassName = isActive ? 'menu-active' : 'regular-menu';
                     return (

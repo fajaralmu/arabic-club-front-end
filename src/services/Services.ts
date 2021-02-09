@@ -12,6 +12,6 @@ export default interface Services {
     lessonService: LessonService,
     masterDataService: MasterDataService,
     publicQuizService: PublicQuizService,
-    quizSerivce: QuizService,
+    quizService: QuizService,
     galleryService: GalleryService,
 }

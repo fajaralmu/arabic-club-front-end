@@ -6,11 +6,11 @@ const     ExternalEditForm = (props:{record:any, entityProperty:EntityProperty, 
     
     if (props.show == false) return null;
     let link = "";
-    if (props.entityProperty.entityName == 'transaction') {
-        link = "/transaction/detail/"+props.record.code;
-    } else {
-        return null;
-    }
+    // if (props.entityProperty.entityName == 'transaction') {
+    //     link = "/transaction/detail/"+props.record.code;
+    // } else {
+    //     return null;
+    // }
 
     
     return <AnchorWithIcon iconClassName="fas fa-edit" to={link} attributes={{target:"_blank"}} />

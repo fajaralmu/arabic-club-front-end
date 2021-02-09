@@ -31,6 +31,7 @@ class Header extends BaseComponent {
     render() {
         const showNavLinks: boolean = this.state.showNavLinks;
         const menus = getMenus();
+        const user = this.getLoggedUser();
         return (
             <div className="bg-dark container-fluid" style={{ position: 'fixed', zIndex: 55, padding: 0, margin: 0 }}>
                 <NavBarTop label={this.getApplicationProfile().name} />
@@ -45,7 +46,8 @@ class Header extends BaseComponent {
                     <div className={"collapse navbar-collapse"} id="navbarToggler">
                         <ul id="navbar-top" className="navbar-nav mr-auto mt-2 mt-lg-0">
                             {menus.map(menu => {
-                                if (menu == null || menu.authenticated && this.isLoggedUserNull()) return null;
+                                if (menu == null || (menu.authenticated && !user)) return null;
+                                if (menu.userAuthorized && menu.userAuthorized(user) == false) return null;
                                 const isActive = this.props.activeMenuCode == menu.code;
                                 return (
                                     <li key={"header-menu-" + new String(menu.code)} className={"nav-item " + (isActive ? "active nav-active" : "nav-inactive")}>
@@ -57,7 +59,7 @@ class Header extends BaseComponent {
                         </ul >
                         <form className="form-inline my-2 my-lg-0">
                             <UserIcon setMenuNull={this.props.setMenuNull} authenticated={this.isUserLoggedIn()}
-                                onLogout={this.onLogout} user={this.getLoggedUser()} />
+                                onLogout={this.onLogout} user={user} />
                         </form >
                     </div >
                 </nav >

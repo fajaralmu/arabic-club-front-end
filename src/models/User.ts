@@ -1,12 +1,12 @@
+import { AuthorityType } from './AuthorityType';
 import BaseEntity from './BaseEntity';
 
 export default class User extends BaseEntity{
 	username?:string;
 	displayName?:string;
-	password?:string;
+	editPassword?:string;
 	profileImage?:string;
-	authorities?:any[];
-	requestId?:string;
-	processingDate?:Date;
+	role?:AuthorityType;
+	requestId?:string; 
 
 }

@@ -7,6 +7,7 @@ export default class Quiz extends BaseEntity{
 	publicQuiz?:boolean = true;
 	questions?:QuizQuestion[] = [];
 	duration:number = 0;
+	active?:boolean = true
 
 	questionCount = () : number => {
 		return this.questions?this.questions.length : 0;

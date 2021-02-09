@@ -9,7 +9,7 @@ import './Login.css';
 import { performLogin } from '../../../redux/actionCreators';
 import Spinner from './../../loader/Spinner';
 class IState {
-    loading:boolean = false; username:string = ""; password: string = "";
+    loading:boolean = false; username:string = ""; editPassword: string = "";
 }
 class Login extends BaseComponent{
     state:IState = new IState();
@@ -20,7 +20,7 @@ class Login extends BaseComponent{
     endLoading = () => this.setState({ loading: false });
     login(e: FormEvent) {
         e.preventDefault();
-        this.props.performLogin(this.state.username,this.state.password, this);
+        this.props.performLogin(this.state.username,this.state.editPassword, this);
     }
     componentDidMount(){
         document.title = "Login";
@@ -53,7 +53,7 @@ class Login extends BaseComponent{
                         <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
                     </div>
                     <UsernameField value={this.state.username} onChange={this.updateCredentialProperty}/>
-                    <PasswordField value={this.state.password} onChange={this.updateCredentialProperty}/>
+                    <PasswordField value={this.state.editPassword} onChange={this.updateCredentialProperty}/>
                     {this.state.loading ? <Spinner/>:<button className="btn btn-lg btn-success btn-block" type="submit">Sign in</button>}
                     <input name="transport_type" type="hidden" value="rest" />
                 </form>
@@ -65,7 +65,7 @@ class Login extends BaseComponent{
 const PasswordField = ({value, onChange}) => {
     return <Fragment>
         <label className="sr-only">Password</label>
-        <input name="password" value={value} onChange={onChange} type="password" id="inputPassword" className="form-control"
+        <input name="editPassword" value={value} onChange={onChange} type="password" id="inputPassword" className="form-control"
             placeholder="Password" required />
     </Fragment>
 }

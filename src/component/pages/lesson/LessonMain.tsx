@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
 import BaseMainMenus from '../../layout/BaseMainMenus'; 
 import WebResponse from '../../../models/WebResponse';
-import Menu from '../../../models/Menu'; 
+import Menu from '../../../models/settings/Menu'; 
 import CategoriesService from './../../../services/CategoriesService';
 import LessonCategory from './../../../models/LessonCategory';
 import { uniqueId } from './../../../utils/StringUtil';
@@ -45,7 +45,8 @@ class LessonMain extends BaseMainMenus {
                 name: element.name,
                 url: element.code,
                 code: element.code??uniqueId(),
-                menuClass: element.iconClassName
+                menuClass: element.iconClassName,
+                role:[]
             });
         }
         if (this.props.setSidebarMenus) {

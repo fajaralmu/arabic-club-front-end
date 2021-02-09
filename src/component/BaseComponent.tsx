@@ -4,6 +4,7 @@ import WebResponse from './../models/WebResponse';
 import ApplicationProfile from './../models/ApplicationProfile';
 import User from './../models/User';
 import Services from './../services/Services';
+import { AuthorityType } from '../models/AuthorityType';
 
 export default class BaseComponent extends Component<any, any> {
     parentApp: any;
@@ -95,8 +96,13 @@ export default class BaseComponent extends Component<any, any> {
     getLoggedUser():User|undefined {
         const user:User|undefined = this.props.loggedUser;
         if (!user) return undefined;
-        user.password = "^_^";
-        return user;
+        user.editPassword = "^_^";
+        return Object.assign(new User(), user);
+    }
+    isAdmin = () : boolean => {
+        const user = this.getLoggedUser();
+        if (!user) return false;
+        return user.role == AuthorityType.ROLE_ADMIN;
     }
     isLoggedUserNull(): boolean {
         return false == this.props.loginStatus || null == this.props.loggedUser;

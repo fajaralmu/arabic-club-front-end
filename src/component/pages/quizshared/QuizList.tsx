@@ -17,6 +17,7 @@ export default class QuizList extends Component<any, IProps>{
                             <th>Title</th>
                             <th>Description</th>
                             <th>Question</th>
+                            <th>Active</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -29,6 +30,9 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{quiz.title}</td>
                                     <td>{quiz.description}</td>
                                     <td>{quiz.questionCount()}</td>
+                                    <td>
+                                        {quiz.active?"Active":"Not Active"}
+                                    </td>
                                     <td>
                                         <AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
                                             className="btn btn-dark" iconClassName="fas fa-clipboard">

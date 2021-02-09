@@ -7,9 +7,10 @@ import { mapCommonUserStateToProps } from '../../../constant/stores';
 import BaseMainMenus from './../../layout/BaseMainMenus';
 import MasterDataService from './../../../services/MasterDataService';
 import WebResponse from './../../../models/WebResponse';
-import Menu from './../../../models/Menu';
+import Menu from '../../../models/settings/Menu';
 import ManagementProperty from '../../../models/ManagementProperty';
 import MasterDataManagement from './MasterDataManagement';
+import { AuthorityType } from '../../../models/AuthorityType';
 
 interface IState {
     code?: string
@@ -37,6 +38,7 @@ class MasterDataMain extends BaseMainMenus {
         for (let i = 0; i < managementProperties.length; i++) {
             const element = managementProperties[i];
             sidebarMenus.push({
+                role:[AuthorityType.ROLE_ADMIN],
                 name: element.label,
                 url: element.entityName,
                 code: element.entityName,

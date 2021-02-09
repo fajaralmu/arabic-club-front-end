@@ -3,7 +3,12 @@
 import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls } from './Promises'; 
 import Quiz from './../models/Quiz';
+import Filter from '../models/Filter';
 export default class QuizService {
+    getQuizList = (filter:Filter) => {
+        const endpoint = contextPath().concat("api/app/quiz/list")
+        return commonAjaxPostCalls(endpoint, {filter:filter});
+    }
     private static instance?: QuizService;
 
     static getInstance(): QuizService {

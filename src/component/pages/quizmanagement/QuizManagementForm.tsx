@@ -23,7 +23,7 @@ class QuizManagementForm extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.quizService = this.getServices().quizSerivce;
+        this.quizService = this.getServices().quizService;
     }
     componentDidMount() {
         this.validateLoginStatus();
@@ -43,6 +43,11 @@ class QuizManagementForm extends BaseComponent {
             this.setState({ quiz: new Quiz() });
         })
 
+    }
+    updateActive = (active:boolean) => {
+        const quiz: Quiz = this.state.quiz;
+        quiz.active = active;
+        this.setState({ quiz: quiz });
     }
     updateQuizField = (e) => {
         const name = e.target.name;
@@ -190,7 +195,7 @@ class QuizManagementForm extends BaseComponent {
                 <h2>Quiz Form</h2>
 
                 <form onSubmit={this.submitQuiz} >
-                    <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateField={this.updateQuizField} />
+                    <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateActive={this.updateActive} updateField={this.updateQuizField} />
                     </Card>
                     <div className="btn-group" style={{ marginBottom: '5px', marginTop: '5px' }}>
                         <AnchorButton className="btn btn-secondary" iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>

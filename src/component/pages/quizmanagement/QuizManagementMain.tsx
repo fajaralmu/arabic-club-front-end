@@ -13,6 +13,7 @@ import NavigationButtons from './../../navigation/NavigationButtons';
 import Spinner from './../../loader/Spinner';
 import QuizList from './../quizshared/QuizList';
 import Card from './../../container/Card';
+import QuizService from './../../../services/QuizService';
 class IState {
     quizList: Quiz[] = new Array();
     loading: boolean = false;
@@ -21,11 +22,11 @@ class IState {
 }
 
 class QuizManagementMain extends BaseMainMenus {
-    publicQuizService: PublicQuizService;
+    quizService: PublicQuizService;
     state: IState = new IState();
     constructor(props: any) {
         super(props, "Quiz Management", true);
-        this.publicQuizService = this.getServices().publicQuizService;
+        this.quizService = this.getServices().publicQuizService;
     }
     startLoading = () => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }
@@ -39,7 +40,7 @@ class QuizManagementMain extends BaseMainMenus {
 
     loadQuizes = () => {
         this.commonAjax(
-            this.publicQuizService.getQuizList,
+            this.quizService.getQuizList,
             this.dataLoaded,
             this.showCommonErrorAlert,
             this.state.filter

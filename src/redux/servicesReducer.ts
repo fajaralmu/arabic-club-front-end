@@ -15,7 +15,7 @@ export const initState: { services: Services } = {
         lessonService: LessonService.getInstance(),
         masterDataService: MasterDataService.getInstance(),
         publicQuizService: PublicQuizService.getInstance(),
-        quizSerivce: QuizService.getInstance(),
+        quizService: QuizService.getInstance(),
         galleryService: GalleryService.getInstance()
     }
 

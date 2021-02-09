@@ -6,7 +6,7 @@ export const initState = {
     loginKey: null,
     loginStatus: false,
     loginFailed: false,
-    menus: menuData.menus,
+    menus: menuData.getMenus(),
     loggedUser: null,
     loginAttempt: false,
     requestId: null,

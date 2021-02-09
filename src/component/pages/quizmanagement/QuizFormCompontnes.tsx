@@ -5,6 +5,7 @@ import QuizQuestion from './../../../models/QuizQuestion';
 import FormGroup from './../../form/FormGroup';
 import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
+import ToggleButton from '../../navigation/ToggleButton';
 
 
 export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, updateField(e:any):void, setAnswer (code:string, index:number):void, removeImage:any, index: number, questionIndex: number }) => {
@@ -70,7 +71,7 @@ export const QuestionForm = (props: {showChoices:boolean, question: QuizQuestion
         </div>
     )
 }
-export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => {
+export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, updateActive(active:boolean):void }) => {
     return (
         <Fragment>
             <FormGroup label="Title">
@@ -81,6 +82,9 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField: any }) => 
             </FormGroup>
             <FormGroup label="Duration (Second)">
                 <input type="number" min={45} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
+            </FormGroup>
+            <FormGroup label="Active">
+                <ToggleButton active={props.quiz.active==true} onClick={props.updateActive} />
             </FormGroup>
             {props.quiz.id?
             <FormGroup label="Record ID">

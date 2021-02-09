@@ -24,7 +24,7 @@ class PublicQuizMain extends BaseMainMenus {
     publicQuizService: PublicQuizService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, "Take Quiz", false);
+        super(props, "Take Quiz", true);
         this.publicQuizService = this.getServices().publicQuizService;
     }
     startLoading = () => { this.setState({ loading: true }); }

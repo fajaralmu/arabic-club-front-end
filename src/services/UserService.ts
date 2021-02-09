@@ -19,7 +19,7 @@ export default class UserService
            user:user
         }
 
-        const endpoint = contextPath().concat("api/app/account/updateprofile")
+        const endpoint = contextPath().concat("api/member/account/updateprofile")
         return commonAjaxPostCalls(endpoint, request);
     }
 

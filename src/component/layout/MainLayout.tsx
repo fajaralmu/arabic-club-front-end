@@ -10,7 +10,7 @@ import Header from '../navigation/Header';
 import ApplicationContent from './ApplicationContent';
 import SideBar from '../navigation/SideBar';
 import './Layout.css';
-import Menu from './../../models/Menu';
+import Menu from '../../models/settings/Menu';
 import { getMenuByMenuPath, extractMenuPath } from './../../constant/Menus';
 interface IState {
     showSidebar: boolean;

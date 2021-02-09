@@ -1,4 +1,6 @@
 
-export default class AuthorityType{
-
+export   enum AuthorityType{
+    
+    ROLE_ADMIN = "ROLE_ADMIN",
+    ROLE_USER = "ROLE_USER"
 }

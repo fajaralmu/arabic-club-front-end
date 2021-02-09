@@ -12,13 +12,13 @@ import UserService from './../../../services/UserService';
 import WebResponse from './../../../models/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
 import { EditField, EditImage } from './settingHelper'; 
-interface EditField { username: boolean, displayName: boolean, password: boolean, profileImage: boolean }
+interface EditField { username: boolean, displayName: boolean, editPassword: boolean, profileImage: boolean }
 class IState {
     user?: User = undefined;
     editFields: EditField = {
         username: false,
         displayName: false,
-        password: false,
+        editPassword: false,
         profileImage: false
     };
     fieldChanged = (): boolean => {
@@ -162,7 +162,7 @@ class UserProfile extends BaseComponent {
                             <EditField edit={editFields.displayName} updateProperty={this.updateProfileProperty} name="displayName" toggleInput={this.toggleInput} value={user.displayName} />
                         </FormGroup>
                         <FormGroup label="Password">
-                            <EditField edit={editFields.password} updateProperty={this.updateProfileProperty} name="password" toggleInput={this.toggleInput} value={user.password} />
+                            <EditField edit={editFields.editPassword} updateProperty={this.updateProfileProperty} name="editPassword" toggleInput={this.toggleInput} value={user.editPassword} />
                         </FormGroup>
                         <FormGroup  >
                            {this.state.fieldChanged()? <input type="submit" className="btn btn-primary" value="Save" />:null}

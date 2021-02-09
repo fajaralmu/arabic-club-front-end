@@ -26,7 +26,7 @@ class QuizDetail extends BaseComponent {
     state: IState = new IState();
     constructor(props: any) {
         super(props, true);
-        this.quizService = this.getServices().quizSerivce;
+        this.quizService = this.getServices().quizService;
     }
     startLoading = (withProgress: boolean) => {
         super.startLoading(withProgress);
@@ -108,6 +108,7 @@ class QuizDetail extends BaseComponent {
                         <FormGroup label="Title">{quiz.title}</FormGroup>
                         <FormGroup label="Description">{quiz.description}</FormGroup>
                         <FormGroup label="Duration (Second)">{quiz.duration}</FormGroup>
+                        <FormGroup label="Active">{quiz.active?"true":"false"}</FormGroup>
                         <FormGroup>
                             <AnchorButton className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
                             <AnchorButton className="btn btn-danger" onClick={this.deleteRecord}>Delete</AnchorButton>

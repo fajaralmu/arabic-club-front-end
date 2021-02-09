@@ -7,7 +7,7 @@ import ApplicationProfile from './../models/ApplicationProfile';
 const usedHost = url.contextPath();
 const apiBaseUrl = usedHost + "api/public/"
 const apiEntityBaseUrl = usedHost + "api/app/entity/"
-const apiAccount = usedHost + "api/app/account/"
+const apiAccount = usedHost + "api/member/account/"
 const apiAdmin = usedHost + "api/app/admin/"    
 
 export const getEntityProperty = (entityName, app) => {
@@ -116,7 +116,7 @@ export const setLoggedUser = (user: User) => {
 
     let request = {
         type: types.SET_LOGGED_USER,
-        payload: { user: user },
+        payload: { user: Object.assign(new User(), user) },
         meta: { type: types.SET_LOGGED_USER }
     };
     return request;
