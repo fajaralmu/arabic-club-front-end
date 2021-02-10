@@ -44,9 +44,9 @@ class QuizManagementForm extends BaseComponent {
         })
 
     }
-    updateActive = (active:boolean) => {
+    updateQuizBooleanField = (name :string, value:boolean) => {
         const quiz: Quiz = this.state.quiz;
-        quiz.active = active;
+        quiz[name] = value;
         this.setState({ quiz: quiz });
     }
     updateQuizField = (e) => {
@@ -195,7 +195,7 @@ class QuizManagementForm extends BaseComponent {
                 <h2>Quiz Form</h2>
 
                 <form onSubmit={this.submitQuiz} >
-                    <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateActive={this.updateActive} updateField={this.updateQuizField} />
+                    <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateQuizBooleanField={this.updateQuizBooleanField} updateField={this.updateQuizField} />
                     </Card>
                     <div className="btn-group" style={{ marginBottom: '5px', marginTop: '5px' }}>
                         <AnchorButton className="btn btn-secondary" iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>

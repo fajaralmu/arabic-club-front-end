@@ -7,7 +7,11 @@ export default class Quiz extends BaseEntity{
 	publicQuiz?:boolean = true;
 	questions?:QuizQuestion[] = [];
 	duration:number = 0;
-	active?:boolean = true
+	active?:boolean = true;
+	repeatable?:boolean = true;
+
+	startedDate?:Date = new Date();
+	submittedDate?:Date = new Date()
 
 	getQuestionCount = () : number => {
 		return this.questions?this.questions.length : 0;

@@ -158,7 +158,9 @@ export default class BaseComponent extends Component<any, any> {
         const msg = e.message??e;
         this.showError("Operation Failed: "+msg);
     }
-
+    componentDidMount() {
+        this.validateLoginStatus();
+    }
     componentDidUpdate() {
         if (this.authenticated == true && this.isLoggedUserNull()) {
             console.debug(typeof this , "BACK TO LOGIN");

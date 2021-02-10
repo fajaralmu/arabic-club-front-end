@@ -109,6 +109,7 @@ class QuizDetail extends BaseComponent {
                         <FormGroup label="Description">{quiz.description}</FormGroup>
                         <FormGroup label="Duration (Second)">{quiz.duration}</FormGroup>
                         <FormGroup label="Active">{quiz.active?"true":"false"}</FormGroup>
+                        <FormGroup label="Repeatable">{quiz.repeatable?"true":"false"}</FormGroup> 
                         <FormGroup>
                             
                             <AnchorButton style={{marginRight:'5px'}} iconClassName="fas fa-edit" className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>

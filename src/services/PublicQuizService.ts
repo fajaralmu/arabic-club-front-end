@@ -16,16 +16,21 @@ export default class PublicQuizService {
     }
     
     getQuiz = (id: number) => {
-        const endpoint = contextPath().concat("api/public/quiz/get/"+id)
+        const endpoint = contextPath().concat("api/member/quiz/get/"+id)
         return commonAjaxPostCalls(endpoint, {});
     }
     submitAnswers = (quiz:Quiz) => {
-        const endpoint = contextPath().concat("api/public/quiz/submit")
+        const endpoint = contextPath().concat("api/member/quiz/submit")
         return commonAjaxPostCalls(endpoint, {quiz:quiz});
     }
     getQuizList = (filter:Filter) => {
         const request:WebRequest = {filter:filter};
-        const endpoint = contextPath().concat("api/public/quiz/list/")
+        const endpoint = contextPath().concat("api/member/quiz/list")
+        return commonAjaxPostCalls(endpoint, request);
+    }
+    getHistories = (filter:Filter) => {
+        const request:WebRequest = {filter:filter};
+        const endpoint = contextPath().concat("api/member/quiz/history")
         return commonAjaxPostCalls(endpoint, request);
     }
 

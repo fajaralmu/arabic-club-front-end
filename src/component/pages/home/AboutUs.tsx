@@ -25,11 +25,11 @@ class AboutUs extends BaseComponent {
             </Card>
             <p/>
             <Card title="Development Mode">
-                <FormGroup label="Repository"><a target="_blank" href="https://github.com/fajaralmu">https://github.com/fajaralmu</a></FormGroup>
+                {/* <FormGroup label="Repository"><a target="_blank" href="https://github.com/fajaralmu">https://github.com/fajaralmu</a></FormGroup>
                 <FormGroup label="Front End">React Js</FormGroup>
                 <FormGroup><a target="_blank" href="https://github.com/fajaralmu/front-end-shopping-mart-v2">https://github.com/fajaralmu/front-end-shopping-mart-v2</a></FormGroup>
                 <FormGroup label="Back End">Java, Spring MVC</FormGroup>
-                <FormGroup><a target="_blank" href="https://github.com/fajaralmu/universal-good-shop-v2">https://github.com/fajaralmu/universal-good-shop-v2</a></FormGroup>
+                <FormGroup><a target="_blank" href="https://github.com/fajaralmu/universal-good-shop-v2">https://github.com/fajaralmu/universal-good-shop-v2</a></FormGroup> */}
             </Card>
             <p/>
         </div>);

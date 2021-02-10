@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { performLogout } from './../../redux/actionCreators';
 import { getMenus } from '../../constant/Menus';
 import './Header.css';
+import User from './../../models/User';
+import { baseImageUrl } from './../../constant/Url';
 class IState {
     showNavLinks: boolean = false;
 }
@@ -58,7 +60,7 @@ class Header extends BaseComponent {
                             })}
                         </ul >
                         <form className="form-inline my-2 my-lg-0">
-                            <UserIcon setMenuNull={this.props.setMenuNull} authenticated={this.isUserLoggedIn()}
+                            <UserIcon setMenuNull={this.props.setMenuNull}  
                                 onLogout={this.onLogout} user={user} />
                         </form >
                     </div >
@@ -77,12 +79,14 @@ const NavBarTop = (props) => {
         </div>
     );
 }
-const UserIcon = (props: any) => {
-    if (props.authenticated) {
+const UserIcon = (props: {user:User|undefined, setMenuNull():any,  onLogout(e):any}) => {
+    if (props.user) {
         return (
             <Fragment>
                 <Link onClick={props.setMenuNull} style={{ marginRight: "5px" }} className="btn btn-light btn-sm my-2 my-sm-0"
-                    to='/settings/user-profile'><i className="fas fa-user-circle"></i>&nbsp;{props.user.displayName}
+                    to='/settings/user-profile'>
+                        <img width="20" src={baseImageUrl() + props.user.profileImage} className="rounded rounded-circle" />
+                        &nbsp;{props.user.displayName}
                 </Link>
                 <a style={{marginRight:'5px'}} className="btn btn-danger btn-sm  my-2 my-sm-0"
                     onClick={props.onLogout}><i className="fas fa-sign-out-alt"></i>&nbsp;Logout

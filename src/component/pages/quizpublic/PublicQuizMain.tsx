@@ -31,14 +31,14 @@ class PublicQuizMain extends BaseMainMenus {
     endLoading = () => { this.setState({ loading: false }); }
     componentDidMount() {
         super.componentDidMount();
-        this.loadQuizes();
+        this.loadRecords();
     }
 
     dataLoaded = (response: WebResponse) => {
         this.setState({ quizList: response.entities ?? [], totalData: response.totalData });
     }
 
-    loadQuizes = () => {
+    loadRecords = () => {
         if (this.state.loading) return;
         this.commonAjax(
             this.publicQuizService.getQuizList,
@@ -47,11 +47,11 @@ class PublicQuizMain extends BaseMainMenus {
             this.state.filter
         )
     }
-    loadQuizesAtPage = (page: number) => {
+    loadRecordsAtPage = (page: number) => {
         const filter = this.state.filter;
         filter.page = page;
         this.setState({ filter: filter });
-        this.loadQuizes();
+        this.loadRecords();
     }
     takeQuiz = (quiz: Quiz) => {
         this.showConfirmation("Take Quiz: " + quiz.title + "?")
@@ -63,6 +63,7 @@ class PublicQuizMain extends BaseMainMenus {
     }
     render() {
         const filter: Filter = this.state.filter;
+        const startNumber = (filter.limit ?? 0) * (filter.page ?? 0);
         return (
             <div id="PublicQuizMain" style={{ marginTop: '20px', }} className="container-fluid">
                 <h2>Take Quiz</h2>
@@ -72,9 +73,9 @@ class PublicQuizMain extends BaseMainMenus {
                 <NavigationButtons
                     activePage={filter.page ?? 0}
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
-                    onClick={this.loadQuizesAtPage}
+                    onClick={this.loadRecordsAtPage}
                 />
-                {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.takeQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.takeQuiz} startingNumber={startNumber} quizList={this.state.quizList} />}
             </div>
         )
     }

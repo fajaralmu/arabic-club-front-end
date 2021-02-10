@@ -1,25 +1,18 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import BaseComponent from '../../BaseComponent';
-import PublicQuizService from '../../../services/PublicQuizService';
-import Quiz from '../../../models/Quiz';
-import WebResponse from '../../../models/WebResponse';
-import SimpleError from '../../alert/SimpleError';
-import Spinner from '../../loader/Spinner';
-import AnchorButton from '../../navigation/AnchorButton';
-import Card from '../../container/Card';
-import QuizQuestion from '../../../models/QuizQuestion';
-import QuizChoice from '../../../models/QuizChoice';
-import { baseImageUrl } from '../../../constant/Url';
-import Modal from '../../container/Modal';
-import QuizResult from '../../../models/QuizResult';
+import BaseComponent from '../../../BaseComponent';
+import PublicQuizService from '../../../../services/PublicQuizService';
+import Quiz from '../../../../models/Quiz';
+import WebResponse from '../../../../models/WebResponse';
+import SimpleError from '../../../alert/SimpleError';
+import Spinner from '../../../loader/Spinner';
+import AnchorButton from '../../../navigation/AnchorButton';
+import QuizResult from '../../../../models/QuizResult';
 import { connect } from 'react-redux';
-import { mapCommonUserStateToProps } from './../../../constant/stores';
-import SimpleWarning from '../../alert/SimpleWarning';
-import FormGroup from '../../form/FormGroup';
-import AnchorWithIcon from '../../navigation/AnchorWithIcon';
-import { timerString } from './../../../utils/DateUtil';
-import { QuizResultInfo, Timer } from './quizChallengeHelper';
+import { mapCommonUserStateToProps } from '../../../../constant/stores';
+import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
+import { QuizResultInfo, Timer } from '../quizChallengeHelper';
+import QuizBody from './QuizBody';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -54,6 +47,10 @@ class PublicQuizChallenge extends BaseComponent {
         this.setState({
             running: true,
         }, this.beginTimer);
+        const quiz: Quiz | undefined = this.state.quiz;
+        if (!quiz  ) return;
+        quiz.startedDate = new Date();
+        this.setState({quiz:quiz});
     }
     setFailedTimeout = () => {
         this.doSubmitAnswer();
@@ -118,10 +115,8 @@ class PublicQuizChallenge extends BaseComponent {
     }
     tryAgain = () => {
         this.showConfirmation("Try quiz again?")
-            .then((ok) => {
-                if (ok) {
+            .then((ok) => { if(!ok) return; 
                     this.resetQuiz();
-                }
             })
     }
     resetQuiz = () => {
@@ -138,19 +133,20 @@ class PublicQuizChallenge extends BaseComponent {
             return;
         }
         this.showConfirmation("Submit Answers?")
-            .then((ok) => {
-                if (ok) {
-                    this.doSubmitAnswer();
-                }
+            .then((ok) => { if(!ok) return;  
+                this.doSubmitAnswer(); 
             })
     }
 
     doSubmitAnswer = () => {
+        const quiz = this.state.quiz;
+        if (!quiz) return;
+        quiz.submittedDate = new Date();
         this.commonAjaxWithProgress(
             this.publicQuizService.submitAnswers,
             this.quizSubmitted,
             this.showCommonErrorAlert,
-            this.state.quiz
+            quiz
         )
         this.setState({ quiz: undefined });
     }
@@ -171,10 +167,11 @@ class PublicQuizChallenge extends BaseComponent {
         }
 
         if (quiz && !this.state.running) {
-            return <div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="text-center container-fluid">
+            return <div id="PublicQuizChallenge" style={{ marginTop: '20px', paddingTop:'20px' }} className="text-center container-fluid">
                 <h1 className="text-primary"><i style={{ fontSize: '5em' }} className="fas fa-book-reader" /></h1>
                 <h3><strong>{quiz.title}</strong></h3>
                 <p>Duration: {quiz.duration} Seconds</p>
+                <p>Question: {quiz.getQuestionCount()}</p>
                 <p />
                 <AnchorWithIcon className="btn btn-dark" onClick={this.start} iconClassName="fas fa-play">Start</AnchorWithIcon>
             </div>
@@ -195,82 +192,6 @@ class PublicQuizChallenge extends BaseComponent {
             </div>
         )
     }
-}
-
-
-const QuizBody = (props: { quiz: Quiz, setChoice: any, submit: any }) => {
-    const quiz = props.quiz;
-    const questions: QuizQuestion[] = quiz.questions ?? [];
-    return (
-        <div>
-            <h1>Quiz : {quiz.title}</h1>
-            <div className='alert alert-info'>
-                <FormGroup label="Duration">
-                    <p>{quiz.duration ?? "0"} Seconds</p>
-                </FormGroup>
-                <FormGroup label="Description">
-                    <p>{quiz.description}</p>
-                </FormGroup>
-            </div>
-
-            {questions.map((question, i) => {
-                return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)
-            })}
-            <Modal title="Option">
-                <AnchorButton onClick={props.submit} className="btn btn-primary" >Submit</AnchorButton>
-            </Modal>
-        </div>
-    )
-}
-
-const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice: any }) => {
-    const question = props.question;
-    const choices: QuizChoice[] = question.choices ?? []
-    return (
-        <Card className="bg-light" attributes={{ style: { marginBottom: '5px' } }} >
-            <div className="row">
-                <h2 className="col-1 text-dark">{props.index + 1}</h2>
-                <div className="col-11"><h4 className="text-dark">{question.statement}</h4>
-
-                    {question.image ? <img height="150" src={baseImageUrl() + question.image} /> : null}
-                    <hr />
-                    {choices.map((choice, i) => {
-                        return <ChoiceItem
-                            correctChoice={question.correctChoice}
-                            answered={choice.answerCode == question.answerCode} setChoice={(code) => props.setChoice(code, props.index)} key={"pqci-" + i + "-of-" + props.index} choice={choice} index={i} />
-                    })}
-                </div>
-            </div>
-        </Card>
-    )
-}
-const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice: any, correctChoice: string | undefined, answered: boolean }) => {
-    const choice: QuizChoice = props.choice;
-    let choiceClass = props.answered ? "btn btn-secondary" : "btn btn-outline-secondary";
-    //after submission
-    if (props.correctChoice != undefined) {
-        if (choice.answerCode == props.correctChoice) {
-            if (props.answered) {
-                choiceClass = "btn btn-primary";
-            } else {
-                choiceClass = "btn btn-success";
-            }
-        } else if (props.answered) {
-            choiceClass = "btn btn-danger";
-        }
-    }
-    return (
-        <div className="row" >
-            <div className="col-1 text-left">
-                <a onClick={(e) => { props.setChoice(choice.answerCode) }}
-                    className={choiceClass}> <strong>{choice.answerCode}</strong></a>
-            </div>
-            <div className="col-11 ">
-                <p>{choice.statement}</p>
-                {choice.image ? <img height="150" src={baseImageUrl() + choice.image} /> : null}
-            </div>
-        </div>
-    )
 }
 
 export default withRouter(connect(

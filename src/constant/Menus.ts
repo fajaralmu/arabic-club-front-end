@@ -146,19 +146,19 @@ const _menus: Menu[] = [
         role: [AuthorityType.ROLE_ADMIN, AuthorityType.ROLE_USER],
         subMenus: [
             {
-                code: 'dashboard_stat',
-                name: 'Statistic',
-                url: 'statistic',
-                menuClass: 'fas fa-chart-bar',
-                role: [],
+                code: 'dashboard_quiz_history',
+                name: 'Quiz History',
+                url: 'quizhistory',
+                menuClass: 'fas fa-history',
+                role: [AuthorityType.ROLE_ADMIN, AuthorityType.ROLE_USER],
             },
-            {
-                code: 'dashboard_productsales',
-                name: 'Product Sales',
-                url: 'productsales',
-                menuClass: 'fas fa-chart-line',
-                role: [],
-            }
+            // {
+            //     code: 'dashboard_productsales',
+            //     name: 'Product Sales',
+            //     url: 'productsales',
+            //     menuClass: 'fas fa-chart-line',
+            //     role: [],
+            // }
         ]
     }, 
     {

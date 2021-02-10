@@ -34,6 +34,8 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{quiz.duration} second(s)</td>
                                     <td>
                                         {quiz.active?"Active":"Not Active"}
+                                        -
+                                        {quiz.repeatable?"Repeatable":"Not Repeatable"}
                                     </td>
                                     <td>
                                         <AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
