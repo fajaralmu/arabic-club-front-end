@@ -1,11 +1,19 @@
 
 import React, { Component } from 'react';
-export default class FormGroup extends Component<any, any>
+interface Props {
+    orientation?:string,
+    show?:boolean,
+    children:any,
+    label?:string,
+    className?:string,
+}
+export default class FormGroup extends Component<Props, any>
 {
     constructor(props) {
         super(props);
     }
     render() {
+        if (false == this.props.show) return null;
         const orientation = this.props.orientation == 'vertical' ? 'vertical' : 'horizontal';
         return (
             <div className={"form-group "+ this.props.className+ " " + (orientation == 'vertical' ? '' : 'row')}>

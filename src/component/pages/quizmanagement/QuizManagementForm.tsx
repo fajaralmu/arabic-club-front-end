@@ -211,6 +211,7 @@ class QuizManagementForm extends BaseComponent {
                         { questions.map((question, i) => {
                             return (
                                 <QuestionForm
+                                    questionsTimered={quiz.questionsTimered}
                                     showChoices={this.state.showChoices}
                                     setAnswer={this.setAnswer}
                                     key={"quest-form-" + i}

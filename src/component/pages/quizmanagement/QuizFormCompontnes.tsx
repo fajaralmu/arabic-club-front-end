@@ -27,13 +27,18 @@ export const ChoiceForm = (props: { answerCode: string, choice: QuizChoice, upda
         </div>
     )
 }
-export const QuestionForm = (props: {showChoices:boolean, question: QuizQuestion, index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
+export const QuestionForm = (props: {questionsTimered:boolean, 
+    showChoices:boolean, question: QuizQuestion, 
+    index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
     const i = props.index;
     const choices: QuizChoice[] = props.question.choices ?? [];
     return (
         <div className="alert alert-info" key={"quiz-quest-form-" + i}>
             <FormGroup label={"Question #" + (i + 1)}>
                 <input required onChange={props.updateField} value={props.question.statement} className="form-control" name="statement" data-index={i} />
+            </FormGroup>
+            <FormGroup show={props.questionsTimered} label={"Duration"}>
+                <input min={5} type="number" required onChange={props.updateField} value={props.question.duration} className="form-control" name="duration" data-index={i} />
             </FormGroup>
             <FormGroup label="Image">
                 <input type="file"  accept="image/*" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
@@ -81,13 +86,19 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, u
                 <textarea required onChange={props.updateField} className="form-control" name="description" value={props.quiz.description} />
             </FormGroup>
             <FormGroup label="Duration (Second)">
-                <input type="number" min={30} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
+                <input type="number" min={5} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
             </FormGroup>
             <FormGroup label="Active">
                 <ToggleButton active={props.quiz.active==true} onClick={(val)=>props.updateQuizBooleanField('active', val)} />
             </FormGroup>
             <FormGroup label="Repeatable">
                 <ToggleButton active={props.quiz.repeatable==true} onClick={(val)=>props.updateQuizBooleanField('repeatable', val)} />
+            </FormGroup>
+            <FormGroup label="Show All Question">
+                <ToggleButton active={props.quiz.showAllQuestion==true} onClick={(val)=>props.updateQuizBooleanField('showAllQuestion', val)} />
+            </FormGroup>
+            <FormGroup label="Question With Timer">
+                <ToggleButton active={props.quiz.questionsTimered==true} onClick={(val)=>props.updateQuizBooleanField('questionsTimered', val)} />
             </FormGroup>
             {props.quiz.id?
             <FormGroup label="Record ID">

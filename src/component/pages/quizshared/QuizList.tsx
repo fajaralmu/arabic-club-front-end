@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Quiz from './../../../models/Quiz';
 import Card from './../../container/Card';
 import AnchorWithIcon from './../../navigation/AnchorWithIcon';
+import { timerString } from './../../../utils/DateUtil';
 interface IProps { quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
 export default class QuizList extends Component<any, IProps>{
 
@@ -31,7 +32,7 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{quiz.title}</td>
                                     <td>{quiz.description}</td>
                                     <td>{quiz.getQuestionCount()}</td>
-                                    <td>{quiz.duration} second(s)</td>
+                                    <td>{timerString(quiz.duration)}</td>
                                     <td>
                                         {quiz.active?"Active":"Not active"}
                                         -

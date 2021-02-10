@@ -16,6 +16,7 @@ import WebResponse from './../../../models/WebResponse';
 import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
 import Spinner from '../../loader/Spinner';
+import { timerString } from './../../../utils/DateUtil';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -89,17 +90,18 @@ class QuizDetail extends BaseComponent {
     }
 
     render() {
-        
+
         if (!this.state.quiz) {
             return (
                 <div id="QuizDetail" className="container-fluid">
                     <h2>Quiz Detail</h2>
-                    {this.state.loading?<Spinner/>:<SimpleError children="No Data"/>}
+                    {this.state.loading ? <Spinner /> : <SimpleError children="No Data" />}
                 </div>
             )
         }
         const quiz: Quiz = Object.assign(new Quiz, this.state.quiz);
         const questions: QuizQuestion[] = quiz.questions ?? [];
+        const questionTimered: boolean = quiz.questionsTimered;
         return (
             <div id="QuizDetail" className="container-fluid">
                 <h2>Quiz Detail</h2>
@@ -107,39 +109,52 @@ class QuizDetail extends BaseComponent {
                     <div className="alert alert-info">
                         <FormGroup label="Title">{quiz.title}</FormGroup>
                         <FormGroup label="Description">{quiz.description}</FormGroup>
-                        <FormGroup label="Duration (Second)">{quiz.duration}</FormGroup>
-                        <FormGroup label="Active">{quiz.active?"true":"false"}</FormGroup>
-                        <FormGroup label="Repeatable">{quiz.repeatable?"true":"false"}</FormGroup> 
+                        <FormGroup label="Duration ">{timerString(quiz.duration)}</FormGroup>
+                        <FormGroup label="Active">{quiz.active ? "YES" : "NO"}</FormGroup>
+                        <FormGroup label="Repeatable">{quiz.repeatable ? "YES" : "NO"}</FormGroup>
+                        <FormGroup label="Show All Question">{quiz.showAllQuestion ? "YES" : "NO"}</FormGroup>
+                        <FormGroup label="Qestions Timered">{quiz.questionsTimered ? "YES" : "NO"}</FormGroup>
                         <FormGroup>
-                            
-                            <AnchorButton style={{marginRight:'5px'}} iconClassName="fas fa-edit" className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
+
+                            <AnchorButton style={{ marginRight: '5px' }} iconClassName="fas fa-edit" className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
                             <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.deleteRecord}>Delete</AnchorButton>
                         </FormGroup>
                     </div>
                     {questions.map((question, i) => {
-                        const choices: QuizChoice[] = question.choices ?? [];
+
                         return (
-                            <Card key={"qdl-" + i} attributes={{ style: { marginBottom: '5px' } }}>
-                                <h4>{i + 1}. {question.statement}</h4>
-                                {question.image ? <img src={baseImageUrl() + question.image} height="100" /> : null}
-                                {choices.map((choice, c) => {
-                                    const rightAnswer = choice.answerCode == question.answerCode;
-                                    return (
-                                        <div key={"qdc-" + i + c}>
-                                            <b className={rightAnswer ? "border rounded border-success text-success" : "text-dark"}>{choice.answerCode}</b>
-                                            <span style={{ marginLeft: '5px' }}>{choice.statement}</span>
-                                            <p />
-                                            {choice.image ? <img src={baseImageUrl() + choice.image} height="100" /> : null}
-                                        </div>
-                                    )
-                                })}
-                            </Card>
+                            <Question questionTimered={questionTimered} number={i+1} key={"qdl-" + i} question={question} />
                         )
                     })}
                 </div>
             </div>
         )
     }
+}
+
+const Question = (props: {questionTimered:boolean, number:number, question: QuizQuestion }) => {
+    const question = props.question;
+    const choices: QuizChoice[] = question.choices ?? [];
+    return (
+        <Card attributes={{ style: { marginBottom: '5px' } }}>
+            <h4>{props.number}. {question.statement}</h4>
+            <FormGroup show={props.questionTimered}>
+                <i className="fas fa-clock"/>&nbsp;{timerString(question.duration)}
+            </FormGroup>
+            {question.image ? <img src={baseImageUrl() + question.image} height="100" /> : null}
+            {choices.map((choice, c) => {
+                const rightAnswer = choice.answerCode == question.answerCode;
+                return (
+                    <div key={"qdc-" + question.id + c}>
+                        <b className={rightAnswer ? "border rounded border-success text-success" : "text-dark"}>{choice.answerCode}</b>
+                        <span style={{ marginLeft: '5px' }}>{choice.statement}</span>
+                        <p />
+                        {choice.image ? <img src={baseImageUrl() + choice.image} height="100" /> : null}
+                    </div>
+                )
+            })}
+        </Card>
+    )
 }
 
 export default withRouter(connect(
