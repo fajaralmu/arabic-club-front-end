@@ -10,11 +10,9 @@ import { baseImageUrl } from './../../../../constant/Url';
 import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
-import SimpleWarning from '../../../alert/SimpleWarning';
 import QuizTimer from './QuizTimer';
-import QuizResult from './../../../../models/QuizResult';
 interface Props {
-   result?:QuizResult, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
+   questionTimered:boolean, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
 }
 class State {
     questionIndex: number = 0;
@@ -28,7 +26,7 @@ export default class QuizBody extends Component<Props, State> {
         super(props);
     }
     updateQuestionIndex = (index: number) => {
-        if (this.props.quiz.questionsTimered && !this.props.result) return;
+        if (this.props.questionTimered) return;
         this.setState({ questionIndex: index });
     }
     getCurrentQuestion = () => {
@@ -89,11 +87,10 @@ export default class QuizBody extends Component<Props, State> {
                     return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)
                 }) :
                     <Fragment>
-                        {quiz.questionsTimered && !this.props.result? 
-                    <QuizTimer onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
+                        {props.questionTimered? 
+                    <QuizTimer display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
                     :null    
                     }
-                        <SimpleWarning show={quiz.questionsTimered}>{timerString(this.getCurrentQuestion().duration)} </SimpleWarning>
                         <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                         <QuestionBody setChoice={props.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
                         <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />

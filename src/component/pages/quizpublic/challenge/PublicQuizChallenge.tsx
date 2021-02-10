@@ -159,7 +159,7 @@ class PublicQuizChallenge extends BaseComponent {
                 <AnchorWithIcon className="btn btn-dark" onClick={this.start} iconClassName="fas fa-play">Start</AnchorWithIcon>
             </div>
         }
-
+        const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (
             <div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="container-fluid">
                 {quiz && quiz.questionsTimered==false ? <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
@@ -169,7 +169,7 @@ class PublicQuizChallenge extends BaseComponent {
                 {this.state.quizResult ?
                     <QuizResultInfo quizResult={this.state.quizResult} tryAgain={this.tryAgain} /> : null}
                 {quiz ?
-                    <QuizBody result={this.state.quizResult} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                    <QuizBody questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>
