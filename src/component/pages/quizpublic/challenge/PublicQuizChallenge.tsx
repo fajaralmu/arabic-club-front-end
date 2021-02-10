@@ -14,6 +14,7 @@ import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { QuizResultInfo } from '../quizChallengeHelper';
 import QuizBody from './QuizBody';
 import QuizTimer from './QuizTimer';
+import { timerString } from './../../../../utils/DateUtil';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -82,7 +83,7 @@ class PublicQuizChallenge extends BaseComponent {
     setChoice = (code: string, questionIndex: number) => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
-        if (!quiz || !quiz.questions || quiz.questions.length == 0) return;
+        if (!quiz || quiz.questions.length == 0) return;
         try {
             quiz.questions[questionIndex].answerCode = code;
             this.setState({ quiz: Object.assign(new Quiz(), quiz) });
@@ -108,10 +109,13 @@ class PublicQuizChallenge extends BaseComponent {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
         if (!Object.assign(new Quiz(), quiz).allQuestionHasBeenAnswered()) {
-            this.showError("Please answer all questions!");
+            this.showConfirmationDanger("Answers are not complete. Continue to submit answers?")
+            .then((ok) => { if(!ok) return;  
+                this.doSubmitAnswer(); 
+            })
             return;
         }
-        this.showConfirmation("Submit Answers?")
+        this.showConfirmation("Submit answers?")
             .then((ok) => { if(!ok) return;  
                 this.doSubmitAnswer(); 
             })
@@ -149,7 +153,7 @@ class PublicQuizChallenge extends BaseComponent {
             return <div id="PublicQuizChallenge" style={{ marginTop: '20px', paddingTop:'20px' }} className="text-center container-fluid">
                 <h1 className="text-primary"><i style={{ fontSize: '5em' }} className="fas fa-book-reader" /></h1>
                 <h3><strong>{quiz.title}</strong></h3>
-                <p>Duration: {quiz.duration} Seconds</p>
+                <p>Duration: {timerString(quiz.duration)}</p>
                 <p>Question: {quiz.getQuestionCount()}</p>
                 <p />
                 <AnchorWithIcon className="btn btn-dark" onClick={this.start} iconClassName="fas fa-play">Start</AnchorWithIcon>

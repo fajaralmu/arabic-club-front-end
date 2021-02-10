@@ -9,6 +9,7 @@ import Card from './../../../container/Card';
 import { baseImageUrl } from './../../../../constant/Url';
 import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
+import { timerString } from './../../../../utils/DateUtil';
 interface Props {
     quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, submit(e): any
 }
@@ -40,7 +41,7 @@ export default class QuizBody extends Component<Props, State> {
         const props = this.props;
         const quiz = props.quiz;
         const questions: QuizQuestion[] = quiz.questions ?? [];
-        const showAllQuestion: boolean = this.state.showAllQuestion;
+        const showAllQuestion: boolean = quiz.showAllQuestion==false?quiz.showAllQuestion:this.state.showAllQuestion;
         return (
             <div>
                 <h1>Quiz : {quiz.title}</h1>
@@ -49,15 +50,18 @@ export default class QuizBody extends Component<Props, State> {
                         {quiz.startedDate ? new Date(quiz.startedDate).toLocaleString() : "-"}
                     </FormGroup>
                     <FormGroup label="Duration">
-                        <p>{quiz.duration ?? "0"} Seconds</p>
+                        <p>{timerString(quiz.duration)}</p>
                     </FormGroup>
                     <FormGroup label="Description">
                         <p>{quiz.description}</p>
                     </FormGroup>
                     <FormGroup label="Show All Question">
-                        <ToggleButton onClick={this.toggleQuestionView}
+                        {/* <ToggleButton onClick={this.toggleQuestionView}
                             active={this.state.showAllQuestion}
-                        />
+                        /> */}
+                        {!quiz.showAllQuestion?"No": <ToggleButton onClick={this.toggleQuestionView}
+                            active={this.state.showAllQuestion}
+                        />}
                     </FormGroup>
                 </div>
                 {showAllQuestion ? questions.map((question, i) => {
@@ -86,9 +90,9 @@ const QuestionNavigation = (props: { index: number, updateQuestionIndex(index: n
                 <div className="col-5 text-center">
                     <AnchorWithIcon className="btn btn-secondary" children="Previous" onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={props.index > 0} iconClassName="fas fa-angle-left" />
                 </div>
-                <h3 className="col-2 text-center">
-                    {props.index+1}/{props.questionCount}
-                </h3>
+                <div className="col-2 text-center">
+                  <p>Question: {props.index+1} of {props.questionCount}</p>
+                </div>
                 <div className="col-5 text-center">
                     <AnchorWithIcon className="btn btn-secondary" children="Next" onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
                 </div>

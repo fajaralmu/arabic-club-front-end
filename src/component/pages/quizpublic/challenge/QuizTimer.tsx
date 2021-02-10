@@ -39,8 +39,6 @@ export default class QuizTimer extends Component<Props, State> {
         }
     }
     beginTimer = () => {
-      
-        const duration = this.props.duration;
         this.timeout = setTimeout(this.updateTimer, 1000);
     }
     render() {

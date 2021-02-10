@@ -10,6 +10,8 @@ export default class Quiz extends BaseEntity{
 	active?:boolean = true;
 	repeatable?:boolean = true;
 	available?:boolean = true;
+	showAllQuestion:boolean = true;
+	questionsTimered:boolean = false;
 
 	startedDate?:Date = new Date();
 	submittedDate?:Date = new Date()
@@ -23,6 +25,7 @@ export default class Quiz extends BaseEntity{
 		for (let i = 0; i < this.questions.length; i++) {
 			const element = this.questions[i];
 			element.correctChoice = undefined;
+			element.answerCode = undefined;
 		}
 	}
 
