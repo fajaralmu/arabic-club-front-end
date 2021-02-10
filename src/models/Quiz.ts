@@ -5,7 +5,7 @@ export default class Quiz extends BaseEntity{
 	title?:string = "";
 	description?:string = "";
 	publicQuiz?:boolean = true;
-	questions?:QuizQuestion[] = [];
+	questions:QuizQuestion[] = [];
 	duration:number = 0;
 	active?:boolean = true;
 	repeatable?:boolean = true;

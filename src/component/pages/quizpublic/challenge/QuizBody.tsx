@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Quiz from './../../../../models/Quiz';
 import FormGroup from './../../../form/FormGroup';
 import QuizQuestion from './../../../../models/QuizQuestion';
@@ -7,26 +7,46 @@ import Modal from './../../../container/Modal';
 import AnchorButton from './../../../navigation/AnchorButton';
 import Card from './../../../container/Card';
 import { baseImageUrl } from './../../../../constant/Url';
+import ToggleButton from '../../../navigation/ToggleButton';
+import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 interface Props {
-    quiz: Quiz, setChoice(code:string|undefined, questionIndex:number): any, submit(e): any
+    quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, submit(e): any
 }
-export default class QuizBody extends Component<Props, any> {
+class State {
+    questionIndex: number = 0;
+    showAllQuestion: boolean = true;
+}
+export default class QuizBody extends Component<Props, State> {
 
+    state: State = new State();
     constructor(props) {
         super(props);
     }
-
+    updateQuestionIndex = (index: number) => {
+        this.setState({ questionIndex: index });
+    }
+    getCurrentQuestion = () => {
+        if (this.props.quiz.questions.length > this.state.questionIndex) {
+            return this.props.quiz.questions[this.state.questionIndex];
+        }
+        this.setState({ questionIndex: 0 });
+        return this.props.quiz.questions[0];
+    }
+    toggleQuestionView = (showAll: boolean) => {
+        this.setState({ showAllQuestion: showAll, questionIndex: 0 });
+    }
     render() {
 
         const props = this.props;
         const quiz = props.quiz;
         const questions: QuizQuestion[] = quiz.questions ?? [];
+        const showAllQuestion: boolean = this.state.showAllQuestion;
         return (
             <div>
                 <h1>Quiz : {quiz.title}</h1>
                 <div className='alert alert-info'>
                     <FormGroup label="Started at">
-                        {quiz.startedDate? new Date(quiz.startedDate).toLocaleString():"-"}
+                        {quiz.startedDate ? new Date(quiz.startedDate).toLocaleString() : "-"}
                     </FormGroup>
                     <FormGroup label="Duration">
                         <p>{quiz.duration ?? "0"} Seconds</p>
@@ -34,11 +54,21 @@ export default class QuizBody extends Component<Props, any> {
                     <FormGroup label="Description">
                         <p>{quiz.description}</p>
                     </FormGroup>
+                    <FormGroup label="Show All Question">
+                        <ToggleButton onClick={this.toggleQuestionView}
+                            active={this.state.showAllQuestion}
+                        />
+                    </FormGroup>
                 </div>
-
-                {questions.map((question, i) => {
+                {showAllQuestion ? questions.map((question, i) => {
                     return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)
-                })}
+                }) :
+                    <Fragment>
+                        <QuestionNavigation updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                        <QuestionBody setChoice={props.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
+                        <QuestionNavigation updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                    </Fragment>
+                }
                 <Modal title="Option">
                     <AnchorButton onClick={props.submit} className="btn btn-primary" >Submit</AnchorButton>
                 </Modal>
@@ -46,7 +76,29 @@ export default class QuizBody extends Component<Props, any> {
         )
     }
 }
-const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(code:string|undefined, index:number): any }) => {
+
+const QuestionNavigation = (props: { index: number, updateQuestionIndex(index: number): any, questionCount: number }) => {
+
+    return (
+        <div >
+            <p />
+            <div className="row container-fluid">
+                <div className="col-5 text-center">
+                    <AnchorWithIcon className="btn btn-secondary" children="Previous" onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={props.index > 0} iconClassName="fas fa-angle-left" />
+                </div>
+                <h3 className="col-2 text-center">
+                    {props.index+1}/{props.questionCount}
+                </h3>
+                <div className="col-5 text-center">
+                    <AnchorWithIcon className="btn btn-secondary" children="Next" onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
+                </div>
+            </div>
+            <p />
+        </div>
+    )
+}
+
+const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(code: string | undefined, index: number): any }) => {
     const question = props.question;
     const choices: QuizChoice[] = question.choices ?? []
     return (
@@ -67,7 +119,7 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(
         </Card>
     )
 }
-const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice(code?:string): any, correctChoice: string | undefined, answered: boolean }) => {
+const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice(code?: string): any, correctChoice: string | undefined, answered: boolean }) => {
     const choice: QuizChoice = props.choice;
     let choiceClass = props.answered ? "btn btn-secondary" : "btn btn-outline-secondary";
     //after submission
