@@ -27,8 +27,8 @@ class PublicQuizMain extends BaseMainMenus {
         super(props, "Take Quiz", true);
         this.publicQuizService = this.getServices().publicQuizService;
     }
-    startLoading = () => { this.setState({ loading: true }); }
-    endLoading = () => { this.setState({ loading: false }); }
+    startLoading = (realtime:boolean) => { this.setState({ loading: true }); super.startLoading(realtime) }
+    endLoading = () => { this.setState({ loading: false }); super.endLoading() }
     componentDidMount() {
         super.componentDidMount();
         this.loadRecords();
@@ -40,11 +40,13 @@ class PublicQuizMain extends BaseMainMenus {
 
     loadRecords = () => {
         if (this.state.loading) return;
-        this.commonAjax(
+        const filter = this.state.filter;
+        filter.availabilityCheck = true;
+        this.commonAjaxWithProgress(
             this.publicQuizService.getQuizList,
             this.dataLoaded,
             this.showCommonErrorAlert,
-            this.state.filter
+            filter
         )
     }
     loadRecordsAtPage = (page: number) => {

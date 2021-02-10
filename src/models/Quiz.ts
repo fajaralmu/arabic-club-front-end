@@ -9,6 +9,7 @@ export default class Quiz extends BaseEntity{
 	duration:number = 0;
 	active?:boolean = true;
 	repeatable?:boolean = true;
+	available?:boolean = true;
 
 	startedDate?:Date = new Date();
 	submittedDate?:Date = new Date()

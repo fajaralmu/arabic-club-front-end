@@ -18,7 +18,7 @@ export default class QuizList extends Component<any, IProps>{
                             <th>Description</th>
                             <th>Question</th>
                             <th>Duration</th>
-                            <th>Status</th>
+                            <th>Status</th> 
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -33,15 +33,15 @@ export default class QuizList extends Component<any, IProps>{
                                     <td>{quiz.getQuestionCount()}</td>
                                     <td>{quiz.duration} second(s)</td>
                                     <td>
-                                        {quiz.active?"Active":"Not Active"}
+                                        {quiz.active?"Active":"Not active"}
                                         -
-                                        {quiz.repeatable?"Repeatable":"Not Repeatable"}
-                                    </td>
+                                        {quiz.repeatable?"Repeatable":"Not repeatable"}
+                                    </td> 
                                     <td>
-                                        <AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
+                                        {quiz.available?<AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
                                             className="btn btn-dark" iconClassName="fas fa-clipboard">
                                             Detail Quiz
-                                            </AnchorWithIcon>
+                                            </AnchorWithIcon> :"Not available"}
                                     </td>
                                 </tr>
                             )

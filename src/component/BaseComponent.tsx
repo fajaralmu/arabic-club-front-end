@@ -82,7 +82,7 @@ export default class BaseComponent extends Component<any, any> {
                 }
                 alert("resource not found");
             }
-        }).finally((e:any) => {
+        }).finally(() => {
             this.endLoading();
         })
     }
@@ -140,6 +140,7 @@ export default class BaseComponent extends Component<any, any> {
         this.parentApp.showAlert("Info", body, true, function () { });
     }
     showError(body: any) {
+       
         this.parentApp.showAlertError("Error", body, true, function () { });
     }
 
@@ -155,8 +156,14 @@ export default class BaseComponent extends Component<any, any> {
 
     showCommonErrorAlert = (e:any) => {
         console.error(e);
-        const msg = e.message??e;
-        this.showError("Operation Failed: "+msg);
+        
+        let message;
+        if (e.response && e.response.data ) {
+            message = e.response.data.message;
+        } else {
+            message = e;
+        } 
+        this.showError("Operation Failed: "+message);
     }
     componentDidMount() {
         this.validateLoginStatus();

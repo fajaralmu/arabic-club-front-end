@@ -4,8 +4,7 @@ export default class Filter{
 	page? :number = 0;
 	orderType?:string;
 	orderBy?:string;
-	contains?:boolean;
-	beginsWith?:boolean;
+	contains?:boolean; 
 	exacts?:boolean;
 	day?:number;
 	year?:number;
@@ -15,6 +14,7 @@ export default class Filter{
 	monthTo?:number;
 	yearTo?:number;
 	maxValue?:number;
+	availabilityCheck?:boolean;
 	
 	//
 	useExistingFilterPage?:boolean = false; 

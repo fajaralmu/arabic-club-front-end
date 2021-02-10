@@ -30,6 +30,10 @@ export const commonAjaxPostCalls = (endpoint: string, payload?: any) => {
                 }
                 else { reject(response); }
             })
-            .catch((e: any) => { console.error(e); reject(e); });
+            .catch((e: any) => { 
+                
+                console.error(e); 
+                reject(e); 
+            });
     })
 }

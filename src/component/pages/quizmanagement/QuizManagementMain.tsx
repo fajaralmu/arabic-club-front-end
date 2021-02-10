@@ -28,29 +28,31 @@ class QuizManagementMain extends BaseMainMenus {
         super(props, "Quiz Management", true);
         this.quizService = this.getServices().publicQuizService;
     }
-    startLoading = () => { this.setState({ loading: true }); }
-    endLoading = () => { this.setState({ loading: false }); }
+    startLoading = (realtime:boolean) => { this.setState({ loading: true });  }
+    endLoading = () => { this.setState({ loading: false });  }
     componentDidMount() {
         super.componentDidMount();
-        this.loadQuizes();
+        this.loadRecords();
     }
     dataLoaded = (response: WebResponse) => {
         this.setState({ quizList: response.entities ?? [], totalData: response.totalData });
     }
 
-    loadQuizes = () => {
+    loadRecords = () => {
+        const filter = this.state.filter;
+        filter.availabilityCheck = false;
         this.commonAjax(
             this.quizService.getQuizList,
             this.dataLoaded,
             this.showCommonErrorAlert,
-            this.state.filter
+            filter
         )
     }
-    loadQuizesAtPage = (page: number) => {
+    loadRecordsAtPage = (page: number) => {
         const filter = this.state.filter;
         filter.page = page;
         this.setState({ filter: filter });
-        this.loadQuizes();
+        this.loadRecords();
     }
     editQuiz = (quiz:Quiz) => {
         this.showConfirmation("See Detail Quiz: " + quiz.title + "?")
@@ -71,7 +73,7 @@ class QuizManagementMain extends BaseMainMenus {
                 <NavigationButtons
                     activePage={filter.page ?? 0}
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
-                    onClick={this.loadQuizesAtPage}
+                    onClick={this.loadRecordsAtPage}
                 />
                 {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
             </div>
