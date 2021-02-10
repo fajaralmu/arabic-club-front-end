@@ -11,14 +11,14 @@ import QuizResult from '../../../../models/QuizResult';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../constant/stores';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
-import { QuizResultInfo, Timer } from '../quizChallengeHelper';
+import { QuizResultInfo } from '../quizChallengeHelper';
 import QuizBody from './QuizBody';
+import QuizTimer from './QuizTimer';
 
 class IState {
     quiz: Quiz | undefined = undefined;
     loading: boolean = false;
     quizResult: QuizResult | undefined
-    tick: number = 0;
     timeout: boolean = false;
     running: boolean = false;
 }
@@ -26,7 +26,7 @@ class IState {
 class PublicQuizChallenge extends BaseComponent {
     publicQuizService: PublicQuizService;
     state: IState = new IState();
-    timeout: any = undefined;
+    timerRef:React.RefObject<QuizTimer> = React.createRef();
     constructor(props: any) {
         super(props, true);
         this.publicQuizService = this.getServices().publicQuizService;
@@ -52,6 +52,9 @@ class PublicQuizChallenge extends BaseComponent {
         quiz.startedDate = new Date();
         this.setState({quiz:quiz});
     }
+    beginTimer = () => {
+        if (this.timerRef.current) this.timerRef.current.beginTimer();
+    }
     setFailedTimeout = () => {
         this.doSubmitAnswer();
         this.setState({ quiz: undefined, timeout: true });
@@ -59,30 +62,7 @@ class PublicQuizChallenge extends BaseComponent {
     dataLoaded = (response: WebResponse) => {
         this.setState({ quiz: Object.assign(new Quiz(), response.quiz), quizResult: undefined });
     }
-    updateTimer = () => {
-        if (!this.state.quiz) return;
-        this.resetTimeout();
-        const duration = this.state.quiz?.duration;
-        let tick = this.state.tick;
-        if (tick >= duration) {
-            this.setFailedTimeout();
-            return;
-        };
-        tick++;
-        this.setState({ tick: tick });
-
-        this.beginTimer();
-    }
-    resetTimeout = () => {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-    }
-    beginTimer = () => {
-        if (!this.state.quiz) return;
-        const duration = this.state.quiz?.duration;
-        this.timeout = setTimeout(this.updateTimer, 1000);
-    }
+    
     loadQuiz = () => {
         this.commonAjaxWithProgress(
             this.publicQuizService.getQuiz,
@@ -97,9 +77,8 @@ class PublicQuizChallenge extends BaseComponent {
                 if (ok) this.props.history.push("/quiz");
             });
     }
-    getId = () => {
-        return this.props.match.params.id;
-    }
+    getId = () =>  this.props.match.params.id;
+    
     setChoice = (code: string, questionIndex: number) => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
@@ -179,7 +158,7 @@ class PublicQuizChallenge extends BaseComponent {
 
         return (
             <div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="container-fluid">
-                {quiz ? <Timer tick={this.state.tick} duration={quiz.duration ?? 0} /> : null}
+                {quiz ? <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
                 <h2>Quiz Challenge</h2>
                 <AnchorButton onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <p />
