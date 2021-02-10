@@ -10,8 +10,11 @@ import { baseImageUrl } from './../../../../constant/Url';
 import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
+import SimpleWarning from '../../../alert/SimpleWarning';
+import QuizTimer from './QuizTimer';
+import QuizResult from './../../../../models/QuizResult';
 interface Props {
-    quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, submit(e): any
+   result?:QuizResult, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
 }
 class State {
     questionIndex: number = 0;
@@ -19,11 +22,13 @@ class State {
 }
 export default class QuizBody extends Component<Props, State> {
 
+    questionTimerRef:React.RefObject<QuizTimer> = React.createRef();
     state: State = new State();
     constructor(props) {
         super(props);
     }
     updateQuestionIndex = (index: number) => {
+        if (this.props.quiz.questionsTimered && !this.props.result) return;
         this.setState({ questionIndex: index });
     }
     getCurrentQuestion = () => {
@@ -35,6 +40,22 @@ export default class QuizBody extends Component<Props, State> {
     }
     toggleQuestionView = (showAll: boolean) => {
         this.setState({ showAllQuestion: showAll, questionIndex: 0 });
+    }
+    nextQuestion = () => {
+        if (this.props.quiz.questions.length - 1 == this.state.questionIndex) {
+            this.props.onTimeout();
+            return;
+        }
+        const nextIndex = this.state.questionIndex+1;
+        this.setState({questionIndex: nextIndex}, this.updateTimer);
+    }
+    updateTimer = () => {
+        if (this.questionTimerRef.current) {
+            this.questionTimerRef.current.beginTimer();
+        }
+    }
+    componentDidMount() {
+        this.updateTimer();
     }
     render() {
 
@@ -68,9 +89,14 @@ export default class QuizBody extends Component<Props, State> {
                     return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)
                 }) :
                     <Fragment>
-                        <QuestionNavigation updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                        {quiz.questionsTimered && !this.props.result? 
+                    <QuizTimer onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
+                    :null    
+                    }
+                        <SimpleWarning show={quiz.questionsTimered}>{timerString(this.getCurrentQuestion().duration)} </SimpleWarning>
+                        <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                         <QuestionBody setChoice={props.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
-                        <QuestionNavigation updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                        <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                     </Fragment>
                 }
                 <Modal title="Option">
@@ -81,20 +107,22 @@ export default class QuizBody extends Component<Props, State> {
     }
 }
 
-const QuestionNavigation = (props: { index: number, updateQuestionIndex(index: number): any, questionCount: number }) => {
-
+const QuestionNavigation = (props: { enabled:boolean, index: number, updateQuestionIndex(index: number): any, questionCount: number }) => {
+    const enabled = props.enabled;
     return (
         <div >
             <p />
             <div className="row container-fluid">
                 <div className="col-5 text-center">
-                    <AnchorWithIcon className="btn btn-secondary" children="Previous" onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={props.index > 0} iconClassName="fas fa-angle-left" />
+                    <AnchorWithIcon  className="btn btn-secondary" children="Previous" 
+                    onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={enabled && props.index > 0} iconClassName="fas fa-angle-left" />
                 </div>
                 <div className="col-2 text-center">
                   <p>Question: {props.index+1} of {props.questionCount}</p>
                 </div>
                 <div className="col-5 text-center">
-                    <AnchorWithIcon className="btn btn-secondary" children="Next" onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
+                    <AnchorWithIcon   className="btn btn-secondary" children="Next" 
+                    onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={enabled && props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
                 </div>
             </div>
             <p />

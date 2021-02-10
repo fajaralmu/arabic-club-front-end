@@ -24,13 +24,11 @@ export default class QuizTimer extends Component<Props, State> {
         const duration = this.props.duration;
         let tick = this.state.tick;
         if (tick >= duration) {
-            this.props.onTimeout();
+            this.setState({ tick: 0 },  this.props.onTimeout);
             return;
         };
         tick++;
-        this.setState({ tick: tick });
-
-        this.beginTimer();
+        this.setState({ tick: tick }, this.beginTimer);
     }
    
     resetTimeout = () => {

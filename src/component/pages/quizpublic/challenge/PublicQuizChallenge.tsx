@@ -105,7 +105,7 @@ class PublicQuizChallenge extends BaseComponent {
         quiz.resetCorrectChoices();
         this.setState({ quizResult: undefined, tick:0, quiz: Object.assign(new Quiz(), quiz), running: false });
     }
-    submitAnwser = (e) => {
+    submitAnwser = () => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
         if (!Object.assign(new Quiz(), quiz).allQuestionHasBeenAnswered()) {
@@ -162,14 +162,14 @@ class PublicQuizChallenge extends BaseComponent {
 
         return (
             <div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="container-fluid">
-                {quiz ? <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
+                {quiz && quiz.questionsTimered==false ? <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
                 <h2>Quiz Challenge</h2>
                 <AnchorButton onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <p />
                 {this.state.quizResult ?
                     <QuizResultInfo quizResult={this.state.quizResult} tryAgain={this.tryAgain} /> : null}
                 {quiz ?
-                    <QuizBody submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                    <QuizBody result={this.state.quizResult} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>
