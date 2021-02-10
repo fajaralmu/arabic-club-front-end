@@ -76,8 +76,11 @@ class EditDeleteAction extends BaseComponent {
         
         if (this.props.show == false) return null;
         let additionalButton:JSX.Element =  (
-        <ExternalEditForm record={this.props.record} entityProperty={entityProperty}  />
+        <ExternalEditForm delete={this.delete} record={this.props.record} entityProperty={entityProperty}  />
         ) 
+        if (entityProperty.editable == false) {
+            return  additionalButton;
+        }
         return (
             <div className="btn-group">
                 {additionalButton}

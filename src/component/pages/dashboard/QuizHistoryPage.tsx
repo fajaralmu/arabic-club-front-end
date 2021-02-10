@@ -82,7 +82,12 @@ class QuizHistoryPage extends BaseComponent {
 
 const Histories = (props:{histories:QuizHistoryModel[], loadRecords():any, startingNumber:number}) => {
     if (props.histories.length == 0){
-        return <Card><SimpleWarning>No Data</SimpleWarning></Card>
+        return <Card><SimpleWarning>No Data</SimpleWarning>
+        
+        <AnchorWithIcon iconClassName="fas fa-sync-alt" className="btn btn-dark" onClick={props.loadRecords}>
+                Reload
+            </AnchorWithIcon>
+            </Card>
     }
     return  (
         <Card>
