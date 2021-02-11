@@ -25,6 +25,7 @@ import PublicQuizChallenge from '../pages/quizpublic/challenge/PublicQuizChallen
 import GalleryMain from '../pages/gallery/GalleryMain';
 import GalleryPicture from '../pages/gallery/picture/GalleryPicture';
 import QuizHistoryPage from '../pages/dashboard/QuizHistoryPage';
+import GalleryVideo from '../pages/gallery/video/GalleryVideo';
 
 class ApplicationContent extends BaseComponent {
 
@@ -65,13 +66,7 @@ class ApplicationContent extends BaseComponent {
                         (props: any) =>
                             <LessonMain setSidebarMenus={this.setSidebarMenus} />
                     } />
-                    {/* ---------- gallery --------- */}
-                    <Route exact path="/gallery" render={
-                        (props: any) => <GalleryMain />
-                    } />
-                    <Route exact path="/gallery/picture" render={
-                        (props: any) => <GalleryPicture />
-                    } />
+                   
 
 
 
@@ -93,6 +88,7 @@ class ApplicationContent extends BaseComponent {
                 <MemberQuiz />
                 <QuizManagement />
                 <Dashboard />
+                <Gallery/>
             </div>
         )
     }
@@ -100,6 +96,25 @@ class ApplicationContent extends BaseComponent {
         // document.title = "Login";
     }
 
+}
+
+const Gallery = (props) => {
+
+    return (
+        <Switch>
+             {/* ---------- gallery --------- */}
+             <Route exact path="/gallery" render={
+                        (props: any) => <GalleryMain />
+                    } />
+                    <Route exact path="/gallery/picture" render={
+                        (props: any) => <GalleryPicture />
+                    } />
+                    <Route exact path="/gallery/video" render={
+                        (props: any) => <GalleryVideo />
+                    } />
+
+        </Switch>
+    )
 }
 
 const Dashboard = (props) => {

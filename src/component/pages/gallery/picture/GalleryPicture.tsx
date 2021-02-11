@@ -67,7 +67,7 @@ class GalleryPicture extends BaseComponent {
         }
         return (
             <div id="GalleryPicture" className="container-fluid">
-                <h2>Gallery</h2>
+                <h2>Pictures</h2>
                 <div className="alert alert-info">
                     Welcome to gallery picture
                 </div>
