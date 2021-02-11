@@ -77,32 +77,44 @@ export const QuestionForm = (props: {questionsTimered:boolean,
     )
 }
 export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, updateQuizBooleanField(name:string, value:boolean):void }) => {
+    const quiz = props.quiz;
     return (
         <Fragment>
             <FormGroup label="Title">
-                <input required onChange={props.updateField} className="form-control" name="title" value={props.quiz.title} />
+                <input required onChange={props.updateField} className="form-control" name="title" value={quiz.title} />
             </FormGroup>
             <FormGroup label="Description">
-                <textarea required onChange={props.updateField} className="form-control" name="description" value={props.quiz.description} />
+                <textarea required onChange={props.updateField} className="form-control" name="description" value={quiz.description} />
             </FormGroup>
             <FormGroup label="Duration (Second)">
-                <input type="number" min={5} required onChange={props.updateField} className="form-control" name="duration" value={props.quiz.duration} />
+                <input type="number" min={5} required onChange={props.updateField} className="form-control" name="duration" value={quiz.duration} />
             </FormGroup>
             <FormGroup label="Active">
-                <ToggleButton active={props.quiz.active==true} onClick={(val)=>props.updateQuizBooleanField('active', val)} />
+                <ToggleButton active={quiz.active==true} onClick={(val)=>props.updateQuizBooleanField('active', val)} />
             </FormGroup>
             <FormGroup label="Repeatable">
-                <ToggleButton active={props.quiz.repeatable==true} onClick={(val)=>props.updateQuizBooleanField('repeatable', val)} />
+                <ToggleButton active={quiz.repeatable==true} onClick={(val)=>props.updateQuizBooleanField('repeatable', val)} />
             </FormGroup>
             <FormGroup label="Show All Question">
-                <ToggleButton active={props.quiz.showAllQuestion==true} onClick={(val)=>props.updateQuizBooleanField('showAllQuestion', val)} />
+                <ToggleButton active={quiz.showAllQuestion==true} onClick={(val)=>props.updateQuizBooleanField('showAllQuestion', val)} />
             </FormGroup>
             <FormGroup label="Question With Timer">
-                <ToggleButton active={props.quiz.questionsTimered==true} onClick={(val)=>props.updateQuizBooleanField('questionsTimered', val)} />
+                <ToggleButton active={quiz.questionsTimered==true} onClick={(val)=>props.updateQuizBooleanField('questionsTimered', val)} />
             </FormGroup>
-            {props.quiz.id?
+            <FormGroup label="Image">
+                <input type="file" required onChange={props.updateField} 
+                className="form-control" name="image"   />
+                {quiz.image != undefined && quiz.image.trim()!=""?
+                 quiz.image.startsWith("data:image")?
+                    <img width="100" height="100" src={quiz.image} />:
+                    <img width="100" height="100" src={baseImageUrl()+quiz.image} />
+                    :null
+                }
+          
+            </FormGroup>
+            {quiz.id?
             <FormGroup label="Record ID">
-                {props.quiz.id}
+                {quiz.id}
             </FormGroup>:null
             }
         </Fragment>

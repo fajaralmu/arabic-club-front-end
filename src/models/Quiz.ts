@@ -12,7 +12,7 @@ export default class Quiz extends BaseEntity{
 	available?:boolean = true;
 	showAllQuestion:boolean = true;
 	questionsTimered:boolean = false;
-
+	image?:string = "";
 	startedDate?:Date = new Date();
 	submittedDate?:Date = new Date()
 

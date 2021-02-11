@@ -51,8 +51,16 @@ class QuizManagementForm extends BaseComponent {
     }
     updateQuizField = (e) => {
         const name = e.target.name;
-        const value = e.target.value;
+        let value = e.target.value;
         const quiz: Quiz = this.state.quiz;
+        if (e.target.type == 'file') {
+           const filePromise:Promise<String> =  toBase64v2(e.target);
+           filePromise.then((data:String)=>{
+               
+                quiz[name] = data;
+                this.setState({ quiz: quiz });
+           })
+        }
         quiz[name] = value;
         this.setState({ quiz: quiz });
     }

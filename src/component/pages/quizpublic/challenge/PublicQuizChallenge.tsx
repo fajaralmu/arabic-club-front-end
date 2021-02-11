@@ -15,6 +15,7 @@ import { QuizResultInfo } from '../quizChallengeHelper';
 import QuizBody from './QuizBody';
 import QuizTimer from './QuizTimer';
 import { timerString } from './../../../../utils/DateUtil';
+import { baseImageUrl } from './../../../../constant/Url';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -180,7 +181,7 @@ class PublicQuizChallenge extends BaseComponent {
 
         if (quiz && !this.state.running) {
             return <div id="PublicQuizChallenge" style={{ marginTop: '20px', paddingTop:'20px' }} className="text-center container-fluid">
-                <h1 className="text-primary"><i style={{ fontSize: '5em' }} className="fas fa-book-reader" /></h1>
+                <img height="250" src={quiz.image?baseImageUrl()+quiz.image:"/logo192.png"} className="rounded-circle"/>
                 <h3><strong>{quiz.title}</strong></h3>
                 <p>Duration: {timerString(quiz.duration)}</p>
                 <p>Question: {quiz.getQuestionCount()}</p>

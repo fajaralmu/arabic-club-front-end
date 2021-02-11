@@ -16,8 +16,8 @@ export const getHtmlInputElement = (e:ChangeEvent) : HTMLInputElement => {
     return target;
 }
 
-export function toBase64v2(fileInput) {
-    return new Promise<string>(function (resolve, reject) {
+export const toBase64v2 = (fileInput): Promise<string> => {
+    return new Promise<string>((resolve, reject) =>{
         try {
             const reader = new FileReader();
             reader.readAsDataURL(fileInput.files[0]);

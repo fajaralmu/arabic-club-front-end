@@ -119,6 +119,10 @@ class QuizDetail extends BaseComponent {
                             <AnchorButton style={{ marginRight: '5px' }} iconClassName="fas fa-edit" className="btn btn-warning" onClick={this.editRecord}>Edit</AnchorButton>
                             <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.deleteRecord}>Delete</AnchorButton>
                         </FormGroup>
+                        <FormGroup label="Image">
+                            {quiz.image?
+                            <img height="100" width="100" src={baseImageUrl()+quiz.image} />:"No Image"}
+                        </FormGroup>
                     </div>
                     {questions.map((question, i) => {
 
