@@ -113,7 +113,7 @@ const VideoItem = (props: { video: Videos, }) => {
     return (
         <div className="col-4" style={{marginBottom:'10px'}}>
             <div className="card">
-                <img src={snippet.thumbnails?.default?.url} className="card-img-top" />
+                <img src={snippet.thumbnails?.medium?.url} className="card-img-top" />
                 <div className="card-body">
                     <p className="card-title">{snippet.title}</p>
                     {/* <p className="card-text">{snippet.description}</p> */}

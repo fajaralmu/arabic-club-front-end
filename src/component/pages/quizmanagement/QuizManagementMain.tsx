@@ -54,6 +54,12 @@ class QuizManagementMain extends BaseMainMenus {
         this.setState({ filter: filter });
         this.loadRecords();
     }
+    loadRecordsWithFilter = (fieldsFilter: any) => {
+        const filter = this.state.filter;
+        filter.fieldsFilter = fieldsFilter;
+        this.setState({ filter: filter });
+        this.loadRecords();
+    }
     editQuiz = (quiz:Quiz) => {
         this.showConfirmation("See Detail Quiz: " + quiz.title + "?")
         .then((ok) => {
@@ -75,7 +81,7 @@ class QuizManagementMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadRecordsAtPage}
                 />
-                {this.state.loading ? <Card><Spinner /></Card> : <QuizList quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                {this.state.loading ? <Card><Spinner /></Card> : <QuizList onFilter={this.loadRecordsWithFilter} quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
             </div>
         )
     }

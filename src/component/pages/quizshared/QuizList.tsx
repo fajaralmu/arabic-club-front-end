@@ -1,16 +1,46 @@
 
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import Quiz from './../../../models/Quiz';
 import Card from './../../container/Card';
 import AnchorWithIcon from './../../navigation/AnchorWithIcon';
 import { timerString } from './../../../utils/DateUtil';
-interface IProps { quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
-export default class QuizList extends Component<any, IProps>{
-
+import FormGroup from '../../form/FormGroup';
+interface IProps { onFilter(fieldsFilter:any):any|undefined, quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
+class State {
+    fieldsFilter:any = {}
+}
+export default class QuizList extends Component<IProps, State>{
+    state:State = new State();
+    constructor(props) {
+        super(props);
+    }
+    updateFilter = (e:ChangeEvent) => {
+        const fieldsFilter = this.state.fieldsFilter;
+        const target = e.target as HTMLInputElement;
+        fieldsFilter[target.name] = target.value;
+        this.setState({fieldsFilter: fieldsFilter});
+    }
     render() {
         const props = this.props;
         return (
             <Card>
+                <form onSubmit={e=>{
+                    e.preventDefault();
+                    if ( this.props.onFilter) {
+                        this.props.onFilter(this.state.fieldsFilter)
+                    }
+                }} >
+                    <FormGroup label="Title">
+                        <div className="input-group">
+                            <input onChange={this.updateFilter} name="title" value={this.state.fieldsFilter['title']??""} type="text" placeholder="Search Title" className="form-control"/>
+                            <div className="input-group-append">
+                                <button type="submit" className="btn btn-dark">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </FormGroup>
+                </form>
                 <table className="table table-striped">
                     <thead>
                         <tr>
