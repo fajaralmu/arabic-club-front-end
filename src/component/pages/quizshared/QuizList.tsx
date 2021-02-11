@@ -5,7 +5,8 @@ import Card from './../../container/Card';
 import AnchorWithIcon from './../../navigation/AnchorWithIcon';
 import { timerString } from './../../../utils/DateUtil';
 import FormGroup from '../../form/FormGroup';
-interface IProps { onFilter(fieldsFilter:any):any|undefined, quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
+import Spinner from '../../loader/Spinner';
+interface IProps { loading:boolean, onFilter(fieldsFilter:any):any|undefined, quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
 class State {
     fieldsFilter:any = {}
 }
@@ -20,28 +21,34 @@ export default class QuizList extends Component<IProps, State>{
         fieldsFilter[target.name] = target.value;
         this.setState({fieldsFilter: fieldsFilter});
     }
+    resetFilter = (e) => {
+        this.setState({fieldsFilter: {}});
+    }
     render() {
         const props = this.props;
         return (
             <Card>
-                <form onSubmit={e=>{
+                <form className="row" onSubmit={e=>{
                     e.preventDefault();
                     if ( this.props.onFilter) {
                         this.props.onFilter(this.state.fieldsFilter)
                     }
                 }} >
-                    <FormGroup label="Title">
+                    <FormGroup className="col-6" label="Title">
                         <div className="input-group">
                             <input onChange={this.updateFilter} name="title" value={this.state.fieldsFilter['title']??""} type="text" placeholder="Search Title" className="form-control"/>
                             <div className="input-group-append">
                                 <button type="submit" className="btn btn-dark">
                                     Search
                                 </button>
+                                <button onClick={this.resetFilter} type="reset" className="btn btn-warning">
+                                    <i className="fas fa-redo"/>
+                                </button>
                             </div>
                         </div>
                     </FormGroup>
                 </form>
-                <table className="table table-striped">
+                <table style={{tableLayout: 'fixed'}} className="table table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -53,7 +60,14 @@ export default class QuizList extends Component<IProps, State>{
                         </tr>
                     </thead>
                     <tbody>
-                        {props.quizList.map((quiz:Quiz, i: number) => {
+                        {props.loading?
+                        <tr>
+                            <td colSpan={6}>
+                                <Spinner/>
+                            </td>
+                        </tr>
+                        :
+                        props.quizList.map((quiz:Quiz, i: number) => {
                             quiz = Object.assign(new Quiz(), quiz);
                             return (
                                 <tr key={"quiz-public-list-" + i}>

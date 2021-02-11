@@ -50,12 +50,14 @@ class PublicQuizMain extends BaseMainMenus {
         )
     }
     loadRecordsWithFilter = (fieldsFilter: any) => {
+        if (this.state.loading) return;
         const filter = this.state.filter;
         filter.fieldsFilter = fieldsFilter;
         this.setState({ filter: filter });
         this.loadRecords();
     }
     loadRecordsAtPage = (page: number) => {
+        if (this.state.loading) return;
         const filter = this.state.filter;
         filter.page = page;
         this.setState({ filter: filter });
@@ -83,10 +85,11 @@ class PublicQuizMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadRecordsAtPage}
                 />
-                {this.state.loading ? <Card><Spinner /></Card> : <QuizList 
+                <QuizList 
+                    loading={this.state.loading}
                     onFilter = {this.loadRecordsWithFilter}
                     quizOnClick={this.takeQuiz} 
-                    startingNumber={startNumber} quizList={this.state.quizList} />}
+                    startingNumber={startNumber} quizList={this.state.quizList} /> 
             </div>
         )
     }

@@ -2,7 +2,7 @@
 
 import React, { ChangeEvent } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
 import BaseMainMenus from '../../layout/BaseMainMenus';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
 import PublicQuizService from './../../../services/PublicQuizService';
@@ -28,8 +28,8 @@ class QuizManagementMain extends BaseMainMenus {
         super(props, "Quiz Management", true);
         this.quizService = this.getServices().publicQuizService;
     }
-    startLoading = (realtime:boolean) => { this.setState({ loading: true });  }
-    endLoading = () => { this.setState({ loading: false });  }
+    startLoading = (realtime: boolean) => { this.setState({ loading: true }); }
+    endLoading = () => { this.setState({ loading: false }); }
     componentDidMount() {
         super.componentDidMount();
         this.loadRecords();
@@ -39,6 +39,7 @@ class QuizManagementMain extends BaseMainMenus {
     }
 
     loadRecords = () => {
+        if (this.state.loading) return;
         const filter = this.state.filter;
         filter.availabilityCheck = false;
         this.commonAjax(
@@ -49,6 +50,7 @@ class QuizManagementMain extends BaseMainMenus {
         )
     }
     loadRecordsAtPage = (page: number) => {
+        if (this.state.loading) return;
         const filter = this.state.filter;
         filter.page = page;
         this.setState({ filter: filter });
@@ -60,13 +62,13 @@ class QuizManagementMain extends BaseMainMenus {
         this.setState({ filter: filter });
         this.loadRecords();
     }
-    editQuiz = (quiz:Quiz) => {
+    editQuiz = (quiz: Quiz) => {
         this.showConfirmation("See Detail Quiz: " + quiz.title + "?")
-        .then((ok) => {
-            if (ok) {
-                this.props.history.push({ pathname: "/quizmanagement/detail/" + quiz.id })
-            }
-        })
+            .then((ok) => {
+                if (ok) {
+                    this.props.history.push({ pathname: "/quizmanagement/detail/" + quiz.id })
+                }
+            })
     }
     render() {
         const filter = this.state.filter;
@@ -81,7 +83,11 @@ class QuizManagementMain extends BaseMainMenus {
                     limit={filter.limit ?? 5} totalData={this.state.totalData}
                     onClick={this.loadRecordsAtPage}
                 />
-                {this.state.loading ? <Card><Spinner /></Card> : <QuizList onFilter={this.loadRecordsWithFilter} quizOnClick={this.editQuiz} startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)} quizList={this.state.quizList} />}
+                <QuizList onFilter={this.loadRecordsWithFilter}
+                    loading={this.state.loading}
+                    quizOnClick={this.editQuiz}
+                    startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)}
+                    quizList={this.state.quizList} />
             </div>
         )
     }

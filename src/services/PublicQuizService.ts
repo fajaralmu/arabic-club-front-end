@@ -28,6 +28,8 @@ export default class PublicQuizService {
         return commonAjaxPostCalls(endpoint, {quiz:submited});
     }
     getQuizList = (filter:Filter) => {
+        filter.orderBy = "title";
+        filter.orderType = "asc";
         const request:WebRequest = {filter:filter};
         const endpoint = contextPath().concat("api/member/quiz/list")
         return commonAjaxPostCalls(endpoint, request);
