@@ -30,4 +30,6 @@ export default class WebRequest{
 	regularTransaction?:boolean;
 	imageData?:string;
 	quiz?:Quiz
+	requestId?:string
+	token?:string
 }

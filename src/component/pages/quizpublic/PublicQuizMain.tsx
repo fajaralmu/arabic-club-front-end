@@ -52,6 +52,7 @@ class PublicQuizMain extends BaseMainMenus {
     loadRecordsWithFilter = (fieldsFilter: any) => {
         if (this.state.loading) return;
         const filter = this.state.filter;
+        filter.page = 0;
         filter.fieldsFilter = fieldsFilter;
         this.setState({ filter: filter });
         this.loadRecords();

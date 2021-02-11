@@ -10,10 +10,7 @@ import Quiz from './../../../models/Quiz';
 import Filter from './../../../models/Filter';
 import WebResponse from './../../../models/WebResponse';
 import NavigationButtons from './../../navigation/NavigationButtons';
-import Spinner from './../../loader/Spinner';
 import QuizList from './../quizshared/QuizList';
-import Card from './../../container/Card';
-import QuizService from './../../../services/QuizService';
 class IState {
     quizList: Quiz[] = new Array();
     loading: boolean = false;
@@ -58,6 +55,7 @@ class QuizManagementMain extends BaseMainMenus {
     }
     loadRecordsWithFilter = (fieldsFilter: any) => {
         const filter = this.state.filter;
+        filter.page = 0;
         filter.fieldsFilter = fieldsFilter;
         this.setState({ filter: filter });
         this.loadRecords();

@@ -14,8 +14,20 @@ export default class Quiz extends BaseEntity{
 	questionsTimered:boolean = false;
 	image?:string = "";
 	startedDate?:Date = new Date();
-	submittedDate?:Date = new Date()
+	submittedDate?:Date = new Date();
+	mappedAnswer?:{};
 
+	public static updateMappedAnswer = (quiz:Quiz) => {
+		quiz.mappedAnswer = {};
+		for (let i = 0; i < quiz.questions.length; i++) {
+			const element = quiz.questions[i];
+			if (element.id && element.answerCode) {
+				quiz.mappedAnswer[new String(element.id).toString()] = element.answerCode;
+				 
+			}
+		}
+	 
+	}
 	getQuestionCount = () : number => {
 		return this.questions?this.questions.length : 0;
 	}

@@ -1,10 +1,9 @@
 
 import React, { Component, Fragment, RefObject } from 'react';
 import './App.css';
-import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import * as actions from './redux/actionCreators'
 import { connect } from 'react-redux'
-import * as menus from './constant/Menus'
 import SockJsClient from 'react-stomp';
 import * as url from './constant/Url';
 import { mapCommonUserStateToProps } from './constant/stores';
@@ -13,17 +12,18 @@ import Alert from './component/alert/Alert';
 import MainLayout from './component/layout/MainLayout';
 import WebResponse from './models/WebResponse';
 import Spinner from './component/loader/Spinner';
+import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks } from './utils/websockets';
 
-interface IState {
-  loading: boolean;
-  loadingPercentage: number;
-  requestId?: undefined;
-  mainAppUpdated: Date;
-  showAlert: boolean;
-  realtime: boolean;
+class IState {
+  loading: boolean = false;
+  loadingPercentage: number = 0;
+  requestId?: string;
+  mainAppUpdated: Date = new Date();
+  showAlert: boolean = false;
+  realtime: boolean = false;
 }
 class App extends Component<any, IState> {
-
+  wsConnected :boolean = false;
   loadings: number = 0;
   alertTitle: String = "Info";
   alertBody: any = null;
@@ -31,35 +31,21 @@ class App extends Component<any, IState> {
   alertIsError: boolean = false;
   alertOnYesCallback: Function = function (e) { };
   alertOnCancelCallback: Function = function (e) { };
+  wsUpdateHandler: Function|undefined = undefined;
   clientRef: RefObject<SockJsClient> = React.createRef();
   // alertRef: RefObject<Alert> = React.createRef();
   alertCallback = {
-    title: "Info",
-    message: "Info",
-    yesOnly: false,
-    onOk: () => { },
-    onNo: () => { }
+    title: "Info",  message: "Info",  yesOnly: false,
+    onOk: () => { }, onNo: () => { }
   }
 
   constructor(props: any) {
     super(props);
-    this.state = {
-      ...this.state,
-      loading: false,
-      loadingPercentage: 0,
-      requestId: undefined,
-      mainAppUpdated: new Date(),
-      showAlert: false,
-      realtime: false,
-    };
-    
-    this.props.setMainApp(this);
-   
+    this.state = new IState();
 
+    this.props.setMainApp(this);
   }
-  refresh() {
-    this.setState({ mainAppUpdated: new Date() });
-  }
+  refresh = () => {  this.setState({ mainAppUpdated: new Date() }); }
 
   requestAppId() {
     this.props.requestAppId(this);
@@ -82,19 +68,19 @@ class App extends Component<any, IState> {
   }
 
   endLoading() {
-    try{
+    try {
       this.decrementLoadings();
       if (this.loadings == 0) {
         this.setState({ loading: false, loadingPercentage: 0 });
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
 
   }
 
-  handleMessage(msg: WebResponse) {
-    const percentageFloat:number = msg.percentage??0; 
+  handleProgress = (msg: WebResponse) => {
+    const percentageFloat: number = msg.percentage ?? 0;
     let percentage = Math.floor(percentageFloat);
     if (percentageFloat < 0 || percentageFloat > 100) {
       this.endLoading();
@@ -136,19 +122,50 @@ class App extends Component<any, IState> {
     if (this.props.applicationProfile) {
       updateFavicon(this.props.applicationProfile);
     }
+    if (this.props.requestId && !this.wsConnected) {
+      this.initWebsocket();
+    }
   }
 
   componentDidMount() {
-    
-    this.requestAppId();
+
+    this.requestAppId(); 
     this.setState({ loadingPercentage: 0 });
+  }
+
+  initWebsocket = () => {
+    setWebSocketUrl(url.contextPath() + 'realtime-app');
+    registerWebSocketCallbacks({
+      subscribeUrl: "/wsResp/progress/" + this.props.requestId,
+      callback: this.handleProgress  //must use lambda
+    },
+    {
+      subscribeUrl: "/wsResp/" + this.props.requestId+"/update",
+      callback: (response)=> this.handleWsUpdate(response)
+    });
+    performWebsocketConnection();
+    this.wsConnected = true;
+  }
+
+  private handleWsUpdate = (response:any) => {
+    
+    if (this.wsUpdateHandler) {
+      this.wsUpdateHandler(response);
+    }
+  }
+
+  setWsUpdateHandler = (handler:Function) => {
+    this.wsUpdateHandler = handler;
+  }
+  resetWsUpdateHandler = () => {
+    this.wsUpdateHandler = undefined;
   }
 
   render() {
     if (!this.props.requestId) {
       return (
-        <div style={{paddingTop:'10%'}}>
-          <Spinner/>
+        <div style={{ paddingTop: '10%' }}>
+          <Spinner />
         </div>
       )
     }
@@ -165,9 +182,10 @@ class App extends Component<any, IState> {
           >{this.alertBody}</Alert> :
           null}
         <MainLayout />
-        <SockJsClient url={usedHost + 'realtime-app'} topics={['/wsResp/progress/' + this.props.requestId]}
+        {/* <SockJsClient url={usedHost + 'realtime-app'} topics={['/wsResp/progress/' + this.props.requestId]}
+
           onMessage={(msg: WebResponse) => { this.handleMessage(msg) }}
-          ref={(client) => { this.clientRef = client }} />
+          ref={this.clientRef} /> */}
       </Fragment>
     )
   }

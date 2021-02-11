@@ -16,6 +16,7 @@ import QuizBody from './QuizBody';
 import QuizTimer from './QuizTimer';
 import { timerString } from './../../../../utils/DateUtil';
 import { baseImageUrl } from './../../../../constant/Url';
+import { getLoginKey } from '../../../../middlewares/Common';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -46,6 +47,12 @@ class PublicQuizChallenge extends BaseComponent {
     componentDidMount() {
         document.title = "Quiz Challenge";
         this.loadQuiz();
+        this.initUpdateCallback();
+    }
+    initUpdateCallback = () => {
+        this.setWsUpdateHandler((response)=>{
+            console.debug("WS UPDATE:", response);
+        })
     }
     start = () => {
         this.setState({
@@ -53,8 +60,8 @@ class PublicQuizChallenge extends BaseComponent {
         }, this.beginTimer);
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz  ) return;
-        quiz.startedDate = new Date();
-        this.setState({quiz:quiz});
+        quiz.startedDate = new Date(); 
+        this.setState({quiz:quiz}, this.sendStartUpdate);
     }
     beginTimer = () => {
         if (this.timerRef.current) this.timerRef.current.updateTimerLoop();
@@ -89,8 +96,32 @@ class PublicQuizChallenge extends BaseComponent {
         if (!quiz || quiz.questions.length == 0) return;
         try {
             quiz.questions[questionIndex].answerCode = code;
-            this.setState({ quiz: Object.assign(new Quiz(), quiz) });
+            this.setState({ quiz: Object.assign(new Quiz(), quiz) },
+            ()=>{
+                this.sendUpdateQuizHistory(Object.assign(new Quiz(), quiz) );
+            }
+            );
         } catch (error) { }
+    }
+    sendUpdateQuizHistory = (quiz:Quiz) => {
+       
+        Quiz.updateMappedAnswer(quiz);
+        quiz.questions = [];
+        
+        this.sendWebSocket("/app/quiz/answer", {
+            requestId: this.props.requestId,
+            quiz: quiz,
+            token: getLoginKey(),
+        });
+    }
+    sendStartUpdate =( ) => {
+        const quiz = Object.assign(new Quiz, this.state.quiz);
+        quiz.questions = [];
+        this.sendWebSocket("/app/quiz/start", {
+            quiz: quiz,
+            token: getLoginKey(),
+            requestId: this.props.requestId
+        });
     }
     quizSubmitted = (response: WebResponse) => {
         this.setState({ errorSubmit:false,

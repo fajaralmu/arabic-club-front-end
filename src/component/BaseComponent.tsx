@@ -5,6 +5,8 @@ import ApplicationProfile from './../models/ApplicationProfile';
 import User from './../models/User';
 import Services from './../services/Services';
 import { AuthorityType } from '../models/AuthorityType';
+import WebRequest from './../models/WebRequest';
+import { sendToWebsocket } from './../utils/websockets';
 
 export default class BaseComponent extends Component<any, any> {
     parentApp: any;
@@ -24,6 +26,21 @@ export default class BaseComponent extends Component<any, any> {
         if (this.authenticated == false) return;
         if (this.isLoggedUserNull()) {
             this.backToLogin();
+        }
+    }
+
+    protected sendWebSocket = (url:string, payload:WebRequest) => {
+        sendToWebsocket(url, payload);
+    }
+
+    protected setWsUpdateHandler =(handler:Function) => {
+        if (this.parentApp) {
+            this.parentApp.setWsUpdateHandler(handler);
+        }
+    }
+    protected resetWsUpdateHandler = () => {
+        if (this.parentApp) {
+            this.parentApp.resetWsUpdateHandler();
         }
     }
 

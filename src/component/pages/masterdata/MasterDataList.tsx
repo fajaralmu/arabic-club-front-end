@@ -114,8 +114,7 @@ class MasterDataList extends BaseComponent {
         const filter = this.state.filter;
         if (filter.fieldsFilter == undefined) {
             filter.fieldsFilter = {};
-        }
-        console.debug("update filter: ", name, filter);
+        } 
         filter.fieldsFilter[name] = value;
         this.setState({ filter: filter });
     }

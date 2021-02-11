@@ -30,5 +30,5 @@ export default class WebResponse{
 	entityClass?:any;
 	quiz?:Quiz;
 	quizResult?:QuizResult;
-
+	type?:string;
 }
