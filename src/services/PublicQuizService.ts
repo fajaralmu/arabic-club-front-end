@@ -20,8 +20,12 @@ export default class PublicQuizService {
         return commonAjaxPostCalls(endpoint, {});
     }
     submitAnswers = (quiz:Quiz) => {
+        const submited = Object.assign(new Quiz, quiz);
+        for (let i = 0; i < submited.questions.length; i++) { 
+            submited.questions[i].choices = undefined;
+        }
         const endpoint = contextPath().concat("api/member/quiz/submit")
-        return commonAjaxPostCalls(endpoint, {quiz:quiz});
+        return commonAjaxPostCalls(endpoint, {quiz:submited});
     }
     getQuizList = (filter:Filter) => {
         const request:WebRequest = {filter:filter};

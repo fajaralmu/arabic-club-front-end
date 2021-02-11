@@ -16,7 +16,6 @@ export default class QuizList extends Component<any, IProps>{
                         <tr>
                             <th>No</th>
                             <th>Title</th>
-                            <th>Description</th>
                             <th>Question</th>
                             <th>Duration</th>
                             <th>Status</th> 
@@ -29,8 +28,9 @@ export default class QuizList extends Component<any, IProps>{
                             return (
                                 <tr key={"quiz-public-list-" + i}>
                                     <td>{i + props.startingNumber + 1}</td>
-                                    <td>{quiz.title}</td>
-                                    <td>{quiz.description}</td>
+                                    <td>{quiz.title}
+                                    {quiz.questionsTimered?<i className="fas fa-stopwatch"/>:null}
+                                    </td>
                                     <td>{quiz.getQuestionCount()}</td>
                                     <td>{timerString(quiz.duration)}</td>
                                     <td>

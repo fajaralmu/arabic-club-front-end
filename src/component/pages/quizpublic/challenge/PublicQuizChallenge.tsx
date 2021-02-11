@@ -22,9 +22,11 @@ class IState {
     quizResult: QuizResult | undefined
     timeout: boolean = false;
     running: boolean = false;
+    errorSubmit: boolean = false;
 }
 
 class PublicQuizChallenge extends BaseComponent {
+    quizTemp?:Quiz = undefined;
     publicQuizService: PublicQuizService;
     state: IState = new IState();
     timerRef:React.RefObject<QuizTimer> = React.createRef();
@@ -54,7 +56,7 @@ class PublicQuizChallenge extends BaseComponent {
         this.setState({quiz:quiz});
     }
     beginTimer = () => {
-        if (this.timerRef.current) this.timerRef.current.beginTimer();
+        if (this.timerRef.current) this.timerRef.current.updateTimerLoop();
     }
     setFailedTimeout = () => {
         this.doSubmitAnswer();
@@ -90,7 +92,10 @@ class PublicQuizChallenge extends BaseComponent {
         } catch (error) { }
     }
     quizSubmitted = (response: WebResponse) => {
-        this.setState({ timeout: false, quizResult: response.quizResult, quiz: Object.assign(new Quiz(), response.quizResult?.submittedQuiz) },
+        this.setState({ errorSubmit:false,
+            timeout: false, 
+            quizResult: response.quizResult, 
+            quiz: Object.assign(new Quiz(), response.quizResult?.submittedQuiz) },
             );
     }
     tryAgain = () => {
@@ -108,6 +113,10 @@ class PublicQuizChallenge extends BaseComponent {
     submitAnwser = () => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
+        if (quiz.questionsTimered) {
+            this.doSubmitAnswer();
+            return;
+        }
         if (!Object.assign(new Quiz(), quiz).allQuestionHasBeenAnswered()) {
             this.showConfirmationDanger("Answers are not complete. Continue to submit answers?")
             .then((ok) => { if(!ok) return;  
@@ -128,15 +137,35 @@ class PublicQuizChallenge extends BaseComponent {
         this.commonAjaxWithProgress(
             this.publicQuizService.submitAnswers,
             this.quizSubmitted,
-            this.showCommonErrorAlert,
+            ()=>this.quizNotSubmitted(Object.assign(new Quiz, quiz)),
             quiz
         )
         this.setState({ quiz: undefined });
     }
 
+    quizNotSubmitted = (quiz:Quiz) => {
+        this.quizTemp = quiz;
+        this.showCommonErrorAlert("Error submitting quiz");
+        this.setState({errorSubmit: true});
+    }
+    retrySubmit = () => {
+        if (this.state.errorSubmit == false) return;
+        this.setState({quiz: this.quizTemp}, this.doSubmitAnswer);
+        this.quizTemp = undefined;
+    }
     render() {
-        const quiz = this.state.quiz;
 
+        if (this.state.errorSubmit) {
+            return <SimpleError style={{marginTop: '20px'}} >
+                <h3>Error While Submitting Answer</h3>
+                <AnchorWithIcon onClick={this.retrySubmit} iconClassName="fas fa-redo">Retry</AnchorWithIcon>
+            </SimpleError>
+        }
+
+        const quiz = Object.assign(new Quiz, this.state.quiz);
+        if (!this.state.loading && quiz.getQuestionCount() == 0) {
+            return <SimpleError style={{marginTop:'20px'}}>Quiz in currently unavailable</SimpleError>
+        }
         if (this.state.timeout) {
             return (<div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="container-fluid">
                 <SimpleError  ><i style={{ marginRight: '5px' }} className="fas fa-exclamation-circle" /> Timeout</SimpleError>
@@ -158,6 +187,9 @@ class PublicQuizChallenge extends BaseComponent {
                 <p />
                 <AnchorWithIcon className="btn btn-dark" onClick={this.start} iconClassName="fas fa-play">Start</AnchorWithIcon>
             </div>
+        }
+        if (quiz) {
+           quiz.showAllQuestion = quiz.showAllQuestion || undefined != this.state.quizResult;
         }
         const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (

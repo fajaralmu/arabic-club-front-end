@@ -18,7 +18,7 @@ export default class QuizTimer extends Component<Props, State> {
         super(props);
     }
 
-    updateTimer = () => {
+    updateTick = () => {
 
         this.resetTimeout();
         const duration = this.props.duration;
@@ -28,7 +28,11 @@ export default class QuizTimer extends Component<Props, State> {
             return;
         };
         tick++;
-        this.setState({ tick: tick }, this.beginTimer);
+        this.setState({ tick: tick }, this.updateTimerLoop);
+    }
+
+    resetTick = () => {
+        this.setState({ tick: 0 }, this.updateTimerLoop);
     }
 
     resetTimeout = () => {
@@ -36,8 +40,8 @@ export default class QuizTimer extends Component<Props, State> {
             clearTimeout(this.timeout);
         }
     }
-    beginTimer = () => {
-        this.timeout = setTimeout(this.updateTimer, 1000);
+    updateTimerLoop = () => {
+        this.timeout = setTimeout(this.updateTick, 1000);
     }
     render() {
         const props = this.props;
@@ -51,7 +55,7 @@ export default class QuizTimer extends Component<Props, State> {
 }
 
 const TimerProgress = (props: { duration: number, tick: number }) => {
-    const width = (props.tick*100 / props.duration)+'%';
+    const width = (100-props.tick*100 / props.duration)+'%';
     return (
         <div className="container-fluid text-center">
             <div className="progress" style={{height:'5px'}}>

@@ -30,7 +30,7 @@ export default class QuizBody extends Component<Props, State> {
         this.setState({ questionIndex: index });
     }
     getCurrentQuestion = () => {
-        if (this.props.quiz.questions.length > this.state.questionIndex) {
+        if (this.props.quiz.questions && this.props.quiz.questions.length > this.state.questionIndex) {
             return this.props.quiz.questions[this.state.questionIndex];
         }
         this.setState({ questionIndex: 0 });
@@ -49,7 +49,23 @@ export default class QuizBody extends Component<Props, State> {
     }
     updateTimer = () => {
         if (this.questionTimerRef.current) {
-            this.questionTimerRef.current.beginTimer();
+            this.questionTimerRef.current.updateTimerLoop();
+        }
+    }
+    resetTimer = () => {
+        if (this.questionTimerRef.current) {
+            this.questionTimerRef.current.resetTick();
+        }
+    }
+    setChoice = (code:string|undefined, index:number) => {
+        this.props.setChoice(code, index);
+        if (this.props.questionTimered ) {
+            if (this.props.quiz.questions.length > index+1) {
+                const nextIndex = index+1;
+                this.setState({questionIndex: nextIndex}, this.resetTimer);
+            } else {
+                this.props.submit();
+            }
         }
     }
     componentDidMount() {
@@ -84,7 +100,7 @@ export default class QuizBody extends Component<Props, State> {
                     </FormGroup>
                 </div>
                 {showAllQuestion ? questions.map((question, i) => {
-                    return (<QuestionBody setChoice={props.setChoice} index={i} question={question} key={"pqqs-" + i} />)
+                    return (<QuestionBody setChoice={this.setChoice} index={i} question={question} key={"pqqs-" + i} />)
                 }) :
                     <Fragment>
                         {props.questionTimered? 
@@ -92,7 +108,7 @@ export default class QuizBody extends Component<Props, State> {
                     :null    
                     }
                         <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
-                        <QuestionBody setChoice={props.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
+                        <QuestionBody setChoice={this.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
                         <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                     </Fragment>
                 }
