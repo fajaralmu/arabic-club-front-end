@@ -154,11 +154,11 @@ class App extends Component<any, IState> {
     }
   }
 
-  setWsUpdateHandler = (handler:Function) => {
+  setWsUpdateHandler = (handler:Function|undefined) => {
     this.wsUpdateHandler = handler;
   }
   resetWsUpdateHandler = () => {
-    this.wsUpdateHandler = undefined;
+    this.setWsUpdateHandler(undefined);
   }
 
   render() {

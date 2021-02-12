@@ -51,7 +51,10 @@ class PublicQuizChallenge extends BaseComponent {
     }
     initUpdateCallback = () => {
         this.setWsUpdateHandler((response:WebResponse) => {
-            console.debug("WS UPDATE:", new Date(response.date??0).toLocaleString());
+            if (response.type != 'QUIZ_ANSWER_UPDATE') {
+                return;
+            }
+            console.debug("QUIZ_ANSWER_UPDATE UPDATE:", new Date(response.date??0).toLocaleString());
         })
     }
     start = (updateStarted: boolean = true) => {
@@ -79,6 +82,9 @@ class PublicQuizChallenge extends BaseComponent {
         }, 500);
 
        
+    }
+    componentWillUnmount(){
+        this.setWsUpdateHandler(undefined);
     }
     setFailedTimeout = () => {
         this.doSubmitAnswer();
@@ -252,7 +258,8 @@ class PublicQuizChallenge extends BaseComponent {
         const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (
             <div id="PublicQuizChallenge" style={{ marginTop: '20px', }} className="container-fluid">
-                {quiz && quiz.questionsTimered == false ? <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
+                {quiz && quiz.questionsTimered == false ? 
+                <QuizTimer ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> : null}
                 <h2>Quiz Challenge</h2>
                 <AnchorButton onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <p />

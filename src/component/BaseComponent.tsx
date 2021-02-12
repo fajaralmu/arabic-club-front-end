@@ -33,7 +33,7 @@ export default class BaseComponent extends Component<any, any> {
         sendToWebsocket(url, payload);
     }
 
-    protected setWsUpdateHandler =(handler:Function) => {
+    protected setWsUpdateHandler =(handler:Function | undefined) => {
         if (this.parentApp) {
             this.parentApp.setWsUpdateHandler(handler);
         }
