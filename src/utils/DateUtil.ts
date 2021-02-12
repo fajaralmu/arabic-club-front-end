@@ -73,7 +73,7 @@ export const timerString = (totalSeconds:number ) => {
     }
     seconds = totalSeconds;
 
-    return twoDigits(hour)+":"+twoDigits(minutes)+":"+twoDigits(seconds);
+    return twoDigits(hour)+":"+twoDigits(parseInt(minutes.toFixed(0)))+":"+twoDigits(seconds);
 }
 
 
