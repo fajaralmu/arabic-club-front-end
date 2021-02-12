@@ -13,5 +13,6 @@ export default class QuizHistoryModel extends BaseModel{
 	score?:number;
 	created?:Date;
 	updated?:Date;
+	remainingDuration?:number;
 
 }
