@@ -66,6 +66,13 @@ export default class QuizBody extends Component<Props, State> {
             } else {
                 this.props.submit();
             }
+        } else  if (!this.props.quiz.showAllQuestion) {
+            if (this.props.quiz.questions.length > index+1) {
+                const nextIndex = index+1;
+                this.setState({questionIndex: nextIndex} );
+            } else {
+                this.props.submit();
+            }
         }
     }
     componentDidMount() {
