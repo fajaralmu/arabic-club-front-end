@@ -5,6 +5,7 @@ interface Props {
     onTimeout(): any;
     duration: number;
     display?: string;
+    latestUpdate?: Date;
 }
 class State {
 
@@ -49,7 +50,7 @@ export default class QuizTimer extends Component<Props, State> {
             return <TimerProgress duration={props.duration} tick={this.state.tick} />
         }
         return (
-            <Timer duration={props.duration} tick={this.state.tick} />
+            <Timer latestUpdate={this.props.latestUpdate} duration={props.duration} tick={this.state.tick} />
         )
     }
 }
@@ -68,7 +69,7 @@ const TimerProgress = (props: { duration: number, tick: number }) => {
 }
 
 
-const Timer = (props: { duration: number, tick: number }) => {
+const Timer = (props: { latestUpdate?:Date,duration: number, tick: number }) => {
 
     const seconds: number = props.duration - props.tick;
     let className;
@@ -85,7 +86,10 @@ const Timer = (props: { duration: number, tick: number }) => {
         </span>
         <span>
             <b>{timerString(seconds)}</b>
+        
         </span>
+        {props.latestUpdate? 
+        <p style={{fontSize:'0.5em'}}>Last Update: {props.latestUpdate.toLocaleString()}</p>:null}
     </div>
 }
 

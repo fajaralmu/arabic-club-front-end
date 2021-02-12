@@ -11,6 +11,7 @@ import Documents from './Documents';
 import LessonCategory from './LessonCategory';
 import ApplicationProfile from './ApplicationProfile';
 import Quiz from './Quiz';
+import QuizHistoryModel from './QuizHistory';
 
 export default class WebRequest{
 	entity?:string;
@@ -30,6 +31,7 @@ export default class WebRequest{
 	regularTransaction?:boolean;
 	imageData?:string;
 	quiz?:Quiz
+	quizHistory?:QuizHistoryModel;
 	requestId?:string
 	token?:string
 }

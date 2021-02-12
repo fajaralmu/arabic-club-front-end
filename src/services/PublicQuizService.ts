@@ -5,6 +5,9 @@ import { commonAjaxPostCalls } from './Promises';
 import WebRequest from './../models/WebRequest';
 import Filter from './../models/Filter';
 import Quiz from './../models/Quiz';
+import { getLoginKey } from '../middlewares/Common';
+import { sendToWebsocket } from '../utils/websockets';
+import QuizQuestion from './../models/QuizQuestion';
 export default class PublicQuizService {
     private static instance?: PublicQuizService;
 
@@ -38,6 +41,39 @@ export default class PublicQuizService {
         const request:WebRequest = {filter:filter};
         const endpoint = contextPath().concat("api/member/quiz/history")
         return commonAjaxPostCalls(endpoint, request);
+    }
+
+    /**
+     * ================== update via websocket ==================
+     */
+    sendUpdateStart = (_quiz:Quiz, requestId:string) => {
+        const quiz = Object.assign(new Quiz, _quiz);
+        quiz.questions = [];
+        sendToWebsocket("/app/quiz/start", {
+            quizHistory:{
+                quiz: quiz,
+                token: getLoginKey(),
+                requestId:  requestId
+            }
+        });
+    }
+
+    sendUpdateAnswer = (_quiz:Quiz,  requestId: string) => {
+        const quiz = Object.assign(new Quiz, _quiz);
+        try {
+            Quiz.updateMappedAnswer(quiz);
+            quiz.questions = [];
+
+            sendToWebsocket("/app/quiz/answer", {
+                quizHistory:{
+                    requestId:  requestId,
+                    quiz: quiz,
+                    token: getLoginKey(),
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
     }
 
 }

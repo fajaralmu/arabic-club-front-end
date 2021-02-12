@@ -11,6 +11,7 @@ export default class QuizQuestion extends BaseEntity {
 	image?: string;
 	choices?: QuizChoice[];
 	duration:number = 5;
+	number:number = 1;
 
 	static publicQuizQuestion = (): QuizQuestion => {
 		const question: QuizQuestion = new QuizQuestion();

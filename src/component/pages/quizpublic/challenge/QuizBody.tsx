@@ -45,7 +45,10 @@ export default class QuizBody extends Component<Props, State> {
             return;
         }
         const nextIndex = this.state.questionIndex+1;
-        this.setState({questionIndex: nextIndex}, this.updateTimer);
+        this.setQuestionIndex(nextIndex);
+    }
+    setQuestionIndex = (index:number) => {
+        this.setState({questionIndex: index}, this.updateTimer);
     }
     updateTimer = () => {
         if (this.questionTimerRef.current) {
@@ -62,14 +65,14 @@ export default class QuizBody extends Component<Props, State> {
         if (this.props.questionTimered ) {
             if (this.props.quiz.questions.length > index+1) {
                 const nextIndex = index+1;
-                this.setState({questionIndex: nextIndex}, this.resetTimer);
+                this.setQuestionIndex(nextIndex);
             } else {
                 this.props.submit();
             }
         } else  if (!this.props.quiz.showAllQuestion) {
             if (this.props.quiz.questions.length > index+1) {
                 const nextIndex = index+1;
-                this.setState({questionIndex: nextIndex} );
+                this.setQuestionIndex(nextIndex);
             } else {
                 this.props.submit();
             }
