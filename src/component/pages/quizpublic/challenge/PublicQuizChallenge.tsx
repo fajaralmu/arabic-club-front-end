@@ -87,24 +87,25 @@ class PublicQuizChallenge extends BaseComponent {
         this.setState({ quiz: undefined, timeout: true });
     }
     dataLoaded = (response: WebResponse) => {
-        const quizCloned:Quiz = Object.assign(new Quiz(), response.quiz);
+       
         if (response.quizHistory && response.quiz) {
             response.quiz.duration = response.quizHistory.remainingDuration ?? response.quiz.duration;
             response.quiz.startedDate = response.quizHistory.started;
            
-            this.setState({ quiz: quizCloned, quizResult: undefined },
+            this.setState({ quiz: Object.assign(new Quiz(), response.quiz), quizResult: undefined },
                 () => {
-                    this.updateQuestionIndex(response.quizHistory?.maxQuestionNumber ?? 1);
                     this.start(false);
+                    this.updateQuestionIndex(response.quizHistory?.maxQuestionNumber ?? 1);
+                    
                 });
             return;
         }
-        this.setState({ quiz: quizCloned, quizResult: undefined });
+        this.setState({ quiz: Object.assign(new Quiz(), response.quiz), quizResult: undefined });
     }
     updateQuestionIndex = (questionNumber:number) => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz  ) return;
-        if (quiz.questions.length < questionNumber || this.quizBodyRef.current) return;
+        if (quiz.questions.length < questionNumber  ) return;
         const timeout = setTimeout(()=>{
             if (this.quizBodyRef.current) {
                 this.quizBodyRef.current.updateQuestionIndex(questionNumber-1);

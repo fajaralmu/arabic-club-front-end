@@ -27,6 +27,7 @@ export default class QuizBody extends Component<Props, State> {
     }
     updateQuestionIndex = (index: number) => {
         if (this.props.questionTimered) return;
+        console.debug("updateQuestionIndex: ", index);
         this.setState({ questionIndex: index });
     }
     getCurrentQuestion = () => {
