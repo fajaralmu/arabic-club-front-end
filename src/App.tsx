@@ -237,8 +237,7 @@ function updateFavicon(profile: any) {
   }
 }
 
-const mapDispatchToProps = (dispatch: Function) => ({
-  requestAppId: (app: App) => dispatch(actions.requestAppId(app)),
+const mapDispatchToProps = (dispatch: Function) => ({ 
   setMainApp: (app: App) => dispatch(actions.setMainApp(app)),
   setRequestId: (response: WebResponse, app:App) => dispatch(actions.setRequestId(response, app)),
 })

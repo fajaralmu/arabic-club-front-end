@@ -9,13 +9,13 @@ export const performLoginMiddleware = store => next => action => {
     const app = action.meta.app;
     axios.post(action.meta.url, {}, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).then(response => {
-        const responseJson = response.data;
+    }).then(axiosResponse => {
+        const responseJson = axiosResponse.data;
         let loginKey: string = "";
         let loginSuccess: boolean = false;
 
         if (responseJson.code != null && responseJson.code == "00") {
-            loginKey = response.headers['access-token'];
+            loginKey = axiosResponse.headers['access-token'];
             console.log("api_token: ", loginKey);
             loginSuccess = true;
         }
@@ -26,6 +26,7 @@ export const performLoginMiddleware = store => next => action => {
                 loggedUser: responseJson.user
             }
         });
+        common.updateAccessToken(axiosResponse);
         delete newAction.meta;
         store.dispatch(newAction);
     })
@@ -33,25 +34,7 @@ export const performLoginMiddleware = store => next => action => {
         .finally(() => { app.endLoading(); });
 
 }
-
-export const requestAppIdMiddleware = store => next => action => {
-    if (!action.meta || action.meta.type !== types.REQUEST_ID) { return next(action); }
-    axios.post(action.meta.url, (action.payload), {
-        headers: common.commonAuthorizedHeader()
-    }).then(axiosResponse => {
-        const data:WebResponse = axiosResponse.data;
-        if (data.code != "00") {
-            alert("Error requesting app ID");
-            return;
-        }
-        common.updateAccessToken(axiosResponse);
-        console.debug("response header:", axiosResponse.headers['access-token']);
-        let newAction = Object.assign({}, action, { payload: { loginStatus: data.loggedIn, ...data } });
-        delete newAction.meta;
-        store.dispatch(newAction);
-    })
-        .catch(console.log).finally(param => action.meta.app.endLoading());
-}
+ 
 
 export const getLoggedUserMiddleware = store => next => action => {
     if (!action.meta || action.meta.type !== types.GET_LOGGED_USER) { return next(action); }

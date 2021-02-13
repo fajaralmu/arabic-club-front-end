@@ -1,6 +1,5 @@
 import * as types from './types'
-import * as menuData from '../constant/Menus'
-import { setCookie, updateAccessToken } from '../middlewares/Common';
+import * as menuData from '../constant/Menus' 
 import { setLoginKeyCookie } from './../middlewares/Common';
 
 export const initState = {
@@ -18,8 +17,7 @@ export const initState = {
 export const reducer = (state = initState, action) => {
     
     let result = {};
-    switch (action.type) {
-        case types.REQUEST_ID:
+    switch (action.type) { 
         case types.SET_REQUEST_ID:
             
             console.debug("USER REDUCER:REQUEST_ID", action.payload.requestId);

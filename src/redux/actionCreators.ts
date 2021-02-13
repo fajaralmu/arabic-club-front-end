@@ -41,18 +41,7 @@ export const getManagementMenus = (app) => {
     };
     return requested;
 }
-
-export const requestAppId = (app) => {
-    app.startLoading();
-    return {
-        type: types.REQUEST_ID,
-        payload: {},
-        meta: {
-            app: app, type: types.REQUEST_ID,
-            url: apiBaseUrl.concat("requestid")
-        }
-    };
-}
+ 
 
 export const setRequestId = (data:WebResponse, app) => {
    
