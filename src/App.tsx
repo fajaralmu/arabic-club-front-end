@@ -22,6 +22,7 @@ class IState {
   mainAppUpdated: Date = new Date();
   showAlert: boolean = false;
   realtime: boolean = false;
+  appIdStatus:string = "Loading App Id";
 }
 class App extends Component<any, IState> {
   wsConnected: boolean = false;
@@ -51,14 +52,15 @@ class App extends Component<any, IState> {
   refresh = () => { this.setState({ mainAppUpdated: new Date() }); }
 
   requestAppId = () => {
+    this.setState({appIdStatus: "Authenticating application"});
     this.userService.requestApplicationId((response) => {
       this.props.setRequestId(response, this);
       this.refresh();
     }, this.retryRequestAppId)
     
   }
-  retryRequestAppId = () => {
-    console.debug("RETRYING");
+  retryRequestAppId = () => { 
+    this.setState({appIdStatus: "Authenticating application (Retrying)"});
     this.userService.requestApplicationIdNoAuth((response) => { 
       this.props.setRequestId(response, this); 
     })
@@ -177,12 +179,12 @@ class App extends Component<any, IState> {
   render() {
     if (!this.props.requestId) {
       return (
-        <div style={{ paddingTop: '10%' }}>
+        <div className="text-center" style={{ paddingTop: '10%' }}>
+          <h2>{this.state.appIdStatus}</h2>{}
           <Spinner />
         </div>
       )
     }
-    const usedHost = url.contextPath();
     return (
       <Fragment>
         <Loading realtime={this.state.realtime} loading={this.state.loading} loadingPercentage={this.state.loadingPercentage} />
