@@ -1,5 +1,5 @@
 
-import { commonAuthorizedHeader } from '../middlewares/Common';
+import { commonAuthorizedHeader, commonHeader } from '../middlewares/Common';
 import WebResponse from '../models/WebResponse';
 import { updateAccessToken } from './../middlewares/Common';
 
@@ -24,8 +24,33 @@ export const commonAjaxPostCalls = (endpoint: string, payload?: any) => {
             .then(axiosResponse => {
                 updateAccessToken(axiosResponse);
                 const response: WebResponse = axiosResponse.data;
+                response.rawAxiosResponse = axiosResponse;
                 if (response.code == "00") {
 
+                    resolve(response);
+                }
+                else { reject(response); }
+            })
+            .catch((e: any) => { 
+                
+                console.error(e); 
+                reject(e); 
+            });
+    })
+}
+
+
+export const commonAjaxPublicPostCalls = (endpoint: string, payload?: any) => {
+    const request = payload == null ? {} : payload;
+    return new Promise<WebResponse>(function (resolve, reject) {
+        axios.post(endpoint, request, {
+            headers: commonHeader()
+        })
+            .then(axiosResponse => {
+                
+                const response: WebResponse = axiosResponse.data;
+                response.rawAxiosResponse = axiosResponse;
+                if (response.code == "00") {
                     resolve(response);
                 }
                 else { reject(response); }

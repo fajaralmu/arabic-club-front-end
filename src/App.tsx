@@ -13,6 +13,7 @@ import MainLayout from './component/layout/MainLayout';
 import WebResponse from './models/WebResponse';
 import Spinner from './component/loader/Spinner';
 import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks } from './utils/websockets';
+import UserService from './services/UserService';
 
 class IState {
   loading: boolean = false;
@@ -23,7 +24,7 @@ class IState {
   realtime: boolean = false;
 }
 class App extends Component<any, IState> {
-  wsConnected :boolean = false;
+  wsConnected: boolean = false;
   loadings: number = 0;
   alertTitle: String = "Info";
   alertBody: any = null;
@@ -31,26 +32,38 @@ class App extends Component<any, IState> {
   alertIsError: boolean = false;
   alertOnYesCallback: Function = function (e) { };
   alertOnCancelCallback: Function = function (e) { };
-  wsUpdateHandler: Function|undefined = undefined;
+  wsUpdateHandler: Function | undefined = undefined;
   clientRef: RefObject<SockJsClient> = React.createRef();
+  userService: UserService;
   // alertRef: RefObject<Alert> = React.createRef();
   alertCallback = {
-    title: "Info",  message: "Info",  yesOnly: false,
+    title: "Info", message: "Info", yesOnly: false,
     onOk: () => { }, onNo: () => { }
   }
 
   constructor(props: any) {
     super(props);
     this.state = new IState();
+    this.userService = this.props.services.userService;
 
     this.props.setMainApp(this);
   }
-  refresh = () => {  this.setState({ mainAppUpdated: new Date() }); }
+  refresh = () => { this.setState({ mainAppUpdated: new Date() }); }
 
-  requestAppId() {
-    this.props.requestAppId(this);
+  requestAppId = () => {
+    this.userService.requestApplicationId((response) => {
+      this.props.setRequestId(response, this);
+      this.refresh();
+    }, this.retryRequestAppId)
+    
   }
-
+  retryRequestAppId = () => {
+    console.debug("RETRYING");
+    this.userService.requestApplicationIdNoAuth((response) => { 
+      this.props.setRequestId(response, this); 
+    })
+    
+  }
   incrementLoadings() {
     this.loadings++;
   }
@@ -129,7 +142,7 @@ class App extends Component<any, IState> {
 
   componentDidMount() {
 
-    this.requestAppId(); 
+    this.requestAppId();
     this.setState({ loadingPercentage: 0 });
   }
 
@@ -139,22 +152,22 @@ class App extends Component<any, IState> {
       subscribeUrl: "/wsResp/progress/" + this.props.requestId,
       callback: this.handleProgress  //must use lambda
     },
-    {
-      subscribeUrl: "/wsResp/" + this.props.requestId+"/update",
-      callback: (response)=> this.handleWsUpdate(response)
-    });
+      {
+        subscribeUrl: "/wsResp/" + this.props.requestId + "/update",
+        callback: (response) => this.handleWsUpdate(response)
+      });
     performWebsocketConnection();
     this.wsConnected = true;
   }
 
-  private handleWsUpdate = (response:any) => {
-    
+  private handleWsUpdate = (response: any) => {
+
     if (this.wsUpdateHandler) {
       this.wsUpdateHandler(response);
     }
   }
 
-  setWsUpdateHandler = (handler:Function|undefined) => {
+  setWsUpdateHandler = (handler: Function | undefined) => {
     this.wsUpdateHandler = handler;
   }
   resetWsUpdateHandler = () => {
@@ -216,7 +229,8 @@ function updateFavicon(profile: any) {
 
 const mapDispatchToProps = (dispatch: Function) => ({
   requestAppId: (app: App) => dispatch(actions.requestAppId(app)),
-  setMainApp: (app: App) => dispatch(actions.setMainApp(app))
+  setMainApp: (app: App) => dispatch(actions.setMainApp(app)),
+  setRequestId: (response: WebResponse, app:App) => dispatch(actions.setRequestId(response, app)),
 })
 
 export default withRouter(connect(

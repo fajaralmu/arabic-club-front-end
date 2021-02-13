@@ -6,6 +6,12 @@ export const commonAuthorizedHeader = () => {
         'Authorization': 'Bearer '+getLoginKey()
     }
 };
+export const commonHeader = () => {
+    return {
+        'Content-Type': 'application/json',
+        'requestId': getRequestId(), 
+    }
+};
 
 const LOGIN_KEY:string = "arabic-club-login-key";
  

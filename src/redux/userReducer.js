@@ -19,6 +19,8 @@ export const reducer = (state = initState, action) => {
     let result = {};
     switch (action.type) {
         case types.REQUEST_ID:
+        case types.SET_REQUEST_ID:
+            
             console.debug("USER REDUCER:REQUEST_ID", action.payload.requestId);
             result = {
                 ...state, requestId: action.payload.requestId,
@@ -37,7 +39,7 @@ export const reducer = (state = initState, action) => {
             console.debug("result");
             console.debug("action.payload.requestId: ",action.payload.requestId); 
             console.debug("REQUEST_ID result.loginStatus:", result.loginStatus)
-            //  action.payload.referer.refresh();
+             action.payload.referer.refresh();
 
             return result;
         case types.DO_LOGIN:

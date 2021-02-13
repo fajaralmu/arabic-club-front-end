@@ -1,5 +1,6 @@
 import * as common from './Common'
 import * as types from '../redux/types'
+import WebResponse from './../models/WebResponse';
 const axios = require('axios');
 export const performLoginMiddleware = store => next => action => {
     if (!action.meta || action.meta.type !== types.DO_LOGIN) {
@@ -38,7 +39,7 @@ export const requestAppIdMiddleware = store => next => action => {
     axios.post(action.meta.url, (action.payload), {
         headers: common.commonAuthorizedHeader()
     }).then(response => {
-        const data = response.data;
+        const data:WebResponse = response.data;
         if (data.code != "00") {
             alert("Error requesting app ID");
             return;

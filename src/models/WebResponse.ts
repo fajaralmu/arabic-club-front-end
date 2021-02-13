@@ -32,5 +32,7 @@ export default class WebResponse{
 	quiz?:Quiz;
 	quizResult?:QuizResult;
 	type?:string;
-	quizHistory?:QuizHistoryModel
+	quizHistory?:QuizHistoryModel;
+
+	rawAxiosResponse?:any;
 }

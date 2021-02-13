@@ -3,6 +3,7 @@ import * as url from '../constant/Url'
 import { contextPath } from '../constant/Url'; 
 import User from './../models/User';
 import ApplicationProfile from './../models/ApplicationProfile';
+import WebResponse from './../models/WebResponse';
 
 const usedHost = url.contextPath();
 const apiBaseUrl = usedHost + "api/public/"
@@ -51,6 +52,19 @@ export const requestAppId = (app) => {
             url: apiBaseUrl.concat("requestid")
         }
     };
+}
+
+export const setRequestId = (data:WebResponse, app) => {
+   
+    const ret= {
+        type: types.SET_REQUEST_ID,
+        payload: { loginStatus: data.loggedIn, referer:app, ...data },
+        meta: {
+            type: types.SET_REQUEST_ID, 
+        }
+    };
+    console.debug("setRequestId: ", ret);
+    return ret;
 }
 
 export const getMessageList = (app) => {

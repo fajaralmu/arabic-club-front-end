@@ -2,7 +2,7 @@
 import User from '../models/User';
 import WebRequest from '../models/WebRequest';
 import { contextPath } from '../constant/Url';
-import { commonAjaxPostCalls } from './Promises';
+import { commonAjaxPostCalls, commonAjaxPublicPostCalls } from './Promises';
 export default class CategoriesService
 {
     private static instance?:CategoriesService;
@@ -15,7 +15,7 @@ export default class CategoriesService
     }
     getCategories = (code:string) => { 
         const endpoint = contextPath().concat("api/public/categories/"+code)
-        return commonAjaxPostCalls(endpoint, {});
+        return commonAjaxPublicPostCalls(endpoint, {});
     }
     getLoadedCategories = (code:string) : any[] =>{
         return this.categories.get(code) ?? [];

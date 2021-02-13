@@ -1,6 +1,6 @@
   
 import { contextPath } from '../constant/Url';
-import { commonAjaxPostCalls } from './Promises';
+import { commonAjaxPublicPostCalls } from './Promises';
 import Filter from './../models/Filter';
 export default class GalleryService
 {
@@ -13,11 +13,11 @@ export default class GalleryService
     }
     getPictures = (filter:Filter) => { 
         const endpoint = contextPath().concat("api/public/gallery/pictures")
-        return commonAjaxPostCalls(endpoint, {filter:filter});
+        return commonAjaxPublicPostCalls(endpoint, {filter:filter});
     }
     getVideos = (filter:Filter) => { 
         const endpoint = contextPath().concat("api/public/gallery/videos")
-        return commonAjaxPostCalls(endpoint, {filter:filter});
+        return commonAjaxPublicPostCalls(endpoint, {filter:filter});
     }
    
 
