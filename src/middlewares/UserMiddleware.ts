@@ -38,14 +38,14 @@ export const requestAppIdMiddleware = store => next => action => {
     if (!action.meta || action.meta.type !== types.REQUEST_ID) { return next(action); }
     axios.post(action.meta.url, (action.payload), {
         headers: common.commonAuthorizedHeader()
-    }).then(response => {
-        const data:WebResponse = response.data;
+    }).then(axiosResponse => {
+        const data:WebResponse = axiosResponse.data;
         if (data.code != "00") {
             alert("Error requesting app ID");
             return;
         }
-        common.updateAccessToken(response);
-        console.debug("response header:", response.headers['access-token']);
+        common.updateAccessToken(axiosResponse);
+        console.debug("response header:", axiosResponse.headers['access-token']);
         let newAction = Object.assign({}, action, { payload: { loginStatus: data.loggedIn, ...data } });
         delete newAction.meta;
         store.dispatch(newAction);

@@ -1,6 +1,7 @@
 import * as types from './types'
 import * as menuData from '../constant/Menus'
-import { setCookie } from '../middlewares/Common';
+import { setCookie, updateAccessToken } from '../middlewares/Common';
+import { setLoginKeyCookie } from './../middlewares/Common';
 
 export const initState = {
     loginKey: null,
@@ -51,11 +52,6 @@ export const reducer = (state = initState, action) => {
                 loginFailed: action.payload.loginStatus == false,
                 loggedUser: action.payload.loggedUser
             };
-
-            if (result.loginStatus == true) {
-                setCookie("loginKey", result.loginKey);
-            }
-
             return result;
         case types.DO_LOGOUT:
             result = {
@@ -63,7 +59,7 @@ export const reducer = (state = initState, action) => {
                 loginStatus: false,
                 loggedUser: null
             };
-            setCookie("loginKey", null);
+            setLoginKeyCookie(null);
             return result;
         case types.REFRESH_LOGIN:
             result = {

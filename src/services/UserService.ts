@@ -41,7 +41,7 @@ export default class UserService {
         })
 
     }
-    requestApplicationIdNoAuth = (callbackSuccess: (response:WebResponse)=>any) => {
+    requestApplicationIdNoAuth = (callbackSuccess: (response:WebResponse)=>any, callbackError: ()=>any) => {
         const url =   contextPath() + "api/public/requestid";
         commonAjaxPublicPostCalls(url, {}).then(data => {
           if (data.code != "00") {
@@ -52,6 +52,7 @@ export default class UserService {
       }).catch(e=>{
           console.error("ERROR requestApplicationIdNoAuth: ", e);
         //   alert("Error, please reload OR try again");
+            callbackError();
       })
           
       }

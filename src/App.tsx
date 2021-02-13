@@ -14,6 +14,7 @@ import WebResponse from './models/WebResponse';
 import Spinner from './component/loader/Spinner';
 import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks } from './utils/websockets';
 import UserService from './services/UserService';
+import AnchorWithIcon from './component/navigation/AnchorWithIcon';
 
 class IState {
   loading: boolean = false;
@@ -23,6 +24,7 @@ class IState {
   showAlert: boolean = false;
   realtime: boolean = false;
   appIdStatus:string = "Loading App Id";
+  errorAuthenticatingApp:boolean = false;
 }
 class App extends Component<any, IState> {
   wsConnected: boolean = false;
@@ -52,18 +54,22 @@ class App extends Component<any, IState> {
   refresh = () => { this.setState({ mainAppUpdated: new Date() }); }
 
   requestAppId = () => {
-    this.setState({appIdStatus: "Authenticating application"});
+    this.setState({appIdStatus: "Authenticating application", errorAuthenticatingApp: false});
     this.userService.requestApplicationId((response) => {
       this.props.setRequestId(response, this);
       this.refresh();
+      this.setState({errorAuthenticatingApp: false});
     }, this.retryRequestAppId)
     
   }
   retryRequestAppId = () => { 
-    this.setState({appIdStatus: "Authenticating application (Retrying)"});
+    this.setState({appIdStatus: "Authenticating application (Retrying)", errorAuthenticatingApp: false});
     this.userService.requestApplicationIdNoAuth((response) => { 
       this.props.setRequestId(response, this); 
-    })
+      this.setState({errorAuthenticatingApp: false});
+    },
+    ()=>
+    this.setState({errorAuthenticatingApp: true}))
     
   }
   incrementLoadings() {
@@ -180,8 +186,10 @@ class App extends Component<any, IState> {
     if (!this.props.requestId) {
       return (
         <div className="text-center" style={{ paddingTop: '10%' }}>
-          <h2>{this.state.appIdStatus}</h2>{}
-          <Spinner />
+          <h2>{this.state.appIdStatus}</h2>
+          {this.state.errorAuthenticatingApp? 
+          <AnchorWithIcon iconClassName="fas fa-redo" onClick={this.retryRequestAppId} children="Retry"/>:
+          <Spinner />}
         </div>
       )
     }

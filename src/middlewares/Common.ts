@@ -29,7 +29,7 @@ export const getRequestId = () :string => {
     return state.userState.requestId;
 }
 export const getLoginKey = () => {
-    return getCookie('loginKey');
+    return getCookie(LOGIN_KEY);
 }
 
 export const updateAccessToken = (axiosResponse) => {
@@ -39,6 +39,9 @@ export const updateAccessToken = (axiosResponse) => {
         setCookie(LOGIN_KEY, accessToken);
     }
 } 
+export const setLoginKeyCookie = (cookieValue:any) => {
+    setCookie(LOGIN_KEY, cookieValue);
+}
 export const setCookie = function (cname, cvalue, exdays=1) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
