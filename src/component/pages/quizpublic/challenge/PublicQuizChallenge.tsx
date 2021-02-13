@@ -134,6 +134,7 @@ class PublicQuizChallenge extends BaseComponent {
         if (!quiz || quiz.questions.length == 0) return;
         try {
             quiz.questions[questionIndex].answerCode = code;
+            quiz.questions[questionIndex].entered = true;
             this.setState({ quiz: Object.assign(new Quiz(), quiz) },
                 () => this.sendUpdateQuizHistory(Object.assign(new Quiz(), quiz))
             );
@@ -239,7 +240,8 @@ class PublicQuizChallenge extends BaseComponent {
                     <QuizResultInfo quizResult={this.state.quizResult} tryAgain={this.tryAgain} /> : 
                     null}
                 {quiz ?
-                    <QuizBody ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                    <QuizBody
+                     ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>

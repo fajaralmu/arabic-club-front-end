@@ -11,7 +11,7 @@ import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
 import QuizTimer from './QuizTimer';
-interface Props {
+interface Props { 
    questionTimered:boolean, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
 }
 class State {
@@ -26,9 +26,9 @@ export default class QuizBody extends Component<Props, State> {
         super(props);
     }
     updateQuestionIndex = (index: number) => {
-        if (this.props.questionTimered) return;
+        // if (this.props.questionTimered) return;
         console.debug("updateQuestionIndex: ", index);
-        this.setState({ questionIndex: index });
+        this.setQuestionIndex( index );
     }
     getCurrentQuestion = () => {
         if (this.props.quiz.questions && this.props.quiz.questions.length > this.state.questionIndex) {
@@ -49,7 +49,12 @@ export default class QuizBody extends Component<Props, State> {
         this.setQuestionIndex(nextIndex);
     }
     setQuestionIndex = (index:number) => {
-        this.setState({questionIndex: index}, this.updateTimer);
+        this.setState({questionIndex: index},()=>{
+             this.resetTimer();
+             try {
+                this.props.setChoice(this.props.quiz.questions[index].answerCode, index);
+             } catch (e) {  }
+        });
     }
     updateTimer = () => {
         if (this.questionTimerRef.current) {

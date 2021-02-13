@@ -13,6 +13,9 @@ export default class QuizQuestion extends BaseEntity {
 	duration:number = 5;
 	number:number = 1;
 
+	
+	entered:boolean = false;
+
 	static publicQuizQuestion = (): QuizQuestion => {
 		const question: QuizQuestion = new QuizQuestion();
 		question.answerCode = "A";
