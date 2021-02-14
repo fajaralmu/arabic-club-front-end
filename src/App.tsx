@@ -15,6 +15,8 @@ import Spinner from './component/loader/Spinner';
 import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks } from './utils/websockets';
 import UserService from './services/UserService';
 import AnchorWithIcon from './component/navigation/AnchorWithIcon';
+import { time } from 'console';
+import { doItLater } from './utils/EventUtil';
 
 class IState {
   loading: boolean = false;
@@ -83,7 +85,7 @@ class App extends Component<any, IState> {
     }
   }
 
-  startLoading(realtime) {
+  startLoading(realtime:boolean=false) {
     this.incrementLoadings();
     this.setState({ loading: true, realtime: realtime });
   }
@@ -92,12 +94,23 @@ class App extends Component<any, IState> {
     try {
       this.decrementLoadings();
       if (this.loadings == 0) {
-        this.setState({ loading: false, loadingPercentage: 0 });
+        if (this.state.realtime) {
+        this.setState({  loadingPercentage: 100 }, 
+          this.smoothEndLoading);
+        } else {
+          this.setState({loading: false,   loadingPercentage: 0 });
+        }
       }
     } catch (e) {
       console.error(e);
     }
 
+  }
+
+  smoothEndLoading = () => {
+    doItLater(()=>{
+      this.setState({loading: false,   loadingPercentage: 0 });
+    }, 100);
   }
 
   handleProgress = (msg: WebResponse) => {

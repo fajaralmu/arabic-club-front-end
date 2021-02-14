@@ -30,7 +30,7 @@ export default class QuizTimer extends Component<Props, State> {
             this.updateTickWithCallback(tick, this.props.onTimeout);
             return;
         };
-        tick += 0.25;
+        tick += 0.1;
         this.updateTickWithCallback(tick, this.updateTimerLoop);
     }
 
@@ -58,18 +58,19 @@ export default class QuizTimer extends Component<Props, State> {
         }
     }
     updateTimerLoop = () => {
-        this.timeout = setTimeout(this.updateTick, 250);
+        this.timeout = setTimeout(this.updateTick, 100);
     }
     render() {
         console.debug("update timer render");
          
         return (
             <div className="container-fluid text-center">
+                <p><i className="fas fa-stopwatch"/>&nbsp;<span ref={this.timerStringRef}></span></p>
                 <div className="progress" style={{ height: '5px' }}>
                     <div ref={this.progressRef} style={{ transitionDuration: '500ms', width:'0%' }} 
                     className="bg-dark"    ></div>
                 </div>
-                <span ref={this.timerStringRef}></span>
+                
                 <p />
             </div>
         )

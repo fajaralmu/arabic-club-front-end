@@ -53,7 +53,7 @@ function LoaderContent(props) {
                 <div className="col-11 progress" style={{padding:0, marginTop: '7px', height:'10px'}}  >
                     <div className="bg-primary" style={{
                         width: props.progress + "%",
-                        transitionDuration: '300ms',
+                        transitionDuration: '50ms',
                         margin: 0,
                     }}>
                     </div>
