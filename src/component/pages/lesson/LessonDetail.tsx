@@ -28,7 +28,7 @@ class LessonDetail extends BaseMainMenus {
         return (
             <div className="container-fluid">
                 <h2>{lesson.title}</h2>
-                <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toString() : ""}</p>
+                <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toLocaleString() : ""}</p>
                 <AnchorWithIcon iconClassName="fas fa-angle-left" onClick={this.props.back}>Back</AnchorWithIcon>
                 
                 {lesson.bannerImages?

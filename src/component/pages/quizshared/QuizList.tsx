@@ -83,10 +83,10 @@ export default class QuizList extends Component<IProps, State>{
                                         {quiz.repeatable?"Repeatable":"Not repeatable"}
                                     </td> 
                                     <td>
-                                        {quiz.available?<AnchorWithIcon onClick={(e) => props.quizOnClick(quiz)}
-                                            className="btn btn-dark" iconClassName="fas fa-clipboard">
-                                            Detail Quiz
-                                            </AnchorWithIcon> :"Not available"}
+                                        {quiz.available?<a onClick={(e) => props.quizOnClick(quiz)}
+                                            className="btn btn-dark" >
+                                            <i className="fas fa-folder-open"/>
+                                            </a> :"Not available"}
                                     </td>
                                 </tr>
                             )

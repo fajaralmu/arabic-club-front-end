@@ -165,12 +165,13 @@ const LessonItem = (props: { lesson: Lesson, setSelectedLesson: Function }) => {
         new String(lesson.content);
     return (<Card attributes={{ style: { marginBottom: '5px' } }}>
         <h3>{lesson.title}</h3>
-        <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toLocaleString() : ""}</p>
+        {/* <p className="text-dark"><i className="fas fa-edit" />&nbsp;{lesson.user?.displayName}</p> */}
+        <p><i className="fas fa-clock"/>&nbsp;{lesson.createdDate ? new Date(lesson.createdDate).toLocaleString() : ""}</p>
         <div dangerouslySetInnerHTML={{
             __html: content.toString()
         }} />
         <p />
-        <AnchorWithIcon onClick={(e) => props.setSelectedLesson(lesson)} className="btn btn-success btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
+        <AnchorWithIcon onClick={(e) => props.setSelectedLesson(lesson)} className="btn btn-outline-dark btn-sm" iconClassName="fas fa-angle-right">Read More</AnchorWithIcon>
     </Card>)
 }
 

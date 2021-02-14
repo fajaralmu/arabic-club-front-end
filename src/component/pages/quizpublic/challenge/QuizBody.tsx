@@ -95,7 +95,7 @@ export default class QuizBody extends Component<Props, State> {
         const showAllQuestion: boolean = quiz.showAllQuestion==false?quiz.showAllQuestion:this.state.showAllQuestion;
         return (
             <div>
-                <h1>Quiz : {quiz.title}</h1>
+                <h1><i className="fas fa-feather-alt" />&nbsp;{quiz.title}</h1>
                 <div className='alert alert-info'>
                     <FormGroup label="Started at">
                         {quiz.startedDate ? new Date(quiz.startedDate).toLocaleString() : "-"}

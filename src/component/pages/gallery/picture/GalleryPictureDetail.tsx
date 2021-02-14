@@ -27,7 +27,10 @@ export default class GalleryPictureDetail extends Component<IProps, IState> {
                 <p/>
                 <Carousel imageUrls={image.getFullUrls()} />
                 <h4>{image.title}</h4>
-                <div className="alert alert-success">{image.description}</div>
+                <div className="alert alert-success">
+                    <h5>Description</h5>
+                    {image.description}
+                </div>
 
             </div>
         )

@@ -252,8 +252,7 @@ class PublicQuizChallenge extends BaseComponent {
                     <QuizTimer latestUpdate={this.state.latestUpdate} ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} />
                     : null}
 
-                <h2>Quiz Challenge</h2>
-                <AnchorButton onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
+                <AnchorButton className="btn btn-outline-dark btn-sm" onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <p />
 
                 {this.state.quizResult ?

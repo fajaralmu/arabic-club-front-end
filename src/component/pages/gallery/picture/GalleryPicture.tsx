@@ -11,7 +11,7 @@ import Images from './../../../../models/Images';
 import WebResponse from './../../../../models/WebResponse';
 import NavigationButtons from './../../../navigation/NavigationButtons';
 import Spinner from './../../../loader/Spinner';
-import { baseImageUrl  } from './../../../../constant/Url';
+import { baseImageUrl } from './../../../../constant/Url';
 import GalleryPictureDetail from './GalleryPictureDetail';
 class IState {
     imageList: Images[] = new Array();
@@ -87,7 +87,7 @@ const ImageList = (props: { images: Images[], onClick(image: Images): void }) =>
     return (
         <div className="row">
             {images.map((image, i) => {
-                return <ImageItem onClick={props.onClick} image={image} key={"ii-" + i} />
+                return <ImageItem key={"img-item-" + i} onClick={props.onClick} image={image} />
             })}
         </div>
     )
@@ -97,13 +97,16 @@ const ImageItem = (props: { image: Images, onClick(image: Images): void }) => {
     const image: Images = Object.assign(new Images(), props.image);
     const firstImage: string = image.getFirstImage();
     return (
-        <div className="col-3">
+        <div style={{ marginBottom: '5px' }} className="col-3">
             <div className="card">
                 <img onClick={(e) => props.onClick(image)} src={baseImageUrl() + firstImage} className="card-img-top" />
+                <div style={{ position: 'absolute', right: 5, bottom: 5 }} >
+                    <a className="btn btn-outline-dark btn-sm" onClick={(e) => props.onClick(image)} >
+                        <i className="fas fa-angle-double-right" />
+                    </a>
+                </div>
                 <div className="card-body">
                     <h5 className="card-title">{image.title}</h5>
-                    <p className="card-text">{image.description}</p>
-                    <span className="badge badge-dark">{image.imageCount()}</span>
                 </div>
             </div>
         </div>
