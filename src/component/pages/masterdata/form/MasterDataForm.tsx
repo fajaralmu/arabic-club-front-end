@@ -18,6 +18,7 @@ class MasterDataForm extends BaseComponent {
     masterDataService: MasterDataService;
     editMode:boolean = false;
     recordToEdit?:{} = undefined;
+    formRef:React.RefObject<HTMLFormElement> = React.createRef();
     constructor(props: any) {
         super(props, true);
         this.masterDataService = this.getServices().masterDataService;
@@ -37,7 +38,9 @@ class MasterDataForm extends BaseComponent {
     }
     onSubmit = (e) => {
         e.preventDefault();
-        const form = e.target, app = this;
+        if (!this.formRef.current) return;
+       
+        const form = this.formRef.current, app = this;
         this.showConfirmation("Save data?")
             .then(function (ok) {
                 if (ok) { app.submit(form) }
@@ -138,7 +141,7 @@ class MasterDataForm extends BaseComponent {
         return ( 
             <div id="MasterDataForm" >
                 <AnchorButton style={{ marginBottom: '5px' }} onClick={this.props.onClose} iconClassName="fas fa-angle-left">Back</AnchorButton>
-                <form onSubmit={this.onSubmit} id="record-form">
+                <form ref={this.formRef} onSubmit={this.onSubmit} id="record-form">
                 <Modal title={<span>{entityProperty.alias} Record Form {editModeStr}</span>} footerContent={<SubmitReset />}>
                         <InputFields app={this.parentApp} recordToEdit={this.recordToEdit}  entityProperty={entityProperty} />
                     </Modal>
