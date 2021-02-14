@@ -102,7 +102,7 @@ export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, u
                 <ToggleButton active={quiz.questionsTimered==true} onClick={(val)=>props.updateQuizBooleanField('questionsTimered', val)} />
             </FormGroup>
             <FormGroup label="Image">
-                <input type="file" required onChange={props.updateField} 
+                <input type="file"   onChange={props.updateField} 
                 className="form-control" name="image"   />
                 {quiz.image != undefined && quiz.image.trim()!=""?
                  quiz.image.startsWith("data:image")?

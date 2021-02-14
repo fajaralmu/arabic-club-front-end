@@ -17,6 +17,9 @@ export default class Quiz extends BaseEntity{
 	submittedDate?:Date = new Date();
 	mappedAnswer?:{}; 
 
+	//
+	maxQuestionNumber?:number;
+
 	public static updateMappedAnswer = (quiz:Quiz) => {
 		quiz.mappedAnswer = {};
 		for (let i = 0; i < quiz.questions.length; i++) {

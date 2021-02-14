@@ -15,4 +15,6 @@ export default class QuizHistoryModel extends BaseModel{
 	updated?:Date;
 	remainingDuration?:number;
 	maxQuestionNumber?:number;
+	requestId?:string;
+	token?:string;
 }

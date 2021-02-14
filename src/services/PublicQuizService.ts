@@ -8,6 +8,7 @@ import Quiz from './../models/Quiz';
 import { getLoginKey } from '../middlewares/Common';
 import { sendToWebsocket } from '../utils/websockets';
 import QuizQuestion from './../models/QuizQuestion';
+import QuizHistoryModel from './../models/QuizHistory';
 export default class PublicQuizService {
     private static instance?: PublicQuizService;
 
@@ -63,13 +64,14 @@ export default class PublicQuizService {
         try {
             Quiz.updateMappedAnswer(quiz);
             quiz.questions = [];
-
+            const quizHistory:QuizHistoryModel = {
+                updated: new Date(),
+                requestId:  requestId,
+                quiz: quiz,
+                token: getLoginKey(),
+            }
             sendToWebsocket("/app/quiz/answer", {
-                quizHistory:{
-                    requestId:  requestId,
-                    quiz: quiz,
-                    token: getLoginKey(),
-                }
+                quizHistory:quizHistory
             });
         } catch (e) {
             console.error(e);

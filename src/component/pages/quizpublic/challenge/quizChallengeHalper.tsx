@@ -41,14 +41,16 @@ export const QuizLanding = (props:{quiz:Quiz, start:Function}) => {
 }
 
 
-export  const QuizResultInfo = (props: { quizResult: QuizResult, tryAgain: any }) => {
+export  const QuizResultInfo = (props: { quizResult: QuizResult }) => {
     const quizResult = props.quizResult;
     return (<Modal title="Result">
         <h2 className="text-center">Your Score <strong className="text-primary">{quizResult.score.toFixed(2)}</strong></h2>
         <h4 className="text-center text-success">Correct Answer {quizResult.correctAnswer}</h4>
         <h4 className="text-center text-danger">Wrong Answer {quizResult.wrongAnswer}</h4>
         <div className="text-center">
-            <AnchorButton onClick={props.tryAgain} iconClassName="fas fa-sync-alt">Try Again</AnchorButton>
+            <AnchorButton onClick={()=>{
+                window.location.reload()
+            }} iconClassName="fas fa-redo">Reload Try Again</AnchorButton>
         </div>
     </Modal>
     )

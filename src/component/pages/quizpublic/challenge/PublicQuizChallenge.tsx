@@ -9,10 +9,11 @@ import Spinner from '../../../loader/Spinner';
 import AnchorButton from '../../../navigation/AnchorButton';
 import QuizResult from '../../../../models/QuizResult';
 import { connect } from 'react-redux';
-import { mapCommonUserStateToProps } from '../../../../constant/stores'; 
+import { mapCommonUserStateToProps } from '../../../../constant/stores';
 import QuizBody from './QuizBody';
-import QuizTimer from './QuizTimer'; 
+import QuizTimer from './QuizTimer';
 import { RertyPage, QuizResultInfo, StatusTImeout, QuizLanding } from './quizChallengeHalper';
+import QuizHistoryModel from './../../../../models/QuizHistory';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -21,7 +22,7 @@ class IState {
     timeout: boolean = false;
     running: boolean = false;
     errorSubmit: boolean = false;
-    latestUpdate: Date|undefined;
+    latestUpdate: Date | undefined;
 }
 
 class PublicQuizChallenge extends BaseComponent {
@@ -45,14 +46,14 @@ class PublicQuizChallenge extends BaseComponent {
     componentDidMount() {
         document.title = "Quiz Challenge";
         this.loadQuiz();
-        this.initUpdateCallback();
+        this.setWsUpdateHandlerOnQuestionChange();
     }
-    initUpdateCallback = () => {
-        this.setWsUpdateHandler((response:WebResponse) => {
+    setWsUpdateHandlerOnQuestionChange = () => {
+        this.setWsUpdateHandler((response: WebResponse) => {
             if (response.type != 'QUIZ_ANSWER_UPDATE' || !response.date) {
                 return;
             }
-            this.setState({latestUpdate:new Date(response.date)})
+            this.setState({ latestUpdate: new Date(response.date) })
             // console.debug("QUIZ_ANSWER_UPDATE UPDATE:", new Date(response.date??0).toLocaleString());
         })
     }
@@ -62,15 +63,13 @@ class PublicQuizChallenge extends BaseComponent {
         if (updateStartedDate) {
             quiz.startedDate = new Date();
         }
-        this.setState({
-            running: true, quiz: quiz
-        }, () => {
+        this.setState({ running: true, quiz: quiz }, () => {
             this.beginTimer();
             this.sendStartUpdate();
         });
     }
     beginTimer = () => {
-        const timeout = setTimeout(()=>{
+        const timeout = setTimeout(() => {
             if (this.timerRef.current) {
                 this.timerRef.current.updateTimerLoop();
             } else {
@@ -79,7 +78,7 @@ class PublicQuizChallenge extends BaseComponent {
             clearTimeout(timeout);
         }, 500);
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setWsUpdateHandler(undefined);
     }
     setFailedTimeout = () => {
@@ -87,28 +86,53 @@ class PublicQuizChallenge extends BaseComponent {
         this.setState({ quiz: undefined, timeout: true });
     }
     dataLoaded = (response: WebResponse) => {
-       
-        if (response.quizHistory && response.quiz) {
-            response.quiz.duration = response.quizHistory.remainingDuration ?? response.quiz.duration;
-            response.quiz.startedDate = response.quizHistory.started;
-           
-            this.setState({ quiz: Object.assign(new Quiz(), response.quiz), quizResult: undefined },
-                () => {
-                    this.start(false);
-                    this.updateQuestionIndex(response.quizHistory?.maxQuestionNumber ?? 1);
-                    
-                });
+        const history: QuizHistoryModel | undefined = response.quizHistory;
+        if (history && response.quiz) {
+            const quiz: Quiz = response.quiz;
+            const synchronizedQuiz = this.synchronizeLatestHistory(quiz, history);
+            if (synchronizedQuiz) {
+                this.setState({ quiz: synchronizedQuiz, quizResult: undefined },
+                    () => {
+                        this.start(false);
+                        this.updateQuestionIndex(synchronizedQuiz.maxQuestionNumber??1);
+                    });
+            }
             return;
         }
         this.setState({ quiz: Object.assign(new Quiz(), response.quiz), quizResult: undefined });
     }
-    updateQuestionIndex = (questionNumber:number) => {
+    synchronizeLatestHistory = (quiz: Quiz, history: QuizHistoryModel): Quiz | undefined => {
+        quiz.duration = history.remainingDuration ?? quiz.duration;
+        quiz.startedDate = history.started;
+        let questionNumber: number = history.maxQuestionNumber ?? 1;
+        if (history.updated && quiz.questionsTimered) {
+            const questionIndex = questionNumber - 1;
+            const elapsedSecond = Math.ceil((new Date().getTime() - new Date(history.updated).getTime()) / 1000);
+            const duration = quiz.questions[questionIndex].duration;
+            const remainingSecond = duration - elapsedSecond;
+            console.debug("actual duration: ", duration, "-  ", elapsedSecond, " = ", remainingSecond);
+            if (remainingSecond > 0) {
+                quiz.questions[questionIndex].duration = remainingSecond;
+                console.debug("SET question number ", questionNumber, " remaining second: ", remainingSecond);
+            } else {
+                if (questionNumber >= quiz.questions.length) {
+                    this.setFailedTimeout();
+                    return undefined;
+                }
+                questionNumber++;
+            }
+        }
+        quiz.maxQuestionNumber = questionNumber;
+        return Object.assign(new Quiz(), quiz);
+
+    }
+    updateQuestionIndex = (questionNumber: number) => {
         const quiz: Quiz | undefined = this.state.quiz;
-        if (!quiz  ) return;
-        if (quiz.questions.length < questionNumber  ) return;
-        const timeout = setTimeout(()=>{
+        if (!quiz) return;
+        if (quiz.questions.length < questionNumber) return;
+        const timeout = setTimeout(() => {
             if (this.quizBodyRef.current) {
-                this.quizBodyRef.current.updateQuestionIndex(questionNumber-1);
+                this.quizBodyRef.current.updateQuestionIndex(questionNumber - 1);
             } else {
                 console.debug("Question Index Not Updated");
             }
@@ -140,8 +164,8 @@ class PublicQuizChallenge extends BaseComponent {
             );
         } catch (error) { }
     }
-    sendUpdateQuizHistory = (quiz: Quiz ) => {
-       this.publicQuizService.sendUpdateAnswer(quiz, this.props.requestId);
+    sendUpdateQuizHistory = (quiz: Quiz) => {
+        this.publicQuizService.sendUpdateAnswer(quiz, this.props.requestId);
     }
     sendStartUpdate = () => {
         if (this.state.quiz) {
@@ -156,12 +180,7 @@ class PublicQuizChallenge extends BaseComponent {
         },
         );
     }
-    tryAgain = () => {
-        this.showConfirmation("Try quiz again?")
-            .then((ok) => { if (!ok) return;
-                this.resetQuiz();
-            })
-    }
+    
     resetQuiz = () => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz) return;
@@ -177,7 +196,8 @@ class PublicQuizChallenge extends BaseComponent {
         }
         if (!Object.assign(new Quiz(), quiz).allQuestionHasBeenAnswered()) {
             this.showConfirmationDanger("Answers are not complete. Continue to submit answers?")
-                .then((ok) => { if (!ok) return;
+                .then((ok) => {
+                    if (!ok) return;
                     this.doSubmitAnswer();
                 })
             return;
@@ -214,34 +234,34 @@ class PublicQuizChallenge extends BaseComponent {
     }
     render() {
 
-        if (this.state.errorSubmit)  return (<RertyPage retrySubmit={this.retrySubmit} /> )
+        if (this.state.errorSubmit) return (<RertyPage retrySubmit={this.retrySubmit} />)
         const style = { marginTop: '20px', }
         const quiz = Object.assign(new Quiz, this.state.quiz);
 
-        if (!this.state.loading && quiz.getQuestionCount() == 0) return <SimpleError style={style} children="Quiz in currently unavailable"/>
-        if (this.state.timeout)  return (<StatusTImeout /> )
-        if (this.state.loading) return (<div style={style} className="container-fluid"><Spinner /></div>) 
-        if (quiz && !this.state.running)  return (<QuizLanding quiz={quiz} start={this.start} /> )
-        
+        if (!this.state.loading && quiz.getQuestionCount() == 0) return <SimpleError style={style} children="Quiz in currently unavailable" />
+        if (this.state.timeout) return (<StatusTImeout />)
+        if (this.state.loading) return (<div style={style} className="container-fluid"><Spinner /></div>)
+        if (quiz && !this.state.running) return (<QuizLanding quiz={quiz} start={this.start} />)
+
         quiz.showAllQuestion = quiz.showAllQuestion || undefined != this.state.quizResult;
-        
+
         const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (
             <div style={style} className="container-fluid">
-                {quiz && quiz.questionsTimered == false ? 
-                <QuizTimer latestUpdate={this.state.latestUpdate} ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} /> 
-                : null}
+                {quiz && quiz.questionsTimered == false ?
+                    <QuizTimer latestUpdate={this.state.latestUpdate} ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} />
+                    : null}
 
                 <h2>Quiz Challenge</h2>
                 <AnchorButton onClick={this.goBack} iconClassName="fas fa-angle-left">Back</AnchorButton>
                 <p />
 
                 {this.state.quizResult ?
-                    <QuizResultInfo quizResult={this.state.quizResult} tryAgain={this.tryAgain} /> : 
+                    <QuizResultInfo quizResult={this.state.quizResult}  /> :
                     null}
                 {quiz ?
                     <QuizBody
-                     ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                        ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>
