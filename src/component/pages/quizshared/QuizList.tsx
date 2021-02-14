@@ -6,6 +6,7 @@ import AnchorWithIcon from './../../navigation/AnchorWithIcon';
 import { timerString } from './../../../utils/DateUtil';
 import FormGroup from '../../form/FormGroup';
 import Spinner from '../../loader/Spinner';
+import ScrollDiv from '../../container/ScrollDiv';
 interface IProps { loading:boolean, onFilter(fieldsFilter:any):any|undefined, quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
 class State {
     fieldsFilter:any = {}
@@ -48,7 +49,8 @@ export default class QuizList extends Component<IProps, State>{
                         </div>
                     </FormGroup>
                 </form>
-                <table style={{tableLayout: 'fixed'}} className="table table-striped">
+                <ScrollDiv>
+                <table style={{}} className="table table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -93,6 +95,7 @@ export default class QuizList extends Component<IProps, State>{
                         })}
                     </tbody>
                 </table>
+                </ScrollDiv>
             </Card >
         )
     }

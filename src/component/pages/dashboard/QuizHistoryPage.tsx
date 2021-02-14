@@ -16,6 +16,7 @@ import Card from './../../container/Card';
 import Spinner from './../../loader/Spinner';
 import SimpleWarning from './../../alert/SimpleWarning';
 import AnchorWithIcon from '../../navigation/AnchorWithIcon';
+import ScrollDiv from '../../container/ScrollDiv';
 class IState {
     histories: QuizHistoryModel[] = new Array();
     loading: boolean = false;
@@ -90,7 +91,8 @@ const Histories = (props:{histories:QuizHistoryModel[], loadRecords():any, start
             </Card>
     }
     return  (
-        <Card>
+        <Card  >
+            <ScrollDiv>
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -127,6 +129,7 @@ const Histories = (props:{histories:QuizHistoryModel[], loadRecords():any, start
                     })}
                 </tbody>
             </table>
+            </ScrollDiv>
             <p/>
             <AnchorWithIcon iconClassName="fas fa-sync-alt" className="btn btn-dark" onClick={props.loadRecords}>
                 Reload

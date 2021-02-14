@@ -101,7 +101,7 @@ const VideoItem = (props: { video: Videos, }) => {
         </a>
     if (!snippet) {
         return (
-            <div className="col-4">
+            <div className="col-md-4">
             <Card>
                 <SimpleWarning>No Preview</SimpleWarning>
                 {link}
@@ -111,7 +111,7 @@ const VideoItem = (props: { video: Videos, }) => {
         )
     }
     return (
-        <div className="col-4" style={{marginBottom:'10px'}}>
+        <div className="col-md-4" style={{marginBottom:'10px'}}>
             <div className="card">
                 <img src={snippet.thumbnails?.medium?.url} className="card-img-top" />
                 <div className="card-body">

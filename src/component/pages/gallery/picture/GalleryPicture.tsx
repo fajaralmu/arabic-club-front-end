@@ -97,7 +97,7 @@ const ImageItem = (props: { image: Images, onClick(image: Images): void }) => {
     const image: Images = Object.assign(new Images(), props.image);
     const firstImage: string = image.getFirstImage();
     return (
-        <div style={{ marginBottom: '5px' }} className="col-3">
+        <div style={{ marginBottom: '5px' }} className="col-md-3">
             <div className="card">
                 <img onClick={(e) => props.onClick(image)} src={baseImageUrl() + firstImage} className="card-img-top" />
                 <div style={{ position: 'absolute', right: 5, bottom: 5 }} >
