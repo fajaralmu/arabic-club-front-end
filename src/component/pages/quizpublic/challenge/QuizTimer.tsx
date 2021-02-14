@@ -3,8 +3,7 @@ import { timerString } from './../../../../utils/DateUtil';
 
 interface Props {
     onTimeout(): any;
-    duration: number;
-    display?: string;
+    duration: number; 
     latestUpdate?: Date;
 }
 class State {
@@ -46,27 +45,13 @@ export default class QuizTimer extends Component<Props, State> {
     }
     render() {
         const props = this.props;
-        if (props.display == 'progress') {
-            return <TimerProgress duration={props.duration} tick={this.state.tick} />
-        }
+         
         return (
             <Timer latestUpdate={this.props.latestUpdate} duration={props.duration} tick={this.state.tick} />
         )
     }
 }
-
-const TimerProgress = (props: { duration: number, tick: number }) => {
-    const width = (100-props.tick*100 / props.duration)+'%';
-    return (
-        <div className="container-fluid text-center">
-            <div className="progress" style={{height:'5px'}}>
-                <div className="progress-bar" role="progressbar" style={{width: width}}  ></div>
-            </div>
-            <strong>{timerString(props.duration - props.tick)}</strong>
-            <p/>
-        </div>
-    )
-}
+ 
 
 
 const Timer = (props: { latestUpdate?:Date,duration: number, tick: number }) => {

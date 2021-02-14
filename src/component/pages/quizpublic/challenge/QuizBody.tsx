@@ -11,6 +11,7 @@ import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
 import QuizTimer from './QuizTimer';
+import QuizTimerProgress from './QuizTimerProgress';
 interface Props { 
    questionTimered:boolean, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
 }
@@ -20,7 +21,7 @@ class State {
 }
 export default class QuizBody extends Component<Props, State> {
 
-    questionTimerRef:React.RefObject<QuizTimer> = React.createRef();
+    questionTimerRef:React.RefObject<QuizTimerProgress> = React.createRef();
     state: State = new State();
     constructor(props) {
         super(props);
@@ -120,7 +121,7 @@ export default class QuizBody extends Component<Props, State> {
                 }) :
                     <Fragment>
                         {props.questionTimered? 
-                    <QuizTimer display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
+                    <QuizTimerProgress display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
                     :null    
                     }
                         <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
