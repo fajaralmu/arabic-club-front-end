@@ -63,7 +63,7 @@ export default class PublicQuizService {
         const quiz = Object.assign(new Quiz, _quiz);
         try {
             Quiz.updateMappedAnswer(quiz);
-            console.debug(quiz.mappedAnswer);
+            // console.debug(quiz.mappedAnswer);
             quiz.questions = [];
             const quizHistory:QuizHistoryModel = {
                 updated: new Date(),
