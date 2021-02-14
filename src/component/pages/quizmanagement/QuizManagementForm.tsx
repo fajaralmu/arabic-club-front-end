@@ -40,6 +40,7 @@ class QuizManagementForm extends BaseComponent {
     }
     reset = () => {
         this.showConfirmationDanger("Reset Quiz?").then((ok) => {
+            if (!ok ) return;
             this.setState({ quiz: new Quiz() });
         })
 
