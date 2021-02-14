@@ -4,7 +4,7 @@ interface Props {
     orientation?:string,
     show?:boolean,
     children:any,
-    label?:string,
+    label?:any,
     className?:string,
 }
 export default class FormGroup extends Component<Props, any>
