@@ -3,6 +3,9 @@ let wsConnected = false;
 let websocketUrl = undefined;
 const onConnectCallbacks = new Array();
 const subscriptionCallbacks = new Array();
+export const isWsConnected = () => {
+	return wsConnected == true;
+}
 export const setWebSocketUrl = (url) => {
 	websocketUrl = url;
 }
@@ -16,9 +19,16 @@ export const sendToWebsocket = (url, requestObject) => {
 	return true;
 }
 
+export const addOnWsConnectCallbacks = (...callbacks) => {
+	for (let i = 0; i < callbacks.length; i++) {
+		const element = callbacks[i];
+		onConnectCallbacks.push(element);
+	}
+}
+
 export const performWebsocketConnection = () => {
 	var socket = new window.SockJS(websocketUrl);
-	 stompClient  = window.Stomp.over(socket);
+	stompClient  = window.Stomp.over(socket);
 	stompClient .connect({}, function (frame) {
 		wsConnected = true;
 		// setConnected(true);
@@ -32,13 +42,8 @@ export const performWebsocketConnection = () => {
 			if (callBackObject) {
 
 				stompClient.subscribe(callBackObject.subscribeUrl, (response) => {
-
-					// console.log("Websocket Updated...");
-
 					var respObject = JSON.parse(response.body);
-
 					callBackObject.callback(respObject);
-
 				});
 			}
 		}

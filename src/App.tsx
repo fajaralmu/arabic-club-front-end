@@ -16,7 +16,7 @@ import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks
 import UserService from './services/UserService';
 import AnchorWithIcon from './component/navigation/AnchorWithIcon';
 import { time } from 'console';
-import { doItLater } from './utils/EventUtil';
+import { doItLater, updateFavicon } from './utils/EventUtil';
 
 class IState {
   loading: boolean = false;
@@ -25,8 +25,8 @@ class IState {
   mainAppUpdated: Date = new Date();
   showAlert: boolean = false;
   realtime: boolean = false;
-  appIdStatus:string = "Loading App Id";
-  errorAuthenticatingApp:boolean = false;
+  appIdStatus: string = "Loading App Id";
+  errorAuthenticatingApp: boolean = false;
 }
 class App extends Component<any, IState> {
   wsConnected: boolean = false;
@@ -56,23 +56,23 @@ class App extends Component<any, IState> {
   refresh = () => { this.setState({ mainAppUpdated: new Date() }); }
 
   requestAppId = () => {
-    this.setState({appIdStatus: "Authenticating application", errorAuthenticatingApp: false});
+    this.setState({ appIdStatus: "Authenticating application", errorAuthenticatingApp: false });
     this.userService.requestApplicationId((response) => {
       this.props.setRequestId(response, this);
       this.refresh();
-      this.setState({errorAuthenticatingApp: false});
+      this.setState({ errorAuthenticatingApp: false });
     }, this.retryRequestAppId)
-    
+
   }
-  retryRequestAppId = () => { 
-    this.setState({appIdStatus: "Authenticating application (Retrying)", errorAuthenticatingApp: false});
-    this.userService.requestApplicationIdNoAuth((response) => { 
-      this.props.setRequestId(response, this); 
-      this.setState({errorAuthenticatingApp: false});
+  retryRequestAppId = () => {
+    this.setState({ appIdStatus: "Authenticating application (Retrying)", errorAuthenticatingApp: false });
+    this.userService.requestApplicationIdNoAuth((response) => {
+      this.props.setRequestId(response, this);
+      this.setState({ errorAuthenticatingApp: false });
     },
-    ()=>
-    this.setState({errorAuthenticatingApp: true}))
-    
+      () =>
+        this.setState({ errorAuthenticatingApp: true }))
+
   }
   incrementLoadings() {
     this.loadings++;
@@ -85,31 +85,25 @@ class App extends Component<any, IState> {
     }
   }
 
-  startLoading(realtime:boolean=false) {
+  startLoading(realtime: boolean = false) {
     this.incrementLoadings();
     this.setState({ loading: true, realtime: realtime });
   }
 
   endLoading() {
-    try {
-      this.decrementLoadings();
-      if (this.loadings == 0) {
-        if (this.state.realtime) {
-        this.setState({  loadingPercentage: 100 }, 
-          this.smoothEndLoading);
-        } else {
-          this.setState({loading: false,   loadingPercentage: 0 });
-        }
+    this.decrementLoadings();
+    if (this.loadings == 0) {
+      if (this.state.realtime) {
+        this.setState({ loadingPercentage: 100 }, this.smoothEndLoading);
+      } else {
+        this.setState({ loading: false, loadingPercentage: 0 });
       }
-    } catch (e) {
-      console.error(e);
     }
-
   }
 
   smoothEndLoading = () => {
-    doItLater(()=>{
-      this.setState({loading: false,   loadingPercentage: 0 });
+    doItLater(() => {
+      this.setState({ loading: false, loadingPercentage: 0 });
     }, 100);
   }
 
@@ -162,7 +156,6 @@ class App extends Component<any, IState> {
   }
 
   componentDidMount() {
-
     this.requestAppId();
     this.setState({ loadingPercentage: 0 });
   }
@@ -200,9 +193,9 @@ class App extends Component<any, IState> {
       return (
         <div className="text-center" style={{ paddingTop: '10%' }}>
           <h2>{this.state.appIdStatus}</h2>
-          {this.state.errorAuthenticatingApp? 
-          <AnchorWithIcon iconClassName="fas fa-redo" onClick={this.retryRequestAppId} children="Retry"/>:
-          <Spinner />}
+          {this.state.errorAuthenticatingApp ?
+            <AnchorWithIcon iconClassName="fas fa-redo" onClick={this.retryRequestAppId} children="Retry" /> :
+            <Spinner />}
         </div>
       )
     }
@@ -236,23 +229,10 @@ function Loading(props) {
   return null;
 }
 
-function updateFavicon(profile: any) {
-  if (profile.pageIcon) {
-    let link = document.querySelector('link[rel="shortcut icon"]') ||
-      document.querySelector('link[rel="icon"]');
-    if (!link) {
-      link = document.createElement('link');
-      link.id = 'favicon';
-      link.setAttribute("rel", 'shortcut icon');
-      document.head.appendChild(link);
-    }
-    link.setAttribute("href", url.baseImageUrl() + profile.pageIcon);
-  }
-}
 
-const mapDispatchToProps = (dispatch: Function) => ({ 
+const mapDispatchToProps = (dispatch: Function) => ({
   setMainApp: (app: App) => dispatch(actions.setMainApp(app)),
-  setRequestId: (response: WebResponse, app:App) => dispatch(actions.setRequestId(response, app)),
+  setRequestId: (response: WebResponse, app: App) => dispatch(actions.setRequestId(response, app)),
 })
 
 export default withRouter(connect(
