@@ -12,11 +12,12 @@ class State {
 
 }
 export default class QuizTimer extends Component<Props, State> {
-    tick: number = 0;
+    private  tick: number = 0;
     state: State = new State();
-    timeout: any = undefined;
-    progressRef: React.RefObject<HTMLDivElement> = React.createRef();
-    timerStringRef: React.RefObject<HTMLSpanElement> = React.createRef();
+    private  timeout: any = undefined;
+    private progressRef: React.RefObject<HTMLDivElement> = React.createRef();
+    private timerStringRef: React.RefObject<HTMLSpanElement> = React.createRef();
+    private stop:boolean = false;
     constructor(props) {
         super(props);
     }
@@ -48,6 +49,11 @@ export default class QuizTimer extends Component<Props, State> {
         callback();
     }
 
+    stopTimer = () => {
+        console.debug("STOP TIMER");
+        this.stop  = true;
+    }
+
     resetTick = () => {
         this.updateTickWithCallback(0, this.updateTimerLoop);
     }
@@ -58,6 +64,11 @@ export default class QuizTimer extends Component<Props, State> {
         }
     }
     updateTimerLoop = () => {
+        if (this.stop == true) {
+            console.debug("WILL update timer but it has been stopped..");
+            return;
+        }
+        // console.debug("updateTimerLoop: this.stop: ", this.stop);
         this.timeout = setTimeout(this.updateTick, 100);
     }
     render() {

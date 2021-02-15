@@ -14,6 +14,7 @@ import QuizBody from './QuizBody';
 import QuizTimer from './QuizTimer';
 import { RertyPage, QuizResultInfo, StatusTImeout, QuizLanding } from './quizChallengeHalper';
 import QuizHistoryModel from './../../../../models/QuizHistory';
+import { doItLater } from './../../../../utils/EventUtil';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -69,13 +70,12 @@ class PublicQuizChallenge extends BaseComponent {
         });
     }
     beginTimer = () => {
-        const timeout = setTimeout(() => {
+      doItLater(() => {
             if (this.timerRef.current) {
                 this.timerRef.current.updateTimerLoop();
             } else {
                 console.debug("TIME NOT READY");
             }
-            clearTimeout(timeout);
         }, 500);
     }
     componentWillUnmount() {
@@ -118,6 +118,8 @@ class PublicQuizChallenge extends BaseComponent {
                 if (questionNumber >= quiz.questions.length) {
                     this.setFailedTimeout();
                     return undefined;
+                } else {
+                    
                 }
                 questionNumber++;
             }
@@ -177,7 +179,7 @@ class PublicQuizChallenge extends BaseComponent {
             errorSubmit: false, timeout: false,
             quizResult: response.quizResult,
             quiz: Object.assign(new Quiz(), response.quizResult?.submittedQuiz)
-        },
+        } 
         );
     }
     
@@ -248,7 +250,7 @@ class PublicQuizChallenge extends BaseComponent {
         const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (
             <div style={style} className="container-fluid">
-                {quiz && quiz.questionsTimered == false ?
+                {!this.state.quizResult && quiz && quiz.questionsTimered == false ?
                     <QuizTimer latestUpdate={this.state.latestUpdate} ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} />
                     : null}
 
@@ -256,11 +258,11 @@ class PublicQuizChallenge extends BaseComponent {
                 <p />
 
                 {this.state.quizResult ?
-                    <QuizResultInfo quizResult={this.state.quizResult}  /> :
+                    <QuizResultInfo quiz={quiz} quizResult={this.state.quizResult}  /> :
                     null}
                 {quiz ?
                     <QuizBody
-                        ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                       result={this.state.quizResult} ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>

@@ -10,10 +10,13 @@ import { baseImageUrl } from './../../../../constant/Url';
 import ToggleButton from '../../../navigation/ToggleButton';
 import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
-import QuizTimer from './QuizTimer';
 import QuizTimerProgress from './QuizTimerProgress';
-interface Props { 
-   questionTimered:boolean, quiz: Quiz, setChoice(code: string | undefined, questionIndex: number): any, onTimeout():any, submit(): any
+import QuizResult from './../../../../models/QuizResult';
+interface Props {
+    result?: QuizResult,
+    questionTimered: boolean, quiz: Quiz,
+    setChoice(code: string | undefined, questionIndex: number): any,
+    onTimeout(): any, submit(): any
 }
 class State {
     questionIndex: number = 0;
@@ -21,7 +24,7 @@ class State {
 }
 export default class QuizBody extends Component<Props, State> {
 
-    questionTimerRef:React.RefObject<QuizTimerProgress> = React.createRef();
+    questionTimerRef: React.RefObject<QuizTimerProgress> = React.createRef();
     state: State = new State();
     constructor(props) {
         super(props);
@@ -29,7 +32,7 @@ export default class QuizBody extends Component<Props, State> {
     updateQuestionIndex = (index: number) => {
         // if (this.props.questionTimered) return;
         console.debug("updateQuestionIndex: ", index);
-        this.setQuestionIndex( index );
+        this.setQuestionIndex(index);
     }
     getCurrentQuestion = () => {
         if (this.props.quiz.questions && this.props.quiz.questions.length > this.state.questionIndex) {
@@ -46,15 +49,15 @@ export default class QuizBody extends Component<Props, State> {
             this.props.onTimeout();
             return;
         }
-        const nextIndex = this.state.questionIndex+1;
+        const nextIndex = this.state.questionIndex + 1;
         this.setQuestionIndex(nextIndex);
     }
-    setQuestionIndex = (index:number) => {
-        this.setState({questionIndex: index},()=>{
-             this.resetTimer();
-             try {
+    setQuestionIndex = (index: number) => {
+        this.setState({ questionIndex: index }, () => {
+            this.resetTimer();
+            try {
                 this.props.setChoice(this.props.quiz.questions[index].answerCode, index);
-             } catch (e) {  }
+            } catch (e) { }
         });
     }
     updateTimer = () => {
@@ -67,33 +70,40 @@ export default class QuizBody extends Component<Props, State> {
             this.questionTimerRef.current.resetTick();
         }
     }
-    setChoice = (code:string|undefined, index:number) => {
+    setChoice = (code: string | undefined, index: number) => {
         this.props.setChoice(code, index);
-        if (this.props.questionTimered ) {
-            if (this.props.quiz.questions.length > index+1) {
-                const nextIndex = index+1;
+        if (this.props.questionTimered) {
+            if (this.props.quiz.questions.length > index + 1) {
+                const nextIndex = index + 1;
                 this.setQuestionIndex(nextIndex);
             } else {
-                this.props.submit();
+                this.onSubmit();
             }
-        } else  if (!this.props.quiz.showAllQuestion) {
-            if (this.props.quiz.questions.length > index+1) {
-                const nextIndex = index+1;
+        } else if (!this.props.quiz.showAllQuestion) {
+            if (this.props.quiz.questions.length > index + 1) {
+                const nextIndex = index + 1;
                 this.setQuestionIndex(nextIndex);
             } else {
-                this.props.submit();
+                this.onSubmit();
             }
         }
+    }
+    onSubmit = () => {
+        if (this.questionTimerRef.current ) {
+            this.questionTimerRef.current.stopTimer();
+        }
+        this.props.submit();
     }
     componentDidMount() {
         this.updateTimer();
     }
+    
     render() {
 
         const props = this.props;
         const quiz = props.quiz;
         const questions: QuizQuestion[] = quiz.questions ?? [];
-        const showAllQuestion: boolean = quiz.showAllQuestion==false?quiz.showAllQuestion:this.state.showAllQuestion;
+        const showAllQuestion: boolean = quiz.showAllQuestion == false ? quiz.showAllQuestion : this.state.showAllQuestion;
         return (
             <div>
                 <h1><i className="fas fa-feather-alt" />&nbsp;{quiz.title}</h1>
@@ -101,17 +111,17 @@ export default class QuizBody extends Component<Props, State> {
                     <FormGroup label="Started at">
                         {quiz.startedDate ? new Date(quiz.startedDate).toLocaleString() : "-"}
                     </FormGroup>
-                    <FormGroup label="Duration">
+                    <FormGroup show={!this.props.result} label="Duration">
                         <p>{timerString(quiz.duration)}</p>
                     </FormGroup>
-                    <FormGroup label="Description">
+                    {/* <FormGroup label="Description">
                         <p>{quiz.description}</p>
-                    </FormGroup>
+                    </FormGroup> */}
                     <FormGroup label="Show All Question">
                         {/* <ToggleButton onClick={this.toggleQuestionView}
                             active={this.state.showAllQuestion}
                         /> */}
-                        {!quiz.showAllQuestion?"No": <ToggleButton onClick={this.toggleQuestionView}
+                        {!quiz.showAllQuestion ? "No" : <ToggleButton onClick={this.toggleQuestionView}
                             active={this.state.showAllQuestion}
                         />}
                     </FormGroup>
@@ -120,13 +130,13 @@ export default class QuizBody extends Component<Props, State> {
                     return (<QuestionBody setChoice={this.setChoice} index={i} question={question} key={"pqqs-" + i} />)
                 }) :
                     <Fragment>
-                        {props.questionTimered? 
-                    <QuizTimerProgress display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
-                    :null    
-                    }
-                        <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                        {props.questionTimered  ?
+                            <QuizTimerProgress display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
+                            : null
+                        }
+                        <QuestionNavigation enabled={quiz.questionsTimered == false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                         <QuestionBody setChoice={this.setChoice} index={this.state.questionIndex} question={this.getCurrentQuestion()} />
-                        <QuestionNavigation enabled={quiz.questionsTimered==false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
+                        <QuestionNavigation enabled={quiz.questionsTimered == false} updateQuestionIndex={this.updateQuestionIndex} questionCount={props.quiz.questions.length} index={this.state.questionIndex} />
                     </Fragment>
                 }
                 <Modal title="Option">
@@ -137,22 +147,22 @@ export default class QuizBody extends Component<Props, State> {
     }
 }
 
-const QuestionNavigation = (props: { enabled:boolean, index: number, updateQuestionIndex(index: number): any, questionCount: number }) => {
+const QuestionNavigation = (props: { enabled: boolean, index: number, updateQuestionIndex(index: number): any, questionCount: number }) => {
     const enabled = props.enabled;
     return (
         <div >
             <p />
             <div className="row container-fluid">
                 <div className="col-5 text-center">
-                    <AnchorWithIcon  className="btn btn-secondary" children="Previous" 
-                    onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={enabled && props.index > 0} iconClassName="fas fa-angle-left" />
+                    <AnchorWithIcon className="btn btn-secondary" children="Previous"
+                        onClick={(e) => props.updateQuestionIndex(props.index - 1)} show={enabled && props.index > 0} iconClassName="fas fa-angle-left" />
                 </div>
                 <div className="col-2 text-center">
-                  <p>Question: {props.index+1} of {props.questionCount}</p>
+                    <p>Question: {props.index + 1} of {props.questionCount}</p>
                 </div>
                 <div className="col-5 text-center">
-                    <AnchorWithIcon   className="btn btn-secondary" children="Next" 
-                    onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={enabled && props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
+                    <AnchorWithIcon className="btn btn-secondary" children="Next"
+                        onClick={(e) => props.updateQuestionIndex(props.index + 1)} show={enabled && props.index < props.questionCount - 1} iconClassName="fas fa-angle-right" />
                 </div>
             </div>
             <p />
