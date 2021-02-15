@@ -15,7 +15,9 @@
   list-style: none;
 }
 
-.sidebar-nav .sidebar-item {
+.sidebar-nav .sidebar-item,
+.sidebar-nav .sidebar-item-brand
+ {
   text-indent: 5px;
   line-height: 40px;
 }
@@ -69,5 +71,31 @@
 .menu-active>a>* {
   color: #343a40;
   background: #999999;
+}
+
+
+@media screen and (max-width: 991px) {
+  
+  #sidebar-brand {
+    display: none;
+  }
+  #sidebar {
+    width: min-content;
+    margin-top: 55px;
+  }
+  .sidebar-item-brand a,
+  .sidebar-item a {
+    padding-right: 10px;
+  }
+  
+}
+
+@media screen and (min-width: 992px) {
+  #sidebar {
+    display: block;
+  } 
+  .sidebar-item-brand {
+    display: none;
+  }
 }
 
