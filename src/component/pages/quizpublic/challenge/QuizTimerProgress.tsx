@@ -72,8 +72,7 @@ export default class QuizTimer extends Component<Props, State> {
         this.timeout = setTimeout(this.updateTick, 100);
     }
     render() {
-        console.debug("update timer render");
-         
+          
         return (
             <div className="container-fluid text-center">
                 <p><i className="fas fa-stopwatch"/>&nbsp;<span ref={this.timerStringRef}></span></p>

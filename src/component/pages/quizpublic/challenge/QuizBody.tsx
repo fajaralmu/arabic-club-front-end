@@ -140,7 +140,7 @@ export default class QuizBody extends Component<Props, State> {
                     </Fragment>
                 }
                 <Modal title="Option">
-                    <AnchorButton onClick={props.submit} className="btn btn-primary" >Submit</AnchorButton>
+                    <AnchorButton onClick={this.onSubmit} className="btn btn-primary" >Submit</AnchorButton>
                 </Modal>
             </div>
         )
