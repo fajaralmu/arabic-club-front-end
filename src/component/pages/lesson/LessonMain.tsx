@@ -98,7 +98,7 @@ class LessonMain extends BaseMainMenus {
                 <div className="row">
                     {categories.map(category => {
                         return (
-                            <div className="col-md-2 text-center" style={{ marginBottom: '10px' }}>
+                            <div key={"lesson-cat-"+category.id} className="col-md-2 text-center" style={{ marginBottom: '10px' }}>
                                 <h2 ><Link className="btn btn-warning btn-lg" to={"/lessons/" + category.code} ><i className={category.iconClassName&&category.iconClassName!=""?category.iconClassName:"fas fa-folder"} /></Link></h2>
                                 <p>{category.name}</p>
                             </div>

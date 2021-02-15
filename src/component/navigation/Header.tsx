@@ -9,11 +9,13 @@ import { getMenus } from '../../constant/Menus';
 import './Header.css';
 import User from './../../models/User';
 import { baseImageUrl } from './../../constant/Url';
+import Menu from './../../models/settings/Menu';
 class IState {
     showNavLinks: boolean = false;
 }
 class Header extends BaseComponent {
     state: IState = new IState();
+    buttonToggleNavRef: React.RefObject<HTMLButtonElement> = React.createRef();
     constructor(props: any) {
         super(props, false);
     }
@@ -30,6 +32,13 @@ class Header extends BaseComponent {
             }
         )
     }
+    setMenu = (menu: Menu) => {
+        if (this.buttonToggleNavRef.current) {
+            this.buttonToggleNavRef.current.click();
+        }
+        this.props.setMenu(menu);
+
+    }
     render() {
         const showNavLinks: boolean = this.state.showNavLinks;
         const menus = getMenus();
@@ -40,7 +49,7 @@ class Header extends BaseComponent {
                 <nav id="navbar" className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ width: '100%' }}>
                     {/* <div className="container-fluid"></div> */}
                     <a id="navbar-brand" className="navbar-brand" href="#">{this.getApplicationProfile().name}</a>
-                    <button onClick={this.toggleNavLinks} className="navbar-toggler" type="button" data-toggle="collapse"
+                    <button ref={this.buttonToggleNavRef} onClick={this.toggleNavLinks} className="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarToggler" aria-controls="navbarToggler"
                         aria-expanded="false" aria-label="Toggle navigation">
                         <i className={showNavLinks ? "fas fa-times" : "fas fa-bars"} />
@@ -53,14 +62,14 @@ class Header extends BaseComponent {
                                 const isActive = this.props.activeMenuCode == menu.code;
                                 return (
                                     <li key={"header-menu-" + new String(menu.code)} className={"nav-item " + (isActive ? "active nav-active" : "nav-inactive")}>
-                                        <Link onClick={() => this.props.setMenu(menu)} className={"nav-link  "}
+                                        <Link onClick={() => this.setMenu(menu)} className={"nav-link  "}
                                             to={menu.url}><span>{menu.name}</span>
                                         </Link></li>
                                 )
                             })}
                         </ul >
                         <form className="form-inline my-2 my-lg-0">
-                            <UserIcon setMenuNull={this.props.setMenuNull}  
+                            <UserIcon setMenuNull={this.props.setMenuNull}
                                 onLogout={this.onLogout} user={user} />
                         </form >
                     </div >
@@ -79,23 +88,23 @@ const NavBarTop = (props) => {
         </div>
     );
 }
-const UserIcon = (props: {user:User|undefined, setMenuNull():any,  onLogout(e):any}) => {
+const UserIcon = (props: { user: User | undefined, setMenuNull(): any, onLogout(e): any }) => {
     if (props.user) {
         return (
             <Fragment>
                 <Link onClick={props.setMenuNull} style={{ marginRight: "5px" }} className="btn btn-light btn-sm my-2 my-sm-0"
                     to='/settings/user-profile'>
-                        <img width="20" src={baseImageUrl() + props.user.profileImage} className="rounded rounded-circle" />
+                    <img width="20" src={baseImageUrl() + props.user.profileImage} className="rounded rounded-circle" />
                         &nbsp;{props.user.displayName}
                 </Link>
-                <a style={{marginRight:'5px'}} className="btn btn-danger btn-sm  my-2 my-sm-0"
+                <a style={{ marginRight: '5px' }} className="btn btn-danger btn-sm  my-2 my-sm-0"
                     onClick={props.onLogout}><i className="fas fa-sign-out-alt"></i>&nbsp;Logout
 				</a>
             </Fragment>);
     }
     return (
 
-        <Link style={{marginRight:'5px'}} onClick={props.setMenuNull} className="btn btn-sm btn-info my-2 my-sm-0"
+        <Link style={{ marginRight: '5px' }} onClick={props.setMenuNull} className="btn btn-sm btn-info my-2 my-sm-0"
             to='/login'> <i className="fas fa-sign-in-alt"></i>&nbsp;Login
         </Link>
     );
