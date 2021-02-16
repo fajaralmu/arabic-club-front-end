@@ -2,7 +2,7 @@
 import Filter from './../models/Filter';
 import WebRequest from './../models/WebRequest';
 import { contextPath } from './../constant/Url';
-import { commonAjaxPostCalls } from './Promises';
+import { commonAjaxPostCalls, commonAjaxPostCallsWithBlob } from './Promises';
 import BaseEntity from './../models/BaseEntity';
 import ManagementProperty from '../models/ManagementProperty';
 import EntityProperty from '../models/settings/EntityProperty';
@@ -119,5 +119,11 @@ export default class MasterDataService {
         }
         const endpoint = contextPath().concat("api/app/setting/updateprofile");
         return commonAjaxPostCalls(endpoint, request)
+    }
+
+    generateReport(request: WebRequest) {
+        const endpoint: string = contextPath().concat("api/app/report/records");
+        return commonAjaxPostCallsWithBlob(endpoint, request);
+
     }
 }

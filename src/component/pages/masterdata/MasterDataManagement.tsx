@@ -9,6 +9,9 @@ import MasterDataService from '../../../services/MasterDataService';
 import WebResponse from '../../../models/WebResponse';
 import EntityProperty from '../../../models/settings/EntityProperty';
 import MasterDataList from './MasterDataList';
+import Filter from './../../../models/Filter';
+import WebRequest from './../../../models/WebRequest';
+import AttachmentInfo from './../../../models/AttachmentInfo';
 
 class MasterDataManagement extends BaseComponent {
     masterDataService: MasterDataService;
@@ -44,11 +47,10 @@ class MasterDataManagement extends BaseComponent {
             this.loadEntityProperty();
         }
     }
-    startLoading() {
-        //
-    }
-    endLoading() {
-        //
+    startLoading(raltime:boolean) {
+        if (raltime==true) {
+            super.startLoading(raltime);
+        }
     }
     loadEntityProperty() {
 
@@ -73,6 +75,36 @@ class MasterDataManagement extends BaseComponent {
         )
 
     }
+    printRecord = (filter: Filter) => {
+        const property = this.state.entityProperty;
+        if (!property) return;
+        this.showConfirmation("Print record? ")
+            .then(ok => {
+                if (!ok) return;
+                const req:WebRequest = {
+                    entity: property.entityName,
+                    filter: filter
+                }
+                this.commonAjaxWithProgress(
+                    this.masterDataService.generateReport,
+                    this.reportCreated,
+                    this.showCommonErrorAlert,
+                    req); 
+            })
+    }
+    reportCreated = (attachment: AttachmentInfo) => {
+        this.showConfirmation("Save File " + attachment.name + " ?")
+            .then((ok) => {
+                if (!ok) return;
+                Object.assign(document.createElement('a'), {
+                    target: '_blank',
+                    download: attachment.name,
+                    style: { display: 'none' },
+                    href: attachment.dataUrl,
+                }).click();
+            })
+
+    }
     render() {
         if (this.state.entityProperty == undefined) {
             return (
@@ -87,7 +119,7 @@ class MasterDataManagement extends BaseComponent {
         return (
             <div className="section-body container-fluid">
                 <h2>{this.state.entityProperty.alias}</h2>
-                <MasterDataList entityProperty={this.state.entityProperty} />
+                <MasterDataList printRecord={this.printRecord} entityProperty={this.state.entityProperty} />
             </div>
         )
     }
