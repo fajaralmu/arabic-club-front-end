@@ -237,7 +237,7 @@ class PublicQuizChallenge extends BaseComponent {
     render() {
 
         if (this.state.errorSubmit) return (<RertyPage retrySubmit={this.retrySubmit} />)
-        const style = { marginTop: '20px', }
+        const style = { marginTop: '30px', }
         const quiz = Object.assign(new Quiz, this.state.quiz);
 
         if (!this.state.loading && quiz.getQuestionCount() == 0) return <SimpleError style={style} children="Quiz in currently unavailable" />
@@ -249,7 +249,7 @@ class PublicQuizChallenge extends BaseComponent {
 
         const questionTimered = quiz?.questionsTimered == true && this.state.quizResult == undefined;
         return (
-            <div style={style} className="container-fluid">
+            <div style={style} className="section-body container-fluid">
                 {!this.state.quizResult && quiz && quiz.questionsTimered == false ?
                     <QuizTimer latestUpdate={this.state.latestUpdate} ref={this.timerRef} onTimeout={this.setFailedTimeout} duration={quiz.duration ?? 0} />
                     : null}

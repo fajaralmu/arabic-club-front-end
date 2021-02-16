@@ -38,7 +38,7 @@ class ApplicationContent extends BaseComponent {
     }
     render() {
         return (
-            <div style={{ paddingTop: '65px' }}>
+          <Fragment>
                 <Switch>
                     <Route exact path="/login" render={
                         (props: any) =>
@@ -89,7 +89,7 @@ class ApplicationContent extends BaseComponent {
                 <QuizManagement />
                 <Dashboard />
                 <Gallery/>
-            </div>
+            </Fragment>
         )
     }
     componentDidMount() {

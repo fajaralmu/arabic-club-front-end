@@ -129,7 +129,7 @@ class LessonContent extends BaseComponent {
         const lessons: Lesson[] = this.state.lessons;
         const category: LessonCategory = this.state.category;
         return (
-            <div className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Lessons - {category.name}</h2>
                 <form className="row" onSubmit={(e) => { e.preventDefault(); this.loadLessons() }}>
 

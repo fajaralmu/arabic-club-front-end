@@ -66,7 +66,7 @@ class GalleryPicture extends BaseComponent {
                 <GalleryPictureDetail image={selectedImage} back={this.removeSelectedImage} />)
         }
         return (
-            <div id="GalleryPicture" className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Pictures</h2>
                 <div className="alert alert-info">
                     Welcome to gallery picture

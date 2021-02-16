@@ -103,7 +103,7 @@ class QuizDetail extends BaseComponent {
         const questions: QuizQuestion[] = quiz.questions ?? [];
         const questionTimered: boolean = quiz.questionsTimered;
         return (
-            <div id="QuizDetail" className="container-fluid">
+            <div  className="section-body container-fluid">
                 <h2>Quiz Detail</h2>
                 <div >
                     <div className="alert alert-info">

@@ -62,7 +62,7 @@ class QuizHistoryPage extends BaseComponent {
         const filter: Filter = this.state.filter;
         const startNumber = (filter.limit ?? 0) * (filter.page ?? 0);
         return (
-            <div id="QuizHistoryPage" className="container-fluid">
+            <div  className=" section-body container-fluid">
                 <h2>Quiz History</h2>
                 <div className="alert alert-info">
                     Welcome, <strong>{user.displayName}  </strong>

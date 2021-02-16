@@ -71,7 +71,7 @@ class QuizManagementMain extends BaseMainMenus {
     render() {
         const filter = this.state.filter;
         return (
-            <div id="QuizManagement" className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Quiz Management</h2>
                 <div className="alert alert-info">
                     Welcome, <strong>{this.getLoggedUser()?.displayName}</strong>

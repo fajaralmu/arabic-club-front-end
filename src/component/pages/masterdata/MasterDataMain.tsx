@@ -83,11 +83,11 @@ class MasterDataMain extends BaseMainMenus {
             return <MasterDataManagement  code={this.getCode()} />
         }
         if (this.masterDataService.managementProperties.length == 0) {
-            return <div className="container-fluid"><h3>Loading</h3></div>
+            return <div className="section-body container-fluid"><h3>Loading</h3></div>
         }
         const properties: ManagementProperty[] = this.masterDataService.managementProperties;
         return (
-            <div className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Master Data Page</h2>
                 <div className="row">
                     {properties.map(property => {

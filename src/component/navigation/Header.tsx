@@ -33,7 +33,7 @@ class Header extends BaseComponent {
         )
     }
     setMenu = (menu: Menu) => {
-        if (this.buttonToggleNavRef.current) {
+        if (this.state.showNavLinks && this.buttonToggleNavRef.current) {
             this.buttonToggleNavRef.current.click();
         }
         this.props.setMenu(menu);

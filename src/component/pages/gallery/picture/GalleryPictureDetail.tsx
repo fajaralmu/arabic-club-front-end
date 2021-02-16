@@ -21,7 +21,7 @@ export default class GalleryPictureDetail extends Component<IProps, IState> {
     render() {
         const image: Images = this.props.image;
         return (
-            <div id="GalleryPicture" className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Gallery</h2>
                 <AnchorButton onClick={this.props.back} iconClassName="fas fa-angle-left" children="Back" />
                 <p/>

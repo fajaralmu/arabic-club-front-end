@@ -76,7 +76,7 @@ class PublicQuizMain extends BaseMainMenus {
         const filter: Filter = this.state.filter;
         const startNumber = (filter.limit ?? 0) * (filter.page ?? 0);
         return (
-            <div id="PublicQuizMain" style={{ marginTop: '20px', }} className="container-fluid">
+            <div style={{ marginTop: '20px', }} className="section-body container-fluid">
                 <h2>Take Quiz</h2>
                 <div className="alert alert-info">
                     Challenge your self

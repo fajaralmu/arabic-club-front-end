@@ -18,7 +18,7 @@ class DashboardMain extends BaseMainMenus {
         const user: User | undefined = this.getLoggedUser();
         if (!user) return null;
         return (
-            <div id="DashboardMain" className="container-fluid">
+            <div  className=" section-body container-fluid">
                 <h2>Dashboard</h2>
                 <div className="alert alert-info">
                     Welcome, <strong>{user.displayName}  </strong>

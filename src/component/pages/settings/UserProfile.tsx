@@ -147,7 +147,7 @@ class UserProfile extends BaseComponent {
         if (!user) return null;
         const editFields: EditField = this.state.editFields;
         return (
-            <div id="UserProfile" className="container-fluid">
+            <div  className="section-body container-fluid">
                 <h2>User Profile</h2>
                 <Card title="Profile Data">
                     <form onSubmit={this.saveRecord}>

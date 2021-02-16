@@ -1,7 +1,9 @@
 #app-content {
   position: absolute;
 }
-
+#content {
+  padding: 0px;
+}
 @media screen and (max-width: 991px) {
   .menu-label  {
     display: none;
@@ -20,5 +22,6 @@
   #app-content {
     padding-left: 270px;
     margin-top: 20px;
+    background-color: rgb(9, 26, 78);
   }
 }

@@ -65,7 +65,7 @@ class GalleryVideo extends BaseComponent {
         const filter: Filter = this.state.filter; 
         
         return (
-            <div id="GalleryVideo" className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Videos</h2>
                 <div className="alert alert-info">
                     Welcome to gallery videos

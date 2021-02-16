@@ -93,7 +93,7 @@ class LessonMain extends BaseMainMenus {
         }
         
         return (
-            <div className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>Lessons</h2>
                 <div className="row">
                     {categories.map(category => {

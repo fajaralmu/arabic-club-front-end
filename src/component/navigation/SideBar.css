@@ -1,9 +1,9 @@
 #sidebar {
   position: fixed;
   /* background-color: black; */
-  height: 100%;
+  height: 100vh;
   width: 250px;
-  margin-top: 75px;
+  padding-top: 75px;
   z-index: 50;
   border-right: solid 1px #aaaaaa;
 }

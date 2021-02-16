@@ -158,7 +158,7 @@ class EditApplicationProfile extends BaseComponent {
         const bgUrl: string = applicationProfile.backgroundUrl ?? "";
         const pageIcon: string = applicationProfile.pageIcon ?? "";
         return (
-            <div id="ApplicationProfile" className="container-fluid">
+            <div  className="section-body container-fluid">
                 <h2>Application Profile</h2>
                 <Card title="Profile Data">
                     <form onSubmit={this.saveRecord}>

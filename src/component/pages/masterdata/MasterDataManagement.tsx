@@ -9,7 +9,7 @@ import MasterDataService from '../../../services/MasterDataService';
 import WebResponse from '../../../models/WebResponse';
 import EntityProperty from '../../../models/settings/EntityProperty';
 import MasterDataList from './MasterDataList';
- 
+
 class MasterDataManagement extends BaseComponent {
     masterDataService: MasterDataService;
     code: string = "";
@@ -75,23 +75,24 @@ class MasterDataManagement extends BaseComponent {
     }
     render() {
         if (this.state.entityProperty == undefined) {
-            return <div className="row">
-                <div className="col-1"><div className="spinner-border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-                </div>
-                <div className="col-10"><h4>Loading configuration</h4></div>
-            </div>
+            return (
+                <div className="row container-fluid section-body" style={{ paddingTop: '20px' }}>
+                    <div className="col-4 text-right">
+                        <div className="spinner-border" role="status" />
+                    </div>
+                    <div className="col-8"><h4>Loading configuration</h4>
+                    </div>
+                </div>)
         }
         return (
-            <div id="MasterDataManagement" className="container-fluid">
+            <div className="section-body container-fluid">
                 <h2>{this.state.entityProperty.alias}</h2>
-                <MasterDataList  entityProperty={this.state.entityProperty} />
+                <MasterDataList entityProperty={this.state.entityProperty} />
             </div>
         )
     }
 
-} 
+}
 export default withRouter(connect(
     mapCommonUserStateToProps
 )(MasterDataManagement))
