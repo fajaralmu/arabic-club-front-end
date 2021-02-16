@@ -3,7 +3,7 @@
   /* background-color: black; */
   height: 100vh;
   width: 250px;
-  padding-top: 75px;
+ 
   z-index: 50;
   border-right: solid 1px #aaaaaa;
 }
@@ -93,6 +93,7 @@
 @media screen and (min-width: 992px) {
   #sidebar {
     display: block;
+    padding-top: 75px;
   } 
   .sidebar-item-brand {
     display: none;

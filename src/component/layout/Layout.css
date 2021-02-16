@@ -22,6 +22,7 @@
   #app-content {
     padding-left: 270px;
     margin-top: 20px;
-    background-color: rgb(9, 26, 78);
+    background-color: #343a40
+     /* rgb(9, 26, 78); */
   }
 }

@@ -45,7 +45,7 @@ class Login extends BaseComponent{
     }
     render() {
         return (
-            <div id="Login">
+            <div id="Login" style={{marginTop:'20px'}} >
                 <form name='login' onSubmit={(e) => { this.login(e) }}
                     method='POST' className="form-signin">
                     <div className="text-center">
