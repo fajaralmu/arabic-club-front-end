@@ -1,3 +1,4 @@
+import { doItLater } from './EventUtil';
 let stompClient = undefined;
 let wsConnected = false;
 let websocketUrl = undefined;
@@ -53,6 +54,9 @@ export const performWebsocketConnection = () => {
 			callback(frame);
 		}
 
+	}, (e) => {
+		console.warn("Error connection websocket, reconnect");
+		doItLater(performWebsocketConnection, 2000);
 	});
 
 	 
