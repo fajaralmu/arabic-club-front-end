@@ -26,6 +26,7 @@ import GalleryMain from '../pages/gallery/GalleryMain';
 import GalleryPicture from '../pages/gallery/picture/GalleryPicture';
 import QuizHistoryPage from '../pages/dashboard/QuizHistoryPage';
 import GalleryVideo from '../pages/gallery/video/GalleryVideo';
+import GalleryDocument from '../pages/gallery/document/GalleryDocument';
 
 class ApplicationContent extends BaseComponent {
 
@@ -111,6 +112,9 @@ const Gallery = (props) => {
                     } />
                     <Route exact path="/gallery/video" render={
                         (props: any) => <GalleryVideo />
+                    } />
+                    <Route exact path="/gallery/document" render={
+                        (props: any) => <GalleryDocument />
                     } />
 
         </Switch>

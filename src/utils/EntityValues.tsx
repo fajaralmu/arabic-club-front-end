@@ -44,14 +44,12 @@ export default class EntityValues {
 					value = value == true ? <i>true</i> : <i>false</i>;
 					break;
 				case FieldType.FIELD_TYPE_DOCUMENT:
-					const name = new String(value).substring(0,20);
-					if (name == "") {
-						value = "-";
-						break;
-					}
-					value = <a target="_blank" href={baseDocumentUrl()+value} >
-						<i className="far fa-file" style={{marginRight:5}}/>
-						{name}</a>
+					const name = new String(value).substring(0, 20);
+					value = name == "" ? "-" :
+						(<a target="_blank" href={baseDocumentUrl() + value} >
+							<i className="far fa-file" style={{ marginRight: 5 }} />
+							{name}
+						</a>)
 					break;
 				case FieldType.FIELD_TYPE_FIXED_LIST:
 				case FieldType.FIELD_TYPE_DYNAMIC_LIST:

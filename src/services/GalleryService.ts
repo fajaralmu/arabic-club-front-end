@@ -19,6 +19,9 @@ export default class GalleryService
         const endpoint = contextPath().concat("api/public/gallery/videos")
         return commonAjaxPublicPostCalls(endpoint, {filter:filter});
     }
-   
+    getDocuments = (filter:Filter) => { 
+        const endpoint = contextPath().concat("api/public/gallery/documents")
+        return commonAjaxPublicPostCalls(endpoint, {filter:filter});
+    }
 
 }

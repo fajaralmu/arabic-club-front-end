@@ -123,14 +123,19 @@ const _menus: Menu[] = [
                 name: 'Pictures',
                 url: 'picture',
                 menuClass: 'fas fa-images',
-                role: [],
-
+                role: [], 
             },
             {
                 code: 'gallery_video',
                 name: 'Videos',
                 url: 'video',
                 menuClass: 'fas fa-video',
+                role: [],
+            }, {
+                code: 'gallery_document',
+                name: 'Documents',
+                url: 'document',
+                menuClass: 'far fa-file',
                 role: [],
             }
         ]
