@@ -54,7 +54,7 @@ class FormInputDocument extends BaseField {
             return;
         }
         
-        const attachmentInfo = AttachmentInfo.nameOnly(defaultValue);
+        const attachmentInfo = AttachmentInfo.instance(defaultValue, defaultValue);
         this.setState({ attachmentInfo: attachmentInfo, showInputFile: true });
     }
     render() {

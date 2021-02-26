@@ -45,6 +45,10 @@ export default class EntityValues {
 					break;
 				case FieldType.FIELD_TYPE_DOCUMENT:
 					const name = new String(value).substring(0,20);
+					if (name == "") {
+						value = "-";
+						break;
+					}
 					value = <a target="_blank" href={baseDocumentUrl()+value} >
 						<i className="far fa-file" style={{marginRight:5}}/>
 						{name}</a>
