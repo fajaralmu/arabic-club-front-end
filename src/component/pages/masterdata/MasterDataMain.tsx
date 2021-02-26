@@ -24,7 +24,7 @@ class MasterDataMain extends BaseMainMenus {
     constructor(props: any) {
         super(props, "Master Data", true);
         this.masterDataService = this.getServices().masterDataService;
-        console.debug("PROPS: ", this.props);
+       
     }
 
     managementPropertiesLoaded = (response: WebResponse) => {

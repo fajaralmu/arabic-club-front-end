@@ -95,7 +95,7 @@ export const commonAjaxPostCallsWithBlob = (endpoint: string, payload?: any) => 
                 // window.URL.revokeObjectURL(url);
                 const attachmentInfo:AttachmentInfo = new AttachmentInfo();
                 attachmentInfo.name = fileName;
-                attachmentInfo.data = blob;
+                attachmentInfo.blob = blob;
                 attachmentInfo.url = url;
                 resolve(attachmentInfo);
                 

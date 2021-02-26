@@ -52,7 +52,7 @@ export const setRequestId = (data:WebResponse, app) => {
             type: types.SET_REQUEST_ID, 
         }
     };
-    console.debug("setRequestId: ", ret);
+    // console.debug("setRequestId: ", ret);
     return ret;
 }
 

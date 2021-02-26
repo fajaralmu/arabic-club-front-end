@@ -1,7 +1,7 @@
 import React from 'react';
 import EntityProperty from '../models/settings/EntityProperty';
 import EntityElement from '../models/settings/EntityElement';
-import { baseImageUrl } from '../constant/Url';
+import { baseDocumentUrl, baseImageUrl } from '../constant/Url';
 import { FieldType } from '../models/FieldType';
 import { beautifyNominal } from './StringUtil';
 export default class EntityValues {
@@ -16,7 +16,7 @@ export default class EntityValues {
 				result.push(value);
 				continue;
 			}
-			switch (element.fieldType) { 
+			switch (element.fieldType) {
 				case FieldType.FIELD_TYPE_DATE:
 					value = new Date(value).toDateString();
 					break;
@@ -41,12 +41,18 @@ export default class EntityValues {
 					}}></div>;
 					break;
 				case FieldType.FIELD_TYPE_CHECKBOX:
-					value = value == true?<i>true</i> :<i>false</i>;
+					value = value == true ? <i>true</i> : <i>false</i>;
+					break;
+				case FieldType.FIELD_TYPE_DOCUMENT:
+					const name = new String(value).substring(0,20);
+					value = <a target="_blank" href={baseDocumentUrl()+value} >
+						<i className="far fa-file" style={{marginRight:5}}/>
+						{name}</a>
 					break;
 				case FieldType.FIELD_TYPE_FIXED_LIST:
 				case FieldType.FIELD_TYPE_DYNAMIC_LIST:
 				default:
-					if (element.optionItemName  && element.optionItemName != "") {
+					if (element.optionItemName && element.optionItemName != "") {
 						const valueAsObj = object[elementid];
 						value = valueAsObj[element.optionItemName ?? "id"];
 					} else {

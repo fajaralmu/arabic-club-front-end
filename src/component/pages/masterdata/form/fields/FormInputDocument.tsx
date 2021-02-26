@@ -53,9 +53,9 @@ class FormInputDocument extends BaseField {
         if (!defaultValue) {
             return;
         }
-        const fullUrl = baseDocumentUrl() + defaultValue;
+        
         const attachmentInfo = AttachmentInfo.nameOnly(defaultValue);
-        this.setState({ singlePreviewData: attachmentInfo, showInputFile: true });
+        this.setState({ attachmentInfo: attachmentInfo, showInputFile: true });
     }
     render() {
         const element: EntityElement = this.getEntityElement();
@@ -64,7 +64,7 @@ class FormInputDocument extends BaseField {
             <React.Fragment>
                 {this.state.showInputFile ?
                     <input ref={this.ref}
-                        onChange={this.changeFile} type="file"  className='form-control' />
+                        onChange={this.changeFile} type="file" className='form-control' />
 
                     :
                     <Fragment>
@@ -75,9 +75,12 @@ class FormInputDocument extends BaseField {
                         <input type="hidden" name={element.id} value="NULLED" />
                     </Fragment>
                 }
-                {this.state.attachmentInfo? 
-                 <input data-name={this.state.attachmentInfo.name} value={this.state.attachmentInfo.url} type="hidden" name={element.id} />
-                 : null }
+                {this.state.attachmentInfo ?
+                    <Fragment>
+                        <input value={this.state.attachmentInfo.url} type="hidden" name={element.id} />
+                        <input value={this.state.attachmentInfo.name} type="hidden" name={element.id+"-attachment-info"} />
+                    </Fragment>
+                    : null}
                 <FilePreview data={this.state.attachmentInfo} />
                 <AnchorButton show={this.state.attachmentInfo != undefined} onClick={this.remove} iconClassName="fas fa-times" className="btn btn-danger btn-sm">remove</AnchorButton>
             </React.Fragment>

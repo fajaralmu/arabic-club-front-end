@@ -4,7 +4,13 @@ export default class AttachmentInfo {
         info.name = name;
         return info;
     }
+    static instance(name: any, url:string): AttachmentInfo {
+        const info = new AttachmentInfo();
+        info.name = name;
+        info.url = url;
+        return info;
+    }
     name: string = "";
-    data: Blob = new Blob();
+    blob: Blob = new Blob();
     url: string = "";
 }
