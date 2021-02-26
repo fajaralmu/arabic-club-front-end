@@ -1,5 +1,6 @@
 import { base64StringFileSize } from './StringUtil';
 import { ChangeEvent } from 'react';
+import AttachmentInfo from './../models/AttachmentInfo';
 export const byId = (id) => { return document.getElementById(id) }
  
 export function toBase64(file, referer, callback) {
@@ -14,6 +15,32 @@ export function toBase64(file, referer, callback) {
 export const getHtmlInputElement = (e:ChangeEvent) : HTMLInputElement => {
     const target = e.target as HTMLInputElement;
     return target;
+}
+export const getAttachmentInfo = (fileInput:HTMLInputElement): Promise<AttachmentInfo> => {
+    return new Promise<AttachmentInfo>((resolve, reject) =>{
+        if (null == fileInput.files || !fileInput.files[0]) {
+            reject(new Error("No file"));
+            return;
+        }
+        try { 
+            const file:File = fileInput.files[0]; 
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            console.debug("fileInput.files[0]: ", file);
+            reader.onload = function () { 
+                const info:AttachmentInfo = new AttachmentInfo();
+                info.url = new String(reader.result).toString();
+                info.name = file.name;
+                resolve(info);
+             }
+            reader.onerror = function (error) {
+                reject(error);
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+
 }
 
 export const toBase64v2 = (fileInput): Promise<string> => {

@@ -15,6 +15,7 @@ import FormInputCheckbox from './fields/FormInputCheckBox';
 import FormInputCommon from './fields/FormInputCoomon';
 import FormInputDropDownDynamic from './fields/FormInputDropDownDynamic';
 import FormGroup from './../../../form/FormGroup';
+import FormInputDocument from './fields/FormInputDocument';
 
 class FormInputField extends BaseComponent {
 
@@ -44,6 +45,9 @@ class FormInputField extends BaseComponent {
                     <FormInputImageMultiple recordToEdit={this.props.recordToEdit} entityElement={element} />
                     :
                     <FormInputImage recordToEdit={this.props.recordToEdit} entityElement={element} />
+                break;
+            case FieldType.FIELD_TYPE_DOCUMENT:
+                input = <FormInputDocument recordToEdit={this.props.recordToEdit} entityElement={element} />
                 break;
             case FieldType.FIELD_TYPE_CHECKBOX:
                 input = <FormInputCheckbox recordToEdit={this.props.recordToEdit} entityElement={element} />

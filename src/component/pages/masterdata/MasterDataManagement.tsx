@@ -100,7 +100,7 @@ class MasterDataManagement extends BaseComponent {
                     target: '_blank',
                     download: attachment.name,
                     style: { display: 'none' },
-                    href: attachment.dataUrl,
+                    href: attachment.url,
                 }).click();
             })
 

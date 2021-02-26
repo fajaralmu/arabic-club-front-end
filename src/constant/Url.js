@@ -16,6 +16,7 @@ export const contextPath = function(){
 // export const baseImageUrl() = "https://developmentmode.000webhostapp.com/uploaded_storage/"; 
 // export const baseImageUrl() = "http://localhost/storage/images/"; 
 export const baseImageUrl = () => getAssetsPath()+ "images/"; 
+export const baseDocumentUrl = () => getAssetsPath()+ "documents/"; 
 // export const baseImageUrl() = contextPath()+"WebAsset/Shop1/Images/"; 
 
 export const POST = "post";

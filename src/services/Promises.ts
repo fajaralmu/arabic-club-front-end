@@ -96,7 +96,7 @@ export const commonAjaxPostCallsWithBlob = (endpoint: string, payload?: any) => 
                 const attachmentInfo:AttachmentInfo = new AttachmentInfo();
                 attachmentInfo.name = fileName;
                 attachmentInfo.data = blob;
-                attachmentInfo.dataUrl = url;
+                attachmentInfo.url = url;
                 resolve(attachmentInfo);
                 
             })
