@@ -84,10 +84,10 @@ class LessonMain extends BaseMainMenus {
         }
         const categories: LessonCategory[] = this.categoriesService.getLoadedCategories('lesson');
         if (this.state.loading) {
-            return <div className="container-fluid"><Spinner/></div>
+            return <div className="section-body container-fluid"><Spinner/></div>
         }
         if (categories.length == 0) {
-            return <div className="container-fluid">
+            return <div className="section-body container-fluid">
                 <SimpleError>No Categories Yet</SimpleError>
             </div>
         }

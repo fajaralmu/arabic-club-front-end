@@ -112,13 +112,13 @@ class LessonContent extends BaseComponent {
     }
     render() {
         if (this.state.loading) {
-            return (<div className="container-fluid">
+            return (<div className="section-body  container-fluid">
                 <h2>Lessons</h2>
                 <Spinner />
             </div>)
         }
         if (this.state.lessons == undefined || this.state.category == undefined) {
-            return (<div className="container-fluid">
+            return (<div className="section-body  container-fluid">
                 <h2>Lessons</h2>
                 <SimpleError>Data not found</SimpleError>
             </div>)
