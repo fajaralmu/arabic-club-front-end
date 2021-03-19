@@ -93,7 +93,7 @@ class QuizDetail extends BaseComponent {
 
         if (!this.state.quiz) {
             return (
-                <div id="QuizDetail" className="container-fluid">
+                <div id="QuizDetail" className="container-fluid section-body">
                     <h2>Quiz Detail</h2>
                     {this.state.loading ? <Spinner /> : <SimpleError children="No Data" />}
                 </div>

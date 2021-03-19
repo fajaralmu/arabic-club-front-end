@@ -30,6 +30,10 @@ class QuizUpload extends BaseComponent {
     }
     uploadSuccess = (response:WebResponse) => {
         this.showInfo("Success");
+        if (response.quiz) {
+            this.props.history.push("/quizmanagement/detail/"+response.quiz.id);
+            return;
+        } 
         this.setState({attachment:null});
     }
     upload = () => {
@@ -45,6 +49,12 @@ class QuizUpload extends BaseComponent {
         const target:HTMLInputElement = e.target as HTMLInputElement;
         getAttachmentInfo(target).then((attchment:AttachmentInfo)=>{
             // console.debug("attchment:", attchment);
+            attchment.url = "";
+            if (attchment.name.endsWith(".xlsx") == false) {
+                this.showCommonErrorAlert("INVALID FILE: \""+attchment.name+"\"");
+                target.value = "";
+                return;
+            }
             this.setState({attachment:attchment})
         }).catch(this.showCommonErrorAlert);
     }
@@ -58,6 +68,11 @@ class QuizUpload extends BaseComponent {
                         <input type="file" className="form-control"
 
                         onChange={this.setAttachmentInfo} />
+                    </FormGroup>
+                    <FormGroup label="Download Template">
+                        <a href="resources/assets/quiz_template.xlsx" className="btn btn-dark">
+                            Download
+                        </a>
                     </FormGroup>
                     <FormGroup>
                         {this.state.attachment?
