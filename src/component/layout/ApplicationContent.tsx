@@ -28,6 +28,7 @@ import QuizHistoryPage from '../pages/dashboard/QuizHistoryPage';
 import GalleryVideo from '../pages/gallery/video/GalleryVideo';
 import GalleryDocument from '../pages/gallery/document/GalleryDocument';
 import Register from '../pages/login/Register';
+import QuizUpload from '../pages/quizmanagement/QuizUpload';
 
 class ApplicationContent extends BaseComponent {
 
@@ -197,6 +198,10 @@ const QuizManagement = (props) => {
             <Route exact path="/quizmanagement/form" render={
                 (props: any) =>
                     <QuizManagementForm />
+            } />
+            <Route exact path="/quizmanagement/upload" render={
+                (props: any) =>
+                    <QuizUpload />
             } />
             <Route exact path="/quizmanagement/detail/:id" render={
                 (props: any) =>

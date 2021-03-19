@@ -4,6 +4,7 @@ import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls } from './Promises'; 
 import Quiz from './../models/Quiz';
 import Filter from '../models/Filter';
+import AttachmentInfo from './../models/AttachmentInfo';
 export default class QuizService {
     getQuizList = (filter:Filter) => {
         const endpoint = contextPath().concat("api/app/quiz/list")
@@ -28,6 +29,10 @@ export default class QuizService {
     deleteQuiz = (id: number) => {
         const endpoint = contextPath().concat("api/app/quiz/deletequiz/"+id)
         return commonAjaxPostCalls(endpoint, {});
+    }
+    uploadQuiz = (attachment:AttachmentInfo) => {
+        const endpoint = contextPath().concat("api/app/quiz/uploadquiz")
+        return commonAjaxPostCalls(endpoint, {attachmentInfo:attachment});
     }
 
 }

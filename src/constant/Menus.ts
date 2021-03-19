@@ -194,6 +194,13 @@ const _menus: Menu[] = [
                 menuClass: 'fas fa-keyboard',
                 role:[]
             }, 
+            {
+                code: 'quiz_upload_form',
+                name: 'Quiz Upload',
+                url: 'upload',
+                menuClass: 'fas fa-upload',
+                role:[]
+            }, 
         ]
     }, 
     {

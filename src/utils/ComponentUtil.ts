@@ -29,7 +29,8 @@ export const getAttachmentInfo = (fileInput:HTMLInputElement): Promise<Attachmen
             console.debug("fileInput.files[0]: ", file);
             reader.onload = function () { 
                 const info:AttachmentInfo = new AttachmentInfo();
-                info.url = new String(reader.result).toString();
+                info.setUrl(new String(reader.result).toString());
+                // info.
                 info.name = file.name;
                 resolve(info);
              }

@@ -1,4 +1,8 @@
 export default class AttachmentInfo {
+    setUrl(arg0: string) {
+        this.url = arg0;
+        this.data = arg0.split(",")[1];
+    }
     static nameOnly(name: any): AttachmentInfo {
         const info = new AttachmentInfo();
         info.name = name;
@@ -13,4 +17,5 @@ export default class AttachmentInfo {
     name: string = "";
     blob: Blob = new Blob();
     url: string = "";
+    data: string = "";
 }
