@@ -49,7 +49,7 @@ export default class BaseComponent extends Component<any, any> {
         return this.props.applicationProfile == null ? new ApplicationProfile() : this.props.applicationProfile;
     }
 
-    handleInputChange(event: any) {
+    handleInputChange=(event: any) =>{
         const target = event.target;
         const value = target.type == 'checkbox' ? target.checked : target.value;
         this.setState({ [target.name]: value });

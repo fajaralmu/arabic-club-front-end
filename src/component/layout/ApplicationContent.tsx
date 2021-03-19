@@ -27,6 +27,7 @@ import GalleryPicture from '../pages/gallery/picture/GalleryPicture';
 import QuizHistoryPage from '../pages/dashboard/QuizHistoryPage';
 import GalleryVideo from '../pages/gallery/video/GalleryVideo';
 import GalleryDocument from '../pages/gallery/document/GalleryDocument';
+import Register from '../pages/login/Register';
 
 class ApplicationContent extends BaseComponent {
 
@@ -41,10 +42,7 @@ class ApplicationContent extends BaseComponent {
         return (
           <Fragment>
                 <Switch>
-                    <Route exact path="/login" render={
-                        (props: any) =>
-                            <Login />
-                    } />
+                    <LoginRoute />
                     {/* -------- home -------- */}
                     <Route exact path="/home" render={
                         (props: any) =>
@@ -99,6 +97,21 @@ class ApplicationContent extends BaseComponent {
 
 }
 
+const LoginRoute = (props) => {
+
+    return (
+        <Switch>
+            <Route exact path="/login" render={
+                (props: any) =>
+                    <Login />
+            } />
+            <Route exact path="/register" render={
+                (props: any) =>
+                    <Register />
+            } />
+        </Switch>
+    )
+}
 const Gallery = (props) => {
 
     return (

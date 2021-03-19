@@ -23,7 +23,14 @@ export default class UserService {
         const endpoint = contextPath().concat("api/member/account/updateprofile")
         return commonAjaxPostCalls(endpoint, request);
     }
+    saveUser = (user: User) => {
 
+        const request: WebRequest = {
+            user: user
+        } 
+        const endpoint = contextPath().concat("api/public/register")
+        return commonAjaxPublicPostCalls(endpoint, request);
+    }
     requestApplicationId = (callbackSuccess: (response: WebResponse) => any, callbackError: ()=>any) => {
         const url = contextPath() + "api/public/requestid";
         commonAjaxPostCalls(url, {}).then(data => {
