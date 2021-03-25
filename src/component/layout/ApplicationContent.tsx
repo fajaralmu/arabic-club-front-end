@@ -41,13 +41,15 @@ class ApplicationContent extends BaseComponent {
     }
     render() {
         return (
-          <Fragment>
+            <Fragment>
                 <Switch>
-                    <LoginRoute />
+                   
                     {/* -------- home -------- */}
                     <Route exact path="/home" render={
-                        (props: any) =>
-                            <HomeMain />
+                        (props: any) => {
+                            console.debug("Home path")
+                            return <HomeMain />
+                        }
                     } />
                     <Route exact path="/" render={
                         (props: any) =>
@@ -59,21 +61,25 @@ class ApplicationContent extends BaseComponent {
                     } />
                     {/* -------- masterdata -------- */}
                     <Route exact path="/lessons" render={
-                        (props: any) =>
-                            <LessonMain setSidebarMenus={this.setSidebarMenus} />
+                        (props: any) =>{
+                            console.debug("Lessons path")   
+                            return <LessonMain setSidebarMenus={this.setSidebarMenus} />
+                        }
                     } />
                     <Route exact path="/lessons/:categoryCode" render={
                         (props: any) =>
                             <LessonMain setSidebarMenus={this.setSidebarMenus} />
                     } />
-                   
+
 
 
 
                     {/* -------- masterdata -------- */}
                     <Route exact path="/management" render={
-                        (props: any) =>
-                            <MasterDataMain setSidebarMenus={this.setSidebarMenus} />
+                        (props: any) => {
+                            console.debug("MANAGEMENTS path")
+                            return <MasterDataMain setSidebarMenus={this.setSidebarMenus} />
+                        }
                     } />
                     <Route exact path="/management/:code" render={
                         (props: any) =>
@@ -84,11 +90,12 @@ class ApplicationContent extends BaseComponent {
                     {/* ///////// PUBLIC ///////// */}
 
                 </Switch>
+                <LoginRoute />
                 <Settings />
                 <MemberQuiz />
                 <QuizManagement />
                 <Dashboard />
-                <Gallery/>
+                <Gallery />
             </Fragment>
         )
     }
@@ -117,19 +124,19 @@ const Gallery = (props) => {
 
     return (
         <Switch>
-             {/* ---------- gallery --------- */}
-             <Route exact path="/gallery" render={
-                        (props: any) => <GalleryMain />
-                    } />
-                    <Route exact path="/gallery/picture" render={
-                        (props: any) => <GalleryPicture />
-                    } />
-                    <Route exact path="/gallery/video" render={
-                        (props: any) => <GalleryVideo />
-                    } />
-                    <Route exact path="/gallery/document" render={
-                        (props: any) => <GalleryDocument />
-                    } />
+            {/* ---------- gallery --------- */}
+            <Route exact path="/gallery" render={
+                (props: any) => <GalleryMain />
+            } />
+            <Route exact path="/gallery/picture" render={
+                (props: any) => <GalleryPicture />
+            } />
+            <Route exact path="/gallery/video" render={
+                (props: any) => <GalleryVideo />
+            } />
+            <Route exact path="/gallery/document" render={
+                (props: any) => <GalleryDocument />
+            } />
 
         </Switch>
     )
@@ -140,8 +147,12 @@ const Dashboard = (props) => {
         <Switch>
             {/* -------- dashboard -------- */}
             <Route exact path="/dashboard" render={
-                (props: any) =>
-                    <DashboardMain />
+                (props: any) => {
+                   
+                        console.debug("dashboard path")   
+                       return  <DashboardMain />
+                }
+                   
             } />
             <Route exact path="/dashboard/quizhistory" render={
                 (props: any) =>

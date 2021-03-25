@@ -79,6 +79,7 @@ class MasterDataMain extends BaseMainMenus {
     }
 
     render() {
+        console.debug("Render master data main")
         if (this.getCode() != undefined && this.getCode() != null && this.getCode() != "") {
             return <MasterDataManagement  code={this.getCode()} />
         }
