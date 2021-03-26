@@ -182,7 +182,11 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(
                     {question.image ? <img height="150" src={baseImageUrl() + question.image} /> : null}
                     <hr />
                     {question.essay?
-                    <textarea value={question.answerEssay} onChange={(e)=>props.setChoice(e.target.value, props.index)} className="form-control" />
+                    <textarea value={question.answerEssay} onChange={(e)=>{
+                        props.setChoice(e.target.value, props.index);
+
+                    }
+                    } className="form-control" />
                     :null}
                     {choices.map((choice, i) => {
                         return <ChoiceItem

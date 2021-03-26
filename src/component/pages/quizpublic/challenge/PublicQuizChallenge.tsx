@@ -155,6 +155,7 @@ class PublicQuizChallenge extends BaseComponent {
     }
 
     setChoice = (answer: string, questionIndex: number) => {
+        // console.debug("setChoice.............");
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
         if (!quiz || quiz.questions.length == 0) return;
@@ -266,7 +267,8 @@ class PublicQuizChallenge extends BaseComponent {
                     null}
                 {quiz ?
                     <QuizBody
-                       result={this.state.quizResult} ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} setChoice={this.setChoice} quiz={quiz} /> :
+                       result={this.state.quizResult} ref={this.quizBodyRef} questionTimered={questionTimered} onTimeout={this.setFailedTimeout} submit={this.submitAnwser} 
+                       setChoice={this.setChoice} quiz={quiz} /> :
                     <SimpleError>No Data</SimpleError>
                 }
             </div>
