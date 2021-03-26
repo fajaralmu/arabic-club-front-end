@@ -1,6 +1,7 @@
 
 import Quiz from './Quiz';
 export default class QuizResult {
+    displayScore?: boolean;
 
     submittedQuiz?: Quiz;
     quiz?: Quiz;

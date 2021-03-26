@@ -28,7 +28,7 @@ export default class Quiz extends BaseEntity{
 		for (let i = 0; i < quiz.questions.length; i++) {
 			const element = quiz.questions[i];
 			if (element.id &&(element.answerCode|| element.entered == true)) {
-				quiz.mappedAnswer[new String(element.number).toString()] = element.answerCode??null;
+				quiz.mappedAnswer[new String(element.number).toString()] = element.answerCode??(element.answerEssay??null);
 				 
 			}
 		}

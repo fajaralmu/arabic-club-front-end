@@ -117,7 +117,7 @@ const Histories = (props:{histories:QuizHistoryModel[], loadRecords():any, start
                                 <td>{h.started?new Date(h.started).toLocaleString():"-"}</td>
                                 <td>{h.ended?new Date(h.ended).toLocaleString():"-"}  </td>
                                 <td>{h.userDuration} </td>
-                                <td>{h.score?.toFixed(2)} </td>
+                                <td>{h.score && h.score.toFixed? h.score.toFixed(2):"-"} </td>
                                 <td>
                                     {h.quiz?.repeatable?
                                     <AnchorWithIcon attributes={{target:"_blank"}} to={"/quiz/challenge/"+h.quiz?.id} iconClassName="fas fa-redo" />:

@@ -14,6 +14,7 @@ import { baseDocumentUrl } from '../../../../constant/Url';
 import Card from '../../../container/Card';
 import SimpleWarning from '../../../alert/SimpleWarning';
 import Documents from './../../../../models/Documents';
+import DocumentItem from './DocumentItem';
 
 class IState {
     documentList: Documents[] = new Array();
@@ -86,21 +87,6 @@ const DocumentList = (props: { documents: Documents[], }) => {
     )
 }
 
-const DocumentItem = (props: { document: Documents, }) => {
-    const doc: Documents = Object.assign(new Documents(), props.document);
-    return (
-        <div className="col-md-3 text-center">
-            <Card>
-                <h5  >{doc.title}</h5>
-                 
-                <a className="btn btn-outline-dark btn-sm" target="_blank" href={baseDocumentUrl() + doc.fileName} >
-                    <i className="fa fa-link" />&nbsp;Link ({doc.getExtension()})
-                </a>
-            </Card>
-        </div>
-    )
-
-}
 
 export default withRouter(connect(
     mapCommonUserStateToProps

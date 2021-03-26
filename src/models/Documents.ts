@@ -3,6 +3,7 @@ import DocumentCategory from './DocumentCategory';
 
 export default class Documents extends BaseEntity{
 	title?:string;
+	accessCode?:string;
 	description?:string;
 	category?:DocumentCategory;
 	fileName?:string;

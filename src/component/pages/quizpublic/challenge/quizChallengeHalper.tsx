@@ -44,14 +44,19 @@ export const QuizLanding = (props:{quiz:Quiz, start:Function}) => {
 export  const QuizResultInfo = (props: {quiz:Quiz, quizResult: QuizResult }) => {
     const quizResult = props.quizResult;
     return (<Modal title="Result">
+        {quizResult.displayScore == true?
+        <>
         <h2 className="text-center">Your Score <strong className="text-primary">{quizResult.score.toFixed(2)}</strong></h2>
         <h4 className="text-center text-success">Correct Answer {quizResult.correctAnswer}</h4>
         <h4 className="text-center text-danger">Wrong Answer {quizResult.wrongAnswer}</h4>
+        </>
+        :<h2 className="text-center text-primary">Your Response Has Been Submitted</h2>
+        }
         <div className="text-center">
             {props.quiz.repeatable?
             <AnchorButton onClick={()=>{
                 window.location.reload()
-            }} iconClassName="fas fa-redo">Reload Try Again</AnchorButton>
+            }} iconClassName="fas fa-redo">Reload | Try Again</AnchorButton>
             :
             <h4>Thanks for Participating</h4>
         }
