@@ -120,9 +120,11 @@ const Histories = (props:{histories:QuizHistoryModel[], loadRecords():any, start
                                 <td>{h.score && h.score.toFixed? h.score.toFixed(2):"-"} </td>
                                 <td>
                                     {h.quiz?.repeatable?
-                                    <AnchorWithIcon attributes={{target:"_blank"}} to={"/quiz/challenge/"+h.quiz?.id} iconClassName="fas fa-redo" />:
+                                    <AnchorWithIcon className="btn btn-sm" attributes={{target:"_blank"}} to={"/quiz/challenge/"+h.quiz?.id} iconClassName="fas fa-redo" />:
                                     "Not Repeatable"
                                     }
+                                    <AnchorWithIcon className="btn btn-sm" attributes={{target:"_blank"}} to={"/quiz/history/"+h.id} iconClassName="fas fa-list" />
+                                  
                                 </td>
                             </tr>
                         )

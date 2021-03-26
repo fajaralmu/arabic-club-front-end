@@ -29,6 +29,7 @@ import GalleryVideo from '../pages/gallery/video/GalleryVideo';
 import GalleryDocument from '../pages/gallery/document/GalleryDocument';
 import Register from '../pages/login/Register';
 import QuizUpload from '../pages/quizmanagement/QuizUpload';
+import QuizHistoryDetail from '../pages/quizpublic/QuizHistoryDetail';
 
 class ApplicationContent extends BaseComponent {
 
@@ -193,6 +194,10 @@ const MemberQuiz = (props) => {
             <Route exact path="/quiz/challenge/:id" render={
                 (props: any) =>
                     <PublicQuizChallenge />
+            } />
+            <Route exact path="/quiz/history/:id" render={
+                (props: any) =>
+                    <QuizHistoryDetail />
             } />
         </Switch>
     )

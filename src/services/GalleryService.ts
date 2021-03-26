@@ -4,6 +4,7 @@ import { commonAjaxPublicPostCalls } from './Promises';
 import Filter from './../models/Filter';
 export default class GalleryService
 {
+    
     private static instance?:GalleryService; 
     static getInstance(): GalleryService {
         if (this.instance == null) {
@@ -22,6 +23,10 @@ export default class GalleryService
     getDocuments = (filter:Filter) => { 
         const endpoint = contextPath().concat("api/public/gallery/documents")
         return commonAjaxPublicPostCalls(endpoint, {filter:filter});
+    }
+    validateDocumentAccessCode(code: string, id: any) {
+        const endpoint = contextPath().concat("api/public/gallery/documents/"+id+"/unlock/"+code)
+        return commonAjaxPublicPostCalls(endpoint, {});
     }
 
 }

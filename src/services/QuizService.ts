@@ -6,6 +6,10 @@ import Quiz from './../models/Quiz';
 import Filter from '../models/Filter';
 import AttachmentInfo from './../models/AttachmentInfo';
 export default class QuizService {
+    getHistoryDetail(id: any) {
+        const endpoint = contextPath().concat("api/member/quiz/history/"+id)
+        return commonAjaxPostCalls(endpoint, {});
+    }
     getQuizList = (filter:Filter) => {
         const endpoint = contextPath().concat("api/app/quiz/list")
         return commonAjaxPostCalls(endpoint, {filter:filter});

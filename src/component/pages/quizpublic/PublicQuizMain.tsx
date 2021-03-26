@@ -1,6 +1,6 @@
 
 
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import BaseMainMenus from '../../layout/BaseMainMenus';
@@ -9,10 +9,8 @@ import PublicQuizService from '../../../services/PublicQuizService';
 import Quiz from '../../../models/Quiz';
 import Filter from '../../../models/Filter';
 import WebResponse from '../../../models/WebResponse';
-import Spinner from '../../loader/Spinner';
 import NavigationButtons from '../../navigation/NavigationButtons';
 import QuizList from '../quizshared/QuizList';
-import Card from './../../container/Card';
 
 class IState {
     quizList: Quiz[] = new Array();

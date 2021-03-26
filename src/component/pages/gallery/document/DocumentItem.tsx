@@ -1,29 +1,47 @@
 import React, { Component, Fragment } from 'react'
 import { baseDocumentUrl } from '../../../../constant/Url';
+import GalleryService from '../../../../services/GalleryService';
 import Documents from './../../../../models/Documents';
 import Card from './../../../container/Card';
 import AnchorButton from './../../../navigation/AnchorButton';
+import BaseComponent from './../../../BaseComponent';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { mapCommonUserStateToProps } from './../../../../constant/stores';
+import WebResponse from './../../../../models/WebResponse';
 interface Props { document: Documents }
 class State {
     showLink: boolean = false;
+    fileName?:string
 }
-export default class DocumentItem extends Component<Props, State>{
+ class DocumentItem extends BaseComponent{
 
+    galleryService:GalleryService;
     state: State = new State();
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
+        this.galleryService = this.getServices().galleryService;
+        this.state.fileName = this.props.document.fileName;
         this.state.showLink = this.props.document.accessCode == undefined || this.props.document.accessCode == "";
     }
     showAccessCodeInput = (e) => {
         const code = prompt("Enter access code for " + this.props.document.title);
-        if (code == this.props.document.accessCode) {
-            this.setState({ showLink: true });
-        } else {
-            alert("Invalid")
-        }
+        if (null == code) return;
+        this.validateAccessCode(code);
+    }
+    validateAccessCode = (code:string) => {
+        this.commonAjax(
+            this.galleryService.validateDocumentAccessCode,
+            this.accessCodeValidated,
+            this.showCommonErrorAlert,
+            code, this.props.document.id);
+    }
+    accessCodeValidated = (response:WebResponse) => {
+        this.setState({fileName:response.message, showLink:true});
     }
     render = () => {
         const doc: Documents = Object.assign(new Documents(), this.props.document);
+        doc.fileName = this.state.fileName;
         return (
             <div className="col-md-3 text-center">
                 <Card>
@@ -55,3 +73,7 @@ const ExtraViewer = (props: { doc: Documents }) => {
             : null
     )
 }
+
+export default withRouter(connect(
+    mapCommonUserStateToProps
+)(DocumentItem))

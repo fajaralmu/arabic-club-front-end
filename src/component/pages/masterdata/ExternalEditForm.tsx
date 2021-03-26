@@ -19,9 +19,12 @@ class ExternalEditForm extends Component<{delete(e):any, record: any, entityProp
         if (entityName == 'quiz') {
             link = "/quizmanagement/detail/" + props.record.id;
         } else if (entityName == "quizhistory") {
-
+            link = "/quiz/history/" + props.record.id;
             return (
+                <div style={{width:'150px'}}>
+                <AnchorWithIcon className={btnClassName} iconClassName={iconClassName} to={link} attributes={{ target: "_blank" }} />
                 <AnchorButton onClick={props.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
+                </div>
             )
         } else {
             return null;
