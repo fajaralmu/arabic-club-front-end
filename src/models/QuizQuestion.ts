@@ -7,6 +7,9 @@ export default class QuizQuestion extends BaseEntity {
 	answerCode?: string;
 	correctChoice?: string;
 	statement?: string;
+	answerEssay?:string;
+	essay?:boolean;
+
 	quiz?: Quiz;
 	image?: string;
 	choices?: QuizChoice[];
@@ -16,16 +19,21 @@ export default class QuizQuestion extends BaseEntity {
 	
 	entered:boolean = false;
 
-	static publicQuizQuestion = (): QuizQuestion => {
+	static publicQuizQuestion = (essay:boolean = false): QuizQuestion => {
 		const question: QuizQuestion = new QuizQuestion();
-		question.answerCode = "A";
+		
 		const choices: QuizChoice[] = [];
-		for (let i = 0; i < QuizQuestion.public_choices.length; i++) {
-			const code = QuizQuestion.public_choices[i];
-			choices.push({ answerCode: code, statement:"Answer "+ code});
+		if (essay == false) {
+			question.answerCode = "A";
+			for (let i = 0; i < QuizQuestion.public_choices.length; i++) {
+				const code = QuizQuestion.public_choices[i];
+				choices.push({ answerCode: code, statement:"Answer "+ code});
 
+			}
+		} else {
+			question.answerEssay = "ANSWER ESSAY";
 		}
-
+		question.essay = essay
 		question.choices = choices;
 		return question;
 	}

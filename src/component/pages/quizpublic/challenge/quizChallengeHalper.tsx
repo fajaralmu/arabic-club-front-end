@@ -56,6 +56,8 @@ export  const QuizResultInfo = (props: {quiz:Quiz, quizResult: QuizResult }) => 
             <h4>Thanks for Participating</h4>
         }
         </div>
+        <hr/>
+        <p>{quizResult.message}</p>
     </Modal>
     )
 }

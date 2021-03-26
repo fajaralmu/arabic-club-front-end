@@ -8,4 +8,5 @@ export default class QuizResult {
     wrongAnswer: number = 0;
     totalQuestion: number = 0;
     score: number = 0;
+    message?: string;
 }

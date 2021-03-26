@@ -100,7 +100,7 @@ class QuizDetail extends BaseComponent {
             )
         }
         const quiz: Quiz = Object.assign(new Quiz, this.state.quiz);
-        const questions: QuizQuestion[] = quiz.questions ?? [];
+        const questions: QuizQuestion[] = quiz.questions ?? new Array<QuizQuestion>();
         const questionTimered: boolean = quiz.questionsTimered;
         return (
             <div  className="section-body container-fluid">
@@ -108,7 +108,9 @@ class QuizDetail extends BaseComponent {
                 <div >
                     <div className="alert alert-info">
                         <FormGroup label="Title">{quiz.title}</FormGroup>
+                        <FormGroup label="Access Code"><i>{quiz.accessCode}</i></FormGroup>
                         <FormGroup label="Description">{quiz.description}</FormGroup>
+                        <FormGroup label="On Finished Message">{quiz.afterCompletionMessage}</FormGroup>
                         <FormGroup label="Duration ">{timerString(quiz.duration)}</FormGroup>
                         <FormGroup label="Active">{quiz.active ? "YES" : "NO"}</FormGroup>
                         <FormGroup label="Repeatable">{quiz.repeatable ? "YES" : "NO"}</FormGroup>
@@ -125,7 +127,6 @@ class QuizDetail extends BaseComponent {
                         </FormGroup>
                     </div>
                     {questions.map((question, i) => {
-
                         return (
                             <Question questionTimered={questionTimered} number={i+1} key={"qdl-" + i} question={question} />
                         )
@@ -146,6 +147,10 @@ const Question = (props: {questionTimered:boolean, number:number, question: Quiz
                 <i className="fas fa-clock"/>&nbsp;{timerString(question.duration)}
             </FormGroup>
             {question.image ? <img src={baseImageUrl() + question.image} height="100" /> : null}
+            {question.essay? <p>
+                <u  >Answer:</u>
+                <p>{question.answerEssay}</p>
+            </p>:null}
             {choices.map((choice, c) => {
                 const rightAnswer = choice.answerCode == question.answerCode;
                 return (

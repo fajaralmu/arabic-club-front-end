@@ -154,14 +154,18 @@ class PublicQuizChallenge extends BaseComponent {
             });
     }
 
-    setChoice = (code: string, questionIndex: number) => {
+    setChoice = (answer: string, questionIndex: number) => {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz || this.state.quizResult) return;
         if (!quiz || quiz.questions.length == 0) return;
         try {
-            quiz.questions[questionIndex].answerCode = code;
+            if ( quiz.questions[questionIndex].essay) {
+                quiz.questions[questionIndex].answerEssay = answer;
+            } else {
+                quiz.questions[questionIndex].answerCode = answer;
+            }
             quiz.questions[questionIndex].entered = true;
-            this.setState({ quiz: Object.assign(new Quiz(), quiz) },
+            this.setState({ quiz:Quiz.clone(quiz) },
                 () => this.sendUpdateQuizHistory(Object.assign(new Quiz(), quiz))
             );
         } catch (error) { }

@@ -2,6 +2,9 @@ import BaseEntity from './BaseEntity';
 import QuizQuestion from './QuizQuestion';
 
 export default class Quiz extends BaseEntity{
+    static clone= (quiz: Quiz):Quiz => {
+        return  Object.assign(new Quiz(), quiz);
+    }
 	title?:string = "";
 	description?:string = "";
 	publicQuiz?:boolean = true;
@@ -55,4 +58,6 @@ export default class Quiz extends BaseEntity{
 		}
 		return true;
 	}
+	accessCode?: string ;
+	afterCompletionMessage?:string;
 }

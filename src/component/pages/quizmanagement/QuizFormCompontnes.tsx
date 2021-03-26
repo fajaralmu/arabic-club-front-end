@@ -31,39 +31,43 @@ export const QuestionForm = (props: {questionsTimered:boolean,
     showChoices:boolean, question: QuizQuestion, 
     index: number, updateField: any, updateChoiceField: any, remove: any, removeImage:any, removeChoiceImage:any, setAnswer(code:string, index:number):void }) => {
     const i = props.index;
+    const question = props.question;
     const choices: QuizChoice[] = props.question.choices ?? [];
     return (
         <div className="alert alert-info" key={"quiz-quest-form-" + i}>
             <FormGroup label={"Question #" + (i + 1)}>
-                <input required onChange={props.updateField} value={props.question.statement} className="form-control" name="statement" data-index={i} />
+                <textarea required onChange={props.updateField} value={question.statement} className="form-control" name="statement" data-index={i} />
             </FormGroup>
             <FormGroup show={props.questionsTimered} label={"Duration"}>
-                <input min={5} type="number" required onChange={props.updateField} value={props.question.duration} className="form-control" name="duration" data-index={i} />
+                <input min={5} type="number" required onChange={props.updateField} value={question.duration} className="form-control" name="duration" data-index={i} />
             </FormGroup>
             <FormGroup label="Image">
                 <input type="file"  accept="image/*" onChange={props.updateField} name="image" className="form-control" data-index={i}  />
                
-                <ImagePreview name={props.question.image} index={i} remove={props.removeImage} />
+                <ImagePreview name={question.image} index={i} remove={props.removeImage} />
             </FormGroup>
-            
+            {question.essay==false?
             <FormGroup label="Choices">
                 {props.showChoices?choices.map((choice, c) => {
-                    return <ChoiceForm answerCode={props.question.answerCode ?? "A"} key={"qst-choice-" + c +"-" + i}
+                    return <ChoiceForm answerCode={question.answerCode ?? "A"} key={"qst-choice-" + c +"-" + i}
                      updateField={props.updateChoiceField}
                      setAnswer={props.setAnswer}
                      removeImage={(choiceIndex)=>{props.removeChoiceImage(choiceIndex, i)}}
                      questionIndex={i} index={c} choice={choice} />
                 }):<label>Hidden</label>}
-            </FormGroup>
+            </FormGroup>:null}
              
             <FormGroup label="Answer">
-                <select required className="form-control" value={props.question.answerCode} onChange={(e)=>{
+               {question.essay?
+                <textarea required onChange={props.updateField} value={question.answerEssay} className="form-control" name="answerEssay" data-index={i} />
+                : <select required className="form-control" value={question.answerCode} onChange={(e)=>{
                     props.setAnswer(e.target.value, i);
                 }} name="answerCode" data-index={i} >
                     {QuizQuestion.public_choices.map((code, c) => {
                         return <option key={"opt-ch-ans-" + c + i} value={code} >{code}</option>
                     })}
                 </select>
+                }
             </FormGroup>
             {props.question.id?
             <FormGroup label="Record ID">
@@ -79,12 +83,19 @@ export const QuestionForm = (props: {questionsTimered:boolean,
 export const QuizInformationForm = (props: { quiz: Quiz, updateField(e): void, updateQuizBooleanField(name:string, value:boolean):void }) => {
     const quiz = props.quiz;
     return (
+        //afterCompletionMessage
         <Fragment>
             <FormGroup label="Title">
                 <input required onChange={props.updateField} className="form-control" name="title" value={quiz.title} />
             </FormGroup>
+            <FormGroup label="Access Code">
+                <input onChange={props.updateField} className="form-control" name="accessCode" value={quiz.accessCode} />
+            </FormGroup>
             <FormGroup label="Description">
-                <textarea required onChange={props.updateField} className="form-control" name="description" value={quiz.description} />
+                <textarea  onChange={props.updateField} className="form-control" name="description" value={quiz.description} />
+            </FormGroup>
+            <FormGroup label="On Finished Message">
+                <input onChange={props.updateField} className="form-control" name="afterCompletionMessage" value={quiz.afterCompletionMessage} />
             </FormGroup>
             <FormGroup label="Duration (Second)">
                 <input type="number" min={5} required onChange={props.updateField} className="form-control" name="duration" value={quiz.duration} />

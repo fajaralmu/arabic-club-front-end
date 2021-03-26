@@ -66,12 +66,18 @@ class QuizManagementForm extends BaseComponent {
         this.setState({ quiz: quiz });
     }
     addQuestion = (e) => {
+        this.doAddQUestion(false);
+    }
+    addQuestionEssay = (e) => {
+        this.doAddQUestion(true);
+    }
+    doAddQUestion = (essay:boolean) => {
         const quiz: Quiz = this.state.quiz;
         if (quiz.questions == undefined) {
             quiz.questions = [];
         }
-        const question: QuizQuestion = QuizQuestion.publicQuizQuestion();
-        question.statement = "Question " + (quiz.questions.length + 1);
+        const question: QuizQuestion = QuizQuestion.publicQuizQuestion(essay);
+        question.statement = "Question " +(essay?"- ESSAY ":"") + (quiz.questions.length + 1);
         quiz.questions.push(question);
         this.setState({ quiz: quiz });
     }
@@ -208,6 +214,7 @@ class QuizManagementForm extends BaseComponent {
                     </Card>
                     <div className="btn-group" style={{ marginBottom: '5px', marginTop: '5px' }}>
                         <AnchorButton className="btn btn-secondary" iconClassName="fas fa-plus" onClick={this.addQuestion} >Question</AnchorButton>
+                        <AnchorButton className="btn btn-secondary"  onClick={this.addQuestionEssay} >Question Essay</AnchorButton>
                         <AnchorButton className="btn btn-danger" iconClassName="fas fa-times" onClick={this.removeAllQuestion} >Remove All Question</AnchorButton>
                         <AnchorButton className="btn btn-warning" onClick={this.reset}>Reset</AnchorButton>
                     </div>
