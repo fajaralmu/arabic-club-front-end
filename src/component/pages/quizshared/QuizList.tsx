@@ -2,19 +2,32 @@
 import React, { ChangeEvent, Component } from 'react';
 import Quiz from './../../../models/Quiz';
 import Card from './../../container/Card';
-import AnchorWithIcon from './../../navigation/AnchorWithIcon';
 import { timerString } from './../../../utils/DateUtil';
 import FormGroup from '../../form/FormGroup';
 import Spinner from '../../loader/Spinner';
 import ScrollDiv from '../../container/ScrollDiv';
-interface IProps { loading:boolean, onFilter(fieldsFilter:any):any|undefined, quizList: Quiz[], startingNumber: number, quizOnClick(quiz: Quiz): void };
+import BaseComponent from './../../BaseComponent';
+import { tableHeader } from './../../../utils/CollectionUtil';
+import PublicQuizService from './../../../services/PublicQuizService';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { mapCommonUserStateToProps } from './../../../constant/stores';
+interface IProps { 
+    skipAccessCode:boolean,
+    loading:boolean, 
+    onFilter(fieldsFilter:any):any|undefined, 
+    quizList: Quiz[], 
+    startingNumber: number,
+    quizOnClick(quiz: Quiz): void };
 class State {
     fieldsFilter:any = {}
 }
-export default class QuizList extends Component<IProps, State>{
+class QuizList extends BaseComponent {
     state:State = new State();
-    constructor(props) {
+    publicQuizService:PublicQuizService;
+    constructor(props:IProps) {
         super(props);
+        this.publicQuizService = this.getServices().publicQuizService;
     }
     updateFilter = (e:ChangeEvent) => {
         const fieldsFilter = this.state.fieldsFilter;
@@ -25,8 +38,28 @@ export default class QuizList extends Component<IProps, State>{
     resetFilter = (e) => {
         this.setState({fieldsFilter: {}});
     }
+    quizOnClick = (quiz:Quiz) => {
+        if (quiz.protectedByCode && this.props.skipAccessCode != true) {
+            this.validateAccessCode(quiz);
+            return;
+        }
+        this.props.quizOnClick(quiz);
+    }
+    accessCodeValidated = (quiz:Quiz) => {
+        this.props.quizOnClick(quiz);
+    }
+    validateAccessCode = (q:Quiz) => {
+        const code = prompt("Enter access code");
+        if (code == null) return;
+        this.commonAjax(
+            this.publicQuizService.validateAccessCode,
+            ()=> this.accessCodeValidated(q),
+            this.showCommonErrorAlert,
+            q, code);
+    }
     render() {
         const props = this.props;
+        
         return (
             <Card>
                 <form className="row" onSubmit={e=>{
@@ -50,17 +83,8 @@ export default class QuizList extends Component<IProps, State>{
                     </FormGroup>
                 </form>
                 <ScrollDiv>
-                <table style={{}} className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Title</th>
-                            <th>Question</th>
-                            <th>Duration</th>
-                            <th>Status</th> 
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                <table className="table table-striped">
+                    {tableHeader("No", "Title", "Question","Duration","Status","Action")}
                     <tbody>
                         {props.loading?
                         <tr>
@@ -75,7 +99,8 @@ export default class QuizList extends Component<IProps, State>{
                                 <tr key={"quiz-public-list-" + i}>
                                     <td>{i + props.startingNumber + 1}</td>
                                     <td>{quiz.title}
-                                    {quiz.questionsTimered?<i className="fas fa-stopwatch"/>:null}
+                                    &nbsp;{quiz.questionsTimered?<i className="fas fa-stopwatch"/>:null}
+                                   
                                     </td>
                                     <td>{quiz.getQuestionCount()}</td>
                                     <td>{timerString(quiz.duration)}</td>
@@ -85,9 +110,10 @@ export default class QuizList extends Component<IProps, State>{
                                         {quiz.repeatable?"Repeatable":"Not repeatable"}
                                     </td> 
                                     <td>
-                                        {quiz.available?<a onClick={(e) => props.quizOnClick(quiz)}
+                                        
+                                        {quiz.available?<a onClick={(e) => this.quizOnClick(quiz)}
                                             className="btn btn-dark" >
-                                            <i className="fas fa-folder-open"/>
+                                            {quiz.protectedByCode?<i className="fas fa-lock"/>:<i className="fas fa-folder-open"/>}
                                             </a> :"Not available"}
                                     </td>
                                 </tr>
@@ -100,3 +126,7 @@ export default class QuizList extends Component<IProps, State>{
         )
     }
 }
+
+export default  withRouter(connect(
+    mapCommonUserStateToProps
+)(QuizList))

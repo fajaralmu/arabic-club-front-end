@@ -19,7 +19,7 @@ export default class BaseComponent extends Component<any, any> {
         this.state = {
             ...this.state
         }
-        this.parentApp = this.props.mainApp;
+        this.parentApp = props.mainApp;
     }
     
     validateLoginStatus = () => {

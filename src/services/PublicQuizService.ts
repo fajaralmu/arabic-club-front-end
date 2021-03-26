@@ -10,6 +10,7 @@ import { sendToWebsocket } from '../utils/websockets';
 import QuizQuestion from './../models/QuizQuestion';
 import QuizHistoryModel from './../models/QuizHistory';
 export default class PublicQuizService {
+   
     private static instance?: PublicQuizService;
 
     static getInstance(): PublicQuizService {
@@ -42,6 +43,10 @@ export default class PublicQuizService {
         const request:WebRequest = {filter:filter};
         const endpoint = contextPath().concat("api/member/quiz/history")
         return commonAjaxPostCalls(endpoint, request);
+    }
+    validateAccessCode(q: Quiz, code: string | null) {
+        const endpoint = contextPath().concat("api/member/quiz/validateaccesscode/"+q.id+"?code="+code)
+        return commonAjaxPostCalls(endpoint, {});
     }
 
     /**

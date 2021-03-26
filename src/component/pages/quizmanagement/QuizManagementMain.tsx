@@ -83,6 +83,7 @@ class QuizManagementMain extends BaseMainMenus {
                 />
                 <QuizList onFilter={this.loadRecordsWithFilter}
                     loading={this.state.loading}
+                    skipAccessCode={true}
                     quizOnClick={this.editQuiz}
                     startingNumber={(filter.limit ?? 0) * (filter.page ?? 0)}
                     quizList={this.state.quizList} />

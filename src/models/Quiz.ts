@@ -7,19 +7,22 @@ export default class Quiz extends BaseEntity{
     }
 	title?:string = "";
 	description?:string = "";
-	publicQuiz?:boolean = true;
-	questions:QuizQuestion[] = [];
-	duration:number = 0;
-	active?:boolean = true;
-	repeatable?:boolean = true;
+	
 	available?:boolean = true;
 	showAllQuestion:boolean = true;
 	questionsTimered:boolean = false;
+	
+	duration:number = 0;
+	active?:boolean = true;
+	repeatable?:boolean = true;
+	protectedByCode?:boolean;
+	
+	questions:QuizQuestion[] = [];
+	
 	image?:string = "";
 	startedDate?:Date = new Date();
 	submittedDate?:Date = new Date();
 	mappedAnswer?:{}; 
-
 	//
 	maxQuestionNumber?:number;
 

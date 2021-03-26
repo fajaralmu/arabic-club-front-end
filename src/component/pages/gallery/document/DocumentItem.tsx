@@ -27,8 +27,9 @@ export default class DocumentItem extends Component<Props, State>{
         return (
             <div className="col-md-3 text-center">
                 <Card>
-                    <h5  >{doc.title}</h5>
-                    <hr />
+                    <h5>{doc.title}</h5>
+                    <p>{doc.description}</p>
+                    <hr/>
                     {this.state.showLink ? <a className="btn btn-outline-dark btn-sm" target="_blank" href={baseDocumentUrl() + doc.fileName} >
                         <i className="fa fa-link" />&nbsp;Link ({doc.getExtension()})
                     </a> : <AnchorButton onClick={this.showAccessCodeInput} 
