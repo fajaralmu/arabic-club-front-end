@@ -44,5 +44,5 @@ class HomeMain extends BaseComponent {
 } 
 
 export default withRouter(connect(
-    // mapCommonUserStateToProps, 
+    mapCommonUserStateToProps, 
 )(HomeMain))

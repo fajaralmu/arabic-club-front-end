@@ -22,7 +22,7 @@ class State {
         super(props);
         this.galleryService = this.getServices().galleryService;
         this.state.fileName = this.props.document.fileName;
-        this.state.showLink = this.props.document.accessCode == undefined || this.props.document.accessCode == "";
+        this.state.showLink = this.props.document.accessCode != "PROTECTED"
     }
     showAccessCodeInput = (e) => {
         const code = prompt("Enter access code for " + this.props.document.title);
