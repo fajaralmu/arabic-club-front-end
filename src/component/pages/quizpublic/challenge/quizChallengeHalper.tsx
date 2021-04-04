@@ -9,7 +9,7 @@ import QuizResult from './../../../../models/QuizResult';
 import AnchorButton from './../../../navigation/AnchorButton';
 
 
-export const RertyPage = (props:{retrySubmit:Function}) => {
+export const RertyPage = (props:{retrySubmit(e:any):any}) => {
     return (
         <SimpleError style={{ marginTop: '20px' }} >
                 <h3>Error While Submitting Answer</h3>
@@ -26,7 +26,7 @@ export const StatusTImeout = (props) => {
     )
 }
 
-export const QuizLanding = (props:{quiz:Quiz, start:Function}) => {
+export const QuizLanding = (props:{quiz:Quiz, start(e:any):any}) => {
     const quiz = props.quiz;
     return (
         <div style={{ marginTop: '20px', paddingTop: '20px' }} className="text-center container-fluid">
