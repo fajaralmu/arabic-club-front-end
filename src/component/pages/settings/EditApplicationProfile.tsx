@@ -2,7 +2,6 @@ import React, { ChangeEvent, Component, FormEvent, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
-import BaseComponent from '../../BaseComponent';
 import ApplicationProfile from '../../../models/ApplicationProfile';
 import Card from '../../container/Card';
 import FormGroup from '../../form/FormGroup';
@@ -12,6 +11,7 @@ import WebResponse from '../../../models/commons/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
 import { EditField, EditImage } from './settingHelper';
 import MasterDataService from './../../../services/MasterDataService';
+import BasePage from './../../BasePage';
 class EditFields {
     name: boolean = false; pageIcon: boolean = false;
     welcomingMessage: boolean = false;
@@ -31,18 +31,14 @@ class IState {
         return false;
     }
 }
-class EditApplicationProfile extends BaseComponent {
+class EditApplicationProfile extends BasePage {
 
     masterDataService: MasterDataService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Edit Application Profile", true);
         this.masterDataService = this.getServices().masterDataService;
         this.state.applicationProfile = Object.assign(new ApplicationProfile(), this.getApplicationProfile());
-    }
-    componentDidMount() {
-        this.validateLoginStatus();
-        document.title = "ApplicationProfile Profile";
     }
     updateProfileProperty = (e: ChangeEvent) => {
         const target: HTMLInputElement | null = e.target as HTMLInputElement;
@@ -159,7 +155,7 @@ class EditApplicationProfile extends BaseComponent {
         const pageIcon: string = applicationProfile.pageIcon ?? "";
         return (
             <div  className="section-body container-fluid">
-                <h2>Application Profile</h2>
+                {this.titleTag()}
                 <Card title="Profile Data">
                     <form onSubmit={this.saveRecord}>
                         <div className="container-fluid text-center" style={{ marginBottom: '10px' }}>

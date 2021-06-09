@@ -14,7 +14,7 @@ class SettingsMain extends BaseMainMenus
     render(){
         return (
             <div id="SettingsMain" className="section-body container-fluid">
-                <h2>Settings</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome, <strong>{this.getLoggedUser()?.displayName}</strong>
                 </div>

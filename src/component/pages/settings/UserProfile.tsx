@@ -2,7 +2,6 @@ import React, { ChangeEvent, Component, FormEvent, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
-import BaseComponent from './../../BaseComponent';
 import User from './../../../models/User';
 import Card from '../../container/Card';
 import FormGroup from '../../form/FormGroup';
@@ -12,6 +11,7 @@ import UserService from './../../../services/UserService';
 import WebResponse from '../../../models/commons/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
 import { EditField, EditImage } from './settingHelper'; 
+import BasePage from './../../BasePage';
 interface EditField { username: boolean, displayName: boolean, editPassword: boolean, profileImage: boolean }
 class IState {
     user?: User = undefined;
@@ -30,18 +30,14 @@ class IState {
         return false;
     }
 }
-class UserProfile extends BaseComponent {
+class UserProfile extends BasePage {
 
     userService: UserService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Edit User Profile");
         this.userService = this.getServices().userService;
         this.state.user = Object.assign(new User(), this.getLoggedUser());
-    }
-    componentDidMount() {
-        this.validateLoginStatus();
-        document.title = "User Profile";
     }
     updateProfileProperty = (e: ChangeEvent) => {
         const target: HTMLInputElement | null = e.target as HTMLInputElement;
@@ -148,7 +144,7 @@ class UserProfile extends BaseComponent {
         const editFields: EditField = this.state.editFields;
         return (
             <div  className="section-body container-fluid">
-                <h2>User Profile</h2>
+               {this.titleTag()}
                 <Card title="Profile Data">
                     <form onSubmit={this.saveRecord}>
                         <div className="container-fluid text-center" style={{marginBottom:'10px'}}>
