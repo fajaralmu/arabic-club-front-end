@@ -10,7 +10,7 @@ import { mapCommonUserStateToProps } from './constant/stores';
 import Loader from './component/loader/Loader';
 import Alert from './component/alert/Alert';
 import MainLayout from './component/layout/MainLayout';
-import WebResponse from './models/WebResponse';
+import WebResponse from './models/commons/WebResponse';
 import Spinner from './component/loader/Spinner';
 import { performWebsocketConnection, setWebSocketUrl, registerWebSocketCallbacks } from './utils/websockets';
 import UserService from './services/UserService';

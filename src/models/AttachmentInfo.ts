@@ -18,4 +18,5 @@ export default class AttachmentInfo {
     blob: Blob = new Blob();
     url: string = "";
     data: string = "";
+    dataUrl:string = "";
 }

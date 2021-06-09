@@ -1,20 +1,14 @@
-
-
 import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import BaseComponent from '../../BaseComponent';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
 import ApplicationProfile from '../../../models/ApplicationProfile';
 import { baseImageUrl } from '../../../constant/Url';
+import BasePage from './../../BasePage';
 
-class HomeMain extends BaseComponent {
+class HomeMain extends BasePage {
     constructor(props: any) {
-        super(props, false);
-    }
-
-    componentDidMount() {
-        document.title = "Home";
+        super(props, "Home", false);
     }
     render() {
         const applicationProfile: ApplicationProfile = this.getApplicationProfile();
@@ -27,7 +21,7 @@ class HomeMain extends BaseComponent {
                         marginTop: '20px',
                         backgroundImage: 'url("' + imageUrl + '")',
                         backgroundSize: 'cover',
-                        color: applicationProfile.fontColor
+                        color: applicationProfile.fontColor??"rgb(0,0,0)"
                     }}
                 >
                     <h1 className="display-4">{applicationProfile.name}</h1>

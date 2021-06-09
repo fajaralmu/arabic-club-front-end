@@ -2,15 +2,15 @@ import React, { ChangeEvent, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
-import BaseComponent from './../../BaseComponent';
 import Quiz from './../../../models/Quiz';
 import Card from '../../container/Card';
 import QuizQuestion from './../../../models/QuizQuestion';
 import AnchorButton from './../../navigation/AnchorButton';
 import QuizService from './../../../services/QuizService';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import { QuestionForm, QuizInformationForm } from './QuizFormCompontnes';
 import { toBase64v2 } from './../../../utils/ComponentUtil';
+import BasePage from './../../BasePage';
 
 class IState {
     quiz: Quiz = new Quiz();
@@ -18,17 +18,18 @@ class IState {
     showChoices: boolean = true;
 }
 
-class QuizManagementForm extends BaseComponent {
+class QuizManagementForm extends BasePage {
     quizService: QuizService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Quiz Form", true);
         this.quizService = this.getServices().quizService;
     }
     componentDidMount() {
-        this.validateLoginStatus();
-        this.validateQuizFromProps();
-        document.title = "Quiz Form";
+        this.validateLoginStatus(()=>{
+            this.validateQuizFromProps();
+            this.scrollTop();
+        });
     }
     validateQuizFromProps = () => {
         if (!this.props.location.state) return;
@@ -207,8 +208,7 @@ class QuizManagementForm extends BaseComponent {
         const questions: QuizQuestion[] = quiz.questions ?? [];
         return (
             <div className="section-body container-fluid">
-                <h2>Quiz Form</h2>
-
+                {this.titleTag()}
                 <form onSubmit={this.submitQuiz} >
                     <Card title="Quiz Form"> <QuizInformationForm quiz={quiz} updateQuizBooleanField={this.updateQuizBooleanField} updateField={this.updateQuizField} />
                     </Card>

@@ -9,7 +9,7 @@ import FormGroup from '../../form/FormGroup';
 import { baseImageUrl } from '../../../constant/Url';
 import { setLoggedUser } from './../../../redux/actionCreators';
 import UserService from './../../../services/UserService';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import { toBase64v2 } from '../../../utils/ComponentUtil';
 import { EditField, EditImage } from './settingHelper'; 
 interface EditField { username: boolean, displayName: boolean, editPassword: boolean, profileImage: boolean }

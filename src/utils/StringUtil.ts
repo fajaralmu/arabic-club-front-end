@@ -5,61 +5,29 @@ export const uniqueId = function () {
 	return index + "-" + string;
 }
 
-export function beautifyNominal(val:any) {
-	if (val == "" || val == null) return "0";
-	const isDecimal:boolean = new String(val).includes(".");
-	const isNegative:boolean = new String(val).startsWith("-");
-	if (isNegative) {
-		val = new String(val).replace("-","");
-	}
-	const rawVal = isDecimal? parseInt( new String(val).split(".")[0]) : parseInt(val);
-	let nominal = Math.abs(rawVal).toString();
-	let result = "";
-	if (nominal.length > 3) { 
-		let zeroIndex: number = 0;
-		for (let i = nominal.length - 1; i > 0; i--) {
-			zeroIndex++; 
-			result = nominal[i] + result;
-			if (zeroIndex == 3 ) {
-				result = "." + result;
-				zeroIndex = 0;
-			}
+export const greeting = (): string => {
 
-		}
-		result = nominal[0] + result;
+	let hour = new Date().getHours();
+	let time: string = "Datang";
+	if (hour >= 3 && hour < 11) {
+		time = "Pagi";
+	} else if (hour >= 11 && hour < 15) {
+		time = "Siang";
+	} else if (hour >= 15 && hour < 18) {
+		time = "Sore";
 	} else {
-		result = val;
+		time = "Malam";
 	}
-	if (rawVal < 0) {
-		return rawVal;
-	}
-	if (isDecimal) {
-		result+= ","+ new String(val).split(".")[1];
-	}
-	if (isNegative) {
-		result = "-"+result;
-	}
-	return result;
+
+	return "Selamat "+time;
+
 }
 
-export const getMaxSales = (list) => {
-	let result = 0;
-	for (let i = 0; i < list.length; i++) {
-		const element = list[i];
-		if (element.sales > result)
-			result = element.sales;
-	}
-	return result;
+export function beautifyNominal(val: any) {
+	return new String(val). toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	 
 }
-
-export const isNonNullArray = function (array) {
-	return array != null && array.length > 0;
-}
-
-export const isNonNullArrayWithIndex = function (array, i) {
-	return array != null && array.length > 0 && array[i] != null;
-}
-
+  
 const months = [
 	"January", "Ferbuary", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"
@@ -72,22 +40,19 @@ export const monthYearString = function (m, y) {
 	return months[m - 1] + " " + y;
 }
 
-export const base64StringFileSize = (base64String:string) : number => {
+export const base64StringFileSize = (base64String: string): number => {
 	if (base64String.includes(",")) {
 		base64String = base64String.split(",")[1];
 	}
 	var stringLength = base64String.length;
 
-	var sizeInBytes = 4 * Math.ceil((stringLength / 3))*0.5624896334383812;
-	var sizeInKb=sizeInBytes/1000;
+	var sizeInBytes = 4 * Math.ceil((stringLength / 3)) * 0.5624896334383812;
+	var sizeInKb = sizeInBytes / 1000;
 	return sizeInBytes;
 }
-
-export const fileExtension = (fileName:string) :string => {
-	if (fileName.includes(".") == false) {
-		return "*";
-	}
-
-	const splitted = fileName.split(".");
-	return splitted[splitted.length - 1];
+export const twoDigits = (value:number) :string => {
+    if (value >= 10) {
+        return   value.toString();
+    }
+    return "0"+value;
 }

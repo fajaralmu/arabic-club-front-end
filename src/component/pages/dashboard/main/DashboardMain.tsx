@@ -19,7 +19,7 @@ class DashboardMain extends BaseMainMenus {
         if (!user) return null;
         return (
             <div  className=" section-body container-fluid">
-                <h2>Dashboard</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome, <strong>{user.displayName}  </strong>
                     <p />

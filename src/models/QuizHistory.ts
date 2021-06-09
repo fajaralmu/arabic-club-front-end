@@ -4,7 +4,7 @@ import QuizModel from './Quiz';
 
 export default class QuizHistoryModel extends BaseModel{
 	user?:UserModel;
-	started?:Date;
+	started?:Date = new Date();
 	ended?:Date;
 	quizDuration?:string;
 	userDuration?:string;

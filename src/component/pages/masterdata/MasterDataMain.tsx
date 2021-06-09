@@ -4,19 +4,19 @@ import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
-import BaseMainMenus from './../../layout/BaseMainMenus';
+import BasePage from './../../BasePage';
 import MasterDataService from './../../../services/MasterDataService';
-import WebResponse from './../../../models/WebResponse';
-import Menu from '../../../models/settings/Menu';
+import WebResponse from '../../../models/commons/WebResponse';
 import ManagementProperty from '../../../models/ManagementProperty';
-import MasterDataManagement from './MasterDataManagement';
-import { AuthorityType } from '../../../models/AuthorityType';
+import MasterDataManagement from './MasterDataManagement'; 
+import Spinner from './../../loader/Spinner';
+import Menu from './../../../models/settings/Menu';
 
 interface IState {
-    code?: string
+    code: undefined| string
     // managementProperties:ManagementProperty[]
 }
-class MasterDataMain extends BaseMainMenus {
+class MasterDataMain extends BasePage {
     masterDataService: MasterDataService;
     state: IState = {
         code: undefined
@@ -24,7 +24,7 @@ class MasterDataMain extends BaseMainMenus {
     constructor(props: any) {
         super(props, "Master Data", true);
         this.masterDataService = this.getServices().masterDataService;
-       
+        console.debug("PROPS: ", this.props);
     }
 
     managementPropertiesLoaded = (response: WebResponse) => {
@@ -37,13 +37,13 @@ class MasterDataMain extends BaseMainMenus {
         const managementProperties: ManagementProperty[] = this.masterDataService.managementProperties;
         for (let i = 0; i < managementProperties.length; i++) {
             const element = managementProperties[i];
-            sidebarMenus.push({
-                role:[AuthorityType.ROLE_ADMIN],
+            sidebarMenus.push(Object.assign(new Menu(),{
+                // role:[AuthorityType.ROLE_ADMIN],
                 name: element.label,
                 url: element.entityName,
                 code: element.entityName,
                 menuClass: element.iconClassName
-            });
+            }));
         }
         console.debug("this.props.setSidebarMenus: ", this.props.setSidebarMenus);
         if (this.props.setSidebarMenus) {
@@ -68,6 +68,7 @@ class MasterDataMain extends BaseMainMenus {
     componentDidMount() {
         super.componentDidMount();
         this.loadManagamenetPages();
+        this.scrollTop();
     }
     componentDidUpdate() {
         this.validateLoginStatus();
@@ -79,17 +80,16 @@ class MasterDataMain extends BaseMainMenus {
     }
 
     render() {
-        console.debug("Render master data main")
         if (this.getCode() != undefined && this.getCode() != null && this.getCode() != "") {
             return <MasterDataManagement  code={this.getCode()} />
         }
         if (this.masterDataService.managementProperties.length == 0) {
-            return <div className="section-body container-fluid"><h3>Loading</h3></div>
+            return <div className="section-body container-fluid"><Spinner/></div>
         }
         const properties: ManagementProperty[] = this.masterDataService.managementProperties;
         return (
             <div className="section-body container-fluid">
-                <h2>Master Data Page</h2>
+                {this.titleTag()}
                 <div className="row">
                     {properties.map(property => {
 

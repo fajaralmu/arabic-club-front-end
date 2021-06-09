@@ -1,6 +1,6 @@
 
 import User from '../models/User';
-import WebRequest from '../models/WebRequest';
+import WebRequest from '../models/commons/WebRequest';
 import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls, commonAjaxPublicPostCalls } from './Promises';
 export default class CategoriesService

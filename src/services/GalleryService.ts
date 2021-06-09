@@ -1,7 +1,7 @@
   
 import { contextPath } from '../constant/Url';
 import { commonAjaxPublicPostCalls } from './Promises';
-import Filter from './../models/Filter';
+import Filter from '../models/commons/Filter';
 export default class GalleryService
 {
     

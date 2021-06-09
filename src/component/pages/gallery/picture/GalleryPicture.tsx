@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from './../../../../constant/stores';
 import BaseComponent from './../../../BaseComponent';
 import GalleryService from './../../../../services/GalleryService';
-import Filter from './../../../../models/Filter';
+import Filter from '../../../../models/commons/Filter';
 import Images from './../../../../models/Images';
-import WebResponse from './../../../../models/WebResponse';
+import WebResponse from '../../../../models/commons/WebResponse';
 import NavigationButtons from './../../../navigation/NavigationButtons';
 import Spinner from './../../../loader/Spinner';
 import { baseImageUrl } from './../../../../constant/Url';
 import GalleryPictureDetail from './GalleryPictureDetail';
+import BasePage from './../../../BasePage';
 class IState {
     imageList: Images[] = new Array();
     loading: boolean = false;
@@ -20,18 +21,20 @@ class IState {
     totalData: number = 0;
     selectedImage?: Images
 }
-class GalleryPicture extends BaseComponent {
-    state: IState = new IState();;
+class GalleryPicture extends BasePage {
+    state: IState = new IState();
     galleryService: GalleryService;
     constructor(props: any) {
-        super(props, false);
+        super(props, "Picture Gallery", false);
         this.galleryService = this.getServices().galleryService;
     }
     startLoading = () => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }
     componentDidMount() {
-        document.title = "Picture Gallery";
-        this.loadPictures();
+        this.validateLoginStatus(()=>{
+            this.loadPictures();
+            this.scrollTop();
+        });
     }
     dataLoaded = (response: WebResponse) => {
         this.setState({ imageList: response.entities ?? [], totalData: response.totalData });
@@ -67,7 +70,7 @@ class GalleryPicture extends BaseComponent {
         }
         return (
             <div className="section-body container-fluid">
-                <h2>Pictures</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome to gallery picture
                 </div>

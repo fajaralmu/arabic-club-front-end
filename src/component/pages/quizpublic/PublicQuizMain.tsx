@@ -7,8 +7,8 @@ import BaseMainMenus from '../../layout/BaseMainMenus';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
 import PublicQuizService from '../../../services/PublicQuizService';
 import Quiz from '../../../models/Quiz';
-import Filter from '../../../models/Filter';
-import WebResponse from '../../../models/WebResponse';
+import Filter from '../../../models/commons/Filter';
+import WebResponse from '../../../models/commons/WebResponse';
 import NavigationButtons from '../../navigation/NavigationButtons';
 import QuizList from '../quizshared/QuizList';
 
@@ -28,8 +28,10 @@ class PublicQuizMain extends BaseMainMenus {
     startLoading = (realtime:boolean) => { this.setState({ loading: true }); super.startLoading(realtime) }
     endLoading = () => { this.setState({ loading: false }); super.endLoading() }
     componentDidMount() {
-        super.componentDidMount();
-        this.loadRecords();
+        this.validateLoginStatus(()=>{
+            this.scrollTop();
+            this.loadRecords();
+        });
     }
 
     dataLoaded = (response: WebResponse) => {
@@ -75,7 +77,7 @@ class PublicQuizMain extends BaseMainMenus {
         const startNumber = (filter.limit ?? 0) * (filter.page ?? 0);
         return (
             <div style={{ marginTop: '20px', }} className="section-body container-fluid">
-                <h2>Take Quiz</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Challenge your self
                 </div>

@@ -3,7 +3,7 @@
 import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls } from './Promises'; 
 import Quiz from './../models/Quiz';
-import Filter from '../models/Filter';
+import Filter from '../models/commons/Filter';
 import AttachmentInfo from './../models/AttachmentInfo';
 export default class QuizService {
     getHistoryDetail(id: any) {

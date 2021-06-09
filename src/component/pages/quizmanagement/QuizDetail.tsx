@@ -4,7 +4,6 @@ import React, { ChangeEvent } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
-import BaseComponent from './../../BaseComponent';
 import Quiz from './../../../models/Quiz';
 import SimpleError from '../../alert/SimpleError';
 import FormGroup from '../../form/FormGroup';
@@ -12,21 +11,22 @@ import QuizQuestion from './../../../models/QuizQuestion';
 import Card from '../../container/Card';
 import QuizChoice from './../../../models/QuizChoice';
 import QuizService from './../../../services/QuizService';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import AnchorButton from './../../navigation/AnchorButton';
 import { baseImageUrl } from './../../../constant/Url';
 import Spinner from '../../loader/Spinner';
 import { timerString } from './../../../utils/DateUtil';
+import BasePage from './../../BasePage';
 
 class IState {
     quiz: Quiz | undefined = undefined;
     loading: boolean = false;
 }
-class QuizDetail extends BaseComponent {
+class QuizDetail extends BasePage {
     quizService: QuizService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Quiz Detail", true);
         this.quizService = this.getServices().quizService;
     }
     startLoading = (withProgress: boolean) => {
@@ -38,9 +38,11 @@ class QuizDetail extends BaseComponent {
         this.setState({ loading: false });
     }
     componentDidMount() {
-        this.validateLoginStatus();
-        this.loadQuiz();
-        document.title = "Quiz Detail";
+        this.validateLoginStatus(()=>{
+            this.loadQuiz();
+            this.scrollTop()
+        });
+        
     }
     loadQuiz = () => {
         this.commonAjaxWithProgress(
@@ -94,7 +96,7 @@ class QuizDetail extends BaseComponent {
         if (!this.state.quiz) {
             return (
                 <div id="QuizDetail" className="container-fluid section-body">
-                    <h2>Quiz Detail</h2>
+                    {this.titleTag()}
                     {this.state.loading ? <Spinner /> : <SimpleError children="No Data" />}
                 </div>
             )
@@ -104,7 +106,7 @@ class QuizDetail extends BaseComponent {
         const questionTimered: boolean = quiz.questionsTimered;
         return (
             <div  className="section-body container-fluid">
-                <h2>Quiz Detail</h2>
+                {this.titleTag()}
                 <div >
                     <div className="alert alert-info">
                         <FormGroup label="Title">{quiz.title}</FormGroup>

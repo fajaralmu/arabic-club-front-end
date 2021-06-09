@@ -4,15 +4,12 @@ import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../../constant/stores';
-import EntityElement from '../../../../../models/settings/EntityElement';
 import MasterDataService from '../../../../../services/MasterDataService';
-import WebResponse from '../../../../../models/WebResponse';
-import BaseComponent from '../../../../BaseComponent'; 
-import { uniqueId } from '../../../../../utils/StringUtil';
+import WebResponse from '../../../../../models/commons/WebResponse';
 import BaseField from './BaseField';
 interface IState {
     inputList: any[],
-    singlePreviewData?: string, 
+    singlePreviewData?: undefined| string, 
 }
 class FormInputDropDown extends BaseField {
     masterDataService: MasterDataService;
@@ -99,12 +96,12 @@ class FormInputDropDown extends BaseField {
 
         const options = this.state.inputList;
         return (<select ref={this.ref} className="form-control" name={element.id} >
-            {options.map(option => {
+            {options.map((option, i:number) => {
                 const optionItemValue = element.optionValueName;
                 const optionItemName = element.optionItemName;
                 if (!optionItemName || !optionItemValue) { return null; }
                 return (
-                    <option key={"fid-"+uniqueId()+"-"} value={option[optionItemValue]} >{option[optionItemName]}</option>
+                    <option key={"fid-"+element.id+i} value={option[optionItemValue]} >{option[optionItemName]}</option>
                 )
             })}
         </select>)

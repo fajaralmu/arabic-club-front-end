@@ -4,7 +4,7 @@ import QuizQuestion from './QuizQuestion';
 export default class QuizChoice extends BaseEntity{
 	answerCode?:string;
 	statement?:string;
-	image?:string;
+	image?:undefined|string;
 	question?:QuizQuestion;
 
 }

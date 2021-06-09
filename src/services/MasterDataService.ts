@@ -1,6 +1,6 @@
 
-import Filter from './../models/Filter';
-import WebRequest from './../models/WebRequest';
+import Filter from '../models/commons/Filter';
+import WebRequest from '../models/commons/WebRequest';
 import { contextPath } from './../constant/Url';
 import { commonAjaxPostCalls, commonAjaxPostCallsWithBlob } from './Promises';
 import BaseEntity from './../models/BaseEntity';
@@ -47,7 +47,7 @@ export default class MasterDataService {
         return commonAjaxPostCalls(endpoint, request);
 
     }
-    loadEntities(request: WebRequest) {
+    loadItems(request: WebRequest) {
         const endpoint: string = contextPath().concat("api/app/entity/get");
         return commonAjaxPostCalls(endpoint, request);
 

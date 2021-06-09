@@ -11,7 +11,7 @@ export default class QuizQuestion extends BaseEntity {
 	essay?:boolean;
 
 	quiz?: Quiz;
-	image?: string;
+	image?: undefined|string;
 	choices?: QuizChoice[];
 	duration:number = 5;
 	number:number = 1;

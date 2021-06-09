@@ -2,8 +2,8 @@
 
 import { contextPath } from '../constant/Url';
 import { commonAjaxPostCalls } from './Promises'; 
-import WebRequest from './../models/WebRequest';
-import Filter from './../models/Filter';
+import WebRequest from '../models/commons/WebRequest';
+import Filter from '../models/commons/Filter';
 import Quiz from './../models/Quiz';
 import { getLoginKey } from '../middlewares/Common';
 import { sendToWebsocket } from '../utils/websockets';

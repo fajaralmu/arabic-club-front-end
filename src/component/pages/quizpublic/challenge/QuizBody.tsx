@@ -13,7 +13,7 @@ import { timerString } from './../../../../utils/DateUtil';
 import QuizTimerProgress from './QuizTimerProgress';
 import QuizResult from './../../../../models/QuizResult';
 interface Props {
-    result?: QuizResult,
+    result: undefined|QuizResult,
     questionTimered: boolean, quiz: Quiz,
     setChoice(code: string | undefined, questionIndex: number): any,
     onTimeout(): any, submit(): any
@@ -182,7 +182,7 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(
                     {question.image ? <img height="150" src={baseImageUrl() + question.image} /> : null}
                     <hr />
                     {question.essay?
-                    <textarea value={question.answerEssay} onChange={(e)=>{
+                    <textarea value={question.answerEssay??""} onChange={(e)=>{
                         props.setChoice(e.target.value, props.index);
 
                     }

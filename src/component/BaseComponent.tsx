@@ -1,12 +1,13 @@
 import { Component } from 'react';
 import { byId } from '../utils/ComponentUtil';
-import WebResponse from './../models/WebResponse';
+import WebResponse from '../models/commons/WebResponse';
 import ApplicationProfile from './../models/ApplicationProfile';
 import User from './../models/User';
 import Services from './../services/Services';
 import { AuthorityType } from '../models/AuthorityType';
-import WebRequest from './../models/WebRequest';
+import WebRequest from '../models/commons/WebRequest';
 import { sendToWebsocket } from './../utils/websockets';
+import { doItLater } from './../utils/EventUtil';
 
 export default class BaseComponent extends Component<any, any> {
     parentApp: any;
@@ -22,10 +23,18 @@ export default class BaseComponent extends Component<any, any> {
         this.parentApp = props.mainApp;
     }
     
-    validateLoginStatus = () => {
-        if (this.authenticated == false) return;
-        if (this.isLoggedUserNull()) {
+    validateLoginStatus = (callback?:()=>any) => {
+        if (this.authenticated == false) {
+            if (callback){
+                callback();
+            }
+         }
+          if(this.isLoggedUserNull()) {
             this.backToLogin();
+            return;
+        }
+        if (callback){
+            callback();
         }
     }
 
@@ -104,6 +113,13 @@ export default class BaseComponent extends Component<any, any> {
         })
     }
 
+    scrollTop = () => {
+        // console.info("SCROLL TOP");
+        const opt:ScrollToOptions = { top:0,  behavior: 'smooth' };
+        doItLater(()=>{
+        window.scrollTo(opt);
+        }, 100);
+    }
     commonAjax(method: Function, successCallback: Function, errorCallback: Function, ...params:any) {
         this.doAjax(method, false, successCallback, errorCallback, ...params);
     }

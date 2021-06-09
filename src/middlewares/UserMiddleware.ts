@@ -1,6 +1,6 @@
 import * as common from './Common'
 import * as types from '../redux/types'
-import WebResponse from './../models/WebResponse';
+import WebResponse from '../models/commons/WebResponse';
 const axios = require('axios');
 export const performLoginMiddleware = store => next => action => {
     if (!action.meta || action.meta.type !== types.DO_LOGIN) {

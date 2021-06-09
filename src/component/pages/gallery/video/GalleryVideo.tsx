@@ -4,18 +4,16 @@ import React, { ChangeEvent } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../constant/stores';
-import BaseComponent from '../../../BaseComponent';
 import GalleryService from '../../../../services/GalleryService';
-import Filter from '../../../../models/Filter';
+import Filter from '../../../../models/commons/Filter';
 import Videos from '../../../../models/Videos';
-import WebResponse from '../../../../models/WebResponse';
+import WebResponse from '../../../../models/commons/WebResponse';
 import NavigationButtons from '../../../navigation/NavigationButtons';
 import Spinner from '../../../loader/Spinner';
-import { baseImageUrl  } from '../../../../constant/Url'; 
 import Snippet from './../../../../models/Snippet';
 import Card from './../../../container/Card';
-import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import SimpleWarning from '../../../alert/SimpleWarning';
+import BasePage from './../../../BasePage';
 
 class IState {
     videoList: Videos[] = new Array();
@@ -23,18 +21,20 @@ class IState {
     filter: Filter = new Filter();
     totalData: number = 0; 
 }
-class GalleryVideo extends BaseComponent {
+class GalleryVideo extends BasePage {
     state: IState = new IState();;
     galleryService: GalleryService;
     constructor(props: any) {
-        super(props, false);
+        super(props, "Video Gallery", false);
         this.galleryService = this.getServices().galleryService;
     }
     startLoading = (realtime:boolean) => { this.setState({ loading: true }); super.startLoading(realtime) }
     endLoading = () => { this.setState({ loading: false }); super.endLoading() }
     componentDidMount() {
-        document.title = "Video Gallery";
-        this.loadRecords();
+        this.validateLoginStatus(()=>{
+            this.loadRecords();
+            this.scrollTop();
+        })
     }
     dataLoaded = (response: WebResponse) => {
         this.setState({ videoList: response.entities ?? [], totalData: response.totalData });
@@ -66,7 +66,7 @@ class GalleryVideo extends BaseComponent {
         
         return (
             <div className="section-body container-fluid">
-                <h2>Videos</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome to gallery videos
                 </div>
@@ -95,7 +95,7 @@ const VideoList = (props: { video: Videos[], onClick(video: Videos): void }) => 
 const VideoItem = (props: { video: Videos, }) => {
     const video: Videos = Object.assign(new Videos(), props.video);
     const snippet:Snippet|undefined = video.videoSnippet;
-    const link= <a className="btn btn-outline-dark btn-sm" target="_blank" href={video.url} >
+    const link= <a className="btn btn-outline-dark btn-sm" target="_blank" href={video.url??"#"} >
         <i className="fa fa-play"/>&nbsp;
         Link
         </a>
@@ -113,7 +113,7 @@ const VideoItem = (props: { video: Videos, }) => {
     return (
         <div className="col-md-4" style={{marginBottom:'10px'}}>
             <div className="card">
-                <img src={snippet.thumbnails?.medium?.url} className="card-img-top" />
+                <img src={snippet.thumbnails?.medium?.url??""} className="card-img-top" />
                 <div className="card-body">
                     <p className="card-title">{snippet.title}</p>
                     {/* <p className="card-text">{snippet.description}</p> */}

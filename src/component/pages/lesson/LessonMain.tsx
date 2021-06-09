@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
 import BaseMainMenus from '../../layout/BaseMainMenus'; 
-import WebResponse from '../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import Menu from '../../../models/settings/Menu'; 
 import CategoriesService from './../../../services/CategoriesService';
 import LessonCategory from './../../../models/LessonCategory';
@@ -14,16 +14,14 @@ import Spinner from './../../loader/Spinner';
 import SimpleError from '../../alert/SimpleError';
 import LessonContent from './LessonContent';
 
-interface IState {
-    code?: string,
-    loading: boolean
+class IState {
+    code?: string|undefined;
+    loading: boolean = false;
 }
 class LessonMain extends BaseMainMenus {
     categoriesService: CategoriesService;
      
-    state: IState = {
-        code: undefined, loading: false
-    };
+    state: IState = new IState();
     constructor(props: any) {
         super(props, "Lessons", false);
         this.categoriesService = this.getServices().categoriesService;
@@ -42,10 +40,10 @@ class LessonMain extends BaseMainMenus {
         for (let i = 0; i < lessonCategories.length; i++) {
             const element = lessonCategories[i];
             sidebarMenus.push({
-                name: element.name,
-                url: element.code,
+                name: element.name??"",
+                url: element.code??"#",
                 code: element.code??uniqueId(),
-                menuClass: element.iconClassName,
+                menuClass: element.iconClassName??"",
                 role:[]
             });
         }
@@ -67,8 +65,10 @@ class LessonMain extends BaseMainMenus {
         );
     }
     componentDidMount() {
-        super.componentDidMount();
-        this.loadManagamenetPages();
+        this.validateLoginStatus(()=>{
+            this.loadManagamenetPages();
+            this.scrollTop();
+        });
     }
     componentDidUpdate() {
         this.validateLoginStatus();
@@ -94,7 +94,7 @@ class LessonMain extends BaseMainMenus {
         
         return (
             <div className="section-body container-fluid">
-                <h2>Lessons</h2>
+                {this.titleTag()}
                 <div className="row">
                     {categories.map(category => {
                         return (

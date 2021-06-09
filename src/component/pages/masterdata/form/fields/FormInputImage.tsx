@@ -62,19 +62,15 @@ interface IState {
             <React.Fragment>
                 {this.state.showInputFile ?
                     <input ref={this.ref}
-                        onChange={this.changeSingleImageData} type="file" accept="image/*"
-                        //  name={element.id}
-                          className='form-control' />
+                        onChange={this.changeSingleImageData} type="file" accept="image/*" name={element.id} className='form-control' />
 
                     :
                     <Fragment>
                         <p></p>
                         <AnchorButton onClick={(e)=> this.setState({showInputFile:true})} iconClassName="fas fa-plus" className="btn btn-info btn-sm">Add Image</AnchorButton>
-                       
                         <input type="hidden" name={element.id} value="NULLED" />
                     </Fragment>
                 }
-                 <input value={this.state.singlePreviewData} type="hidden" name={element.id} />
                 <ImagePreview imageData={this.state.singlePreviewData} />
                 <AnchorButton show={this.state.singlePreviewData != undefined} onClick={this.removeImage} iconClassName="fas fa-times" className="btn btn-danger btn-sm">remove</AnchorButton>
             </React.Fragment>

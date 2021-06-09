@@ -1,12 +1,11 @@
 import BaseEntity from '../BaseEntity'; 
-import { uniqueId } from '../../utils/StringUtil';
 import { AuthorityType } from '../AuthorityType';
 import User from './../User';
 
 export default class Menu extends BaseEntity{
 	static defaultMenuIconClassName:string = "fas fa-folder";
 
-	code:string = uniqueId();
+	code:string = 'default_menu';
 	name?:string;
 	description?:string;
 	url?:string;

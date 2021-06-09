@@ -1,12 +1,10 @@
 
 import React from 'react'
-import BaseComponent from './../../BaseComponent';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
-import PublicQuizService from '../../../services/PublicQuizService';
 import QuizService from './../../../services/QuizService';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import Quiz from './../../../models/Quiz';
 import SimpleError from '../../alert/SimpleError';
 import Modal from '../../container/Modal';
@@ -14,15 +12,16 @@ import QuizQuestion from './../../../models/QuizQuestion';
 import QuizHistoryModel from './../../../models/QuizHistory';
 import User from './../../../models/User';
 import AnchorWithIcon from '../../navigation/AnchorWithIcon';
+import BasePage from './../../BasePage';
 class State {
     error:boolean  = false;
     quizHistory?:QuizHistoryModel;
 }
-class QuizHistoryDetail extends BaseComponent {
+class QuizHistoryDetail extends BasePage {
     state:State = new State();
     quizService:QuizService;
     constructor(props) {
-        super(props, true);
+        super(props, "Quiz History Detail", true);
         this.quizService = this.getServices().quizService;
     }
     recordLoaded = (response:WebResponse) => {
@@ -47,8 +46,10 @@ class QuizHistoryDetail extends BaseComponent {
         return this.props.match.params.id;
     }
     componentDidMount() {
-        this.validateLoginStatus();
-        this.loadHistoryDetail();
+        this.validateLoginStatus(()=>{
+            this.loadHistoryDetail();
+            this.scrollTop();
+        });
     }
     render() {
         if (this.state.error) {
@@ -59,7 +60,7 @@ class QuizHistoryDetail extends BaseComponent {
         }
         const quiz = this.state.quizHistory.quiz;
         return <div className="container-fluid section-body">
-            <h2>Quiz History Detail: {quiz.title}</h2>
+            <h2>{this.titleTag(quiz.title)}</h2>
             <AnchorWithIcon iconClassName="fas fa-arrow-left" to="/dashboard/quizhistory">Back</AnchorWithIcon>
             <p/>
             <QuizDetail user={this.state.quizHistory.user} quiz={quiz} />
@@ -68,7 +69,7 @@ class QuizHistoryDetail extends BaseComponent {
 
 }
 
-const QuizDetail = (props:{user?:User, quiz:Quiz}) => {
+const QuizDetail = (props:{user:undefined|User, quiz:Quiz}) => {
     const questions:QuizQuestion[] = props.quiz.questions;
     return (
         <Modal title={"Quiz By "+props.user?.displayName}>
@@ -85,7 +86,7 @@ const QuestionDetail = (props:{question:QuizQuestion}) => {
         <div>
             <p><strong>{q.number}</strong> {q.statement}</p>
             {q.essay?
-                <textarea className="form-control" disabled value={q.answerEssay} />
+                <textarea className="form-control" disabled value={q.answerEssay??""} />
                 :
                 <Choices question={q} />
             }

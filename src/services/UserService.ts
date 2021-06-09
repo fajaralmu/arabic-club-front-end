@@ -1,9 +1,9 @@
 
 import User from './../models/User';
-import WebRequest from './../models/WebRequest';
+import WebRequest from '../models/commons/WebRequest';
 import { contextPath } from './../constant/Url';
 import { commonAjaxPostCalls, commonAjaxPublicPostCalls } from './Promises';
-import WebResponse from './../models/WebResponse';
+import WebResponse from '../models/commons/WebResponse';
 import { updateAccessToken } from './../middlewares/Common';
 export default class UserService {
     private static instance?: UserService;

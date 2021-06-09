@@ -33,7 +33,7 @@ export const performWebsocketConnection = () => {
 	stompClient .connect({}, function (frame) {
 		wsConnected = true;
 		// setConnected(true);
-		console.log('Websocket CONNECTED: ', websocketUrl, 'frame :', frame, stompClient.ws._transport.ws.url);
+		// console.log('Websocket CONNECTED: ', websocketUrl, 'frame :', frame, stompClient.ws._transport.ws.url);
 		console.debug("subscriptionCallbacks :", subscriptionCallbacks.length);
 		// document.getElementById("ws-info").innerHTML =
 		// stompClients.ws._transport.ws.url;

@@ -15,7 +15,7 @@ class GalleryMain extends BaseMainMenus {
     render() {
         return (
             <div className="section-body container-fluid">
-                <h2>Gallery</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome to gallery page
                 </div>

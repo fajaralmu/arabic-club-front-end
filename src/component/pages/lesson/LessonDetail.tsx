@@ -13,13 +13,8 @@ import Carousel from '../../container/Carousel';
 class LessonDetail extends BaseMainMenus {
 
     constructor(props: any) {
-        super(props, "Lessons", false);
+        super(props, props.lesson.title, false);
     }
-
-    componentDidMount() {
-        document.title = this.props.lesson.title;
-    }
-
 
     render() {
         const lesson: Lesson | undefined = this.props.lesson;
@@ -27,7 +22,7 @@ class LessonDetail extends BaseMainMenus {
 
         return (
             <div className="section-body container-fluid">
-                <h2>{lesson.title}</h2>
+                {this.titleTag()}
                 <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toLocaleString() : ""}</p>
                 <AnchorWithIcon iconClassName="fas fa-angle-left" onClick={this.props.back}>Back</AnchorWithIcon>
                 

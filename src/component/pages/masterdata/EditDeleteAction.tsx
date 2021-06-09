@@ -8,7 +8,7 @@ import { mapCommonUserStateToProps } from './../../../constant/stores';
 import MasterDataService from './../../../services/MasterDataService';
 import AnchorButton from './../../navigation/AnchorButton';
 import EntityProperty from '../../../models/settings/EntityProperty';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import ExternalEditForm from './ExternalEditForm';
 
 class EditDeleteAction extends BaseComponent {
@@ -72,21 +72,14 @@ class EditDeleteAction extends BaseComponent {
         this.props.reload();
     }
     render() {
-        const entityProperty:EntityProperty = this.props.entityProperty;
-        
-        if (this.props.show == false) return null;
-        let additionalButton:JSX.Element =  (
-        <ExternalEditForm delete={this.delete} record={this.props.record} entityProperty={entityProperty}  />
-        ) 
-        if (entityProperty.editable == false) {
-            return  additionalButton;
-        }
+        const property:EntityProperty = this.props.entityProperty;
+        if (property.editable == false) return null;
         return (
-            <div className="btn-group">
-                {additionalButton}
+           <Fragment>
+              
                 <AnchorButton onClick={this.getRecordById} iconClassName="fas fa-edit" className="btn btn-warning btn-sm"></AnchorButton>
-                <AnchorButton onClick={this.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
-            </div>
+                <AnchorButton show={property.deletable == true} onClick={this.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
+            </Fragment>
         )
     }
 

@@ -4,7 +4,7 @@ import { timerString } from './../../../../utils/DateUtil';
 interface Props {
     onTimeout(): any;
     duration: number; 
-    latestUpdate?: Date;
+    latestUpdate:undefined| Date;
 }
 class State {
 
@@ -54,7 +54,7 @@ export default class QuizTimer extends Component<Props, State> {
  
 
 
-const Timer = (props: { latestUpdate?:Date,duration: number, tick: number }) => {
+const Timer = (props: { latestUpdate:undefined|Date,duration: number, tick: number }) => {
 
     const seconds: number = props.duration - props.tick;
     let className;

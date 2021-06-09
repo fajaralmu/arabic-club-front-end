@@ -8,7 +8,7 @@ import BaseComponent from './../../../BaseComponent';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from './../../../../constant/stores';
-import WebResponse from './../../../../models/WebResponse';
+import WebResponse from '../../../../models/commons/WebResponse';
 interface Props { document: Documents }
 class State {
     showLink: boolean = false;

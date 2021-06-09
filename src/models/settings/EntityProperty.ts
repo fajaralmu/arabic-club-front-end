@@ -16,6 +16,7 @@ export default class EntityProperty{
 	elements:EntityElement[] = new Array();
 	fieldNameList?:string[]; 
 	withProgressWhenUpdated:boolean = false;
+	deletable:boolean = true;
 
 	static getEntityElement = (prop: EntityProperty, id:string) :EntityElement|undefined => {
 		for (let i = 0; i < prop.elements.length; i++) {
@@ -40,7 +41,8 @@ export default class EntityProperty{
 				label:element.labelName,
 				value:element.id,
 				isDate:element.type == 'date',
-				filterable: element.filterable
+				filterable: element.filterable,
+				orderable : true
 			};
 			result.push(header);
 		}

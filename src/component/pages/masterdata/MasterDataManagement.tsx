@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import BaseComponent from '../../BaseComponent';
 import { mapCommonUserStateToProps } from '../../../constant/stores';
 import MasterDataService from '../../../services/MasterDataService';
-import WebResponse from '../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import EntityProperty from '../../../models/settings/EntityProperty';
 import MasterDataList from './MasterDataList';
-import Filter from './../../../models/Filter';
-import WebRequest from './../../../models/WebRequest';
-import AttachmentInfo from './../../../models/AttachmentInfo';
+import Filter from '../../../models/commons/Filter';
+import WebRequest from '../../../models/commons/WebRequest';
+import AttachmentInfo from '../../../models/AttachmentInfo';
 
 class MasterDataManagement extends BaseComponent {
     masterDataService: MasterDataService;
@@ -35,6 +35,7 @@ class MasterDataManagement extends BaseComponent {
         if (this.props.code != undefined && this.code != this.props.code) {
             this.code = this.props.code;
             this.loadEntityProperty();
+            this.scrollTop();
         }
         console.debug("updated this.props.code: ", this.props.code);
     }
@@ -47,9 +48,9 @@ class MasterDataManagement extends BaseComponent {
             this.loadEntityProperty();
         }
     }
-    startLoading(raltime:boolean) {
-        if (raltime==true) {
-            super.startLoading(raltime);
+    startLoading(withProgress: boolean) {
+        if (withProgress == true) {
+            super.startLoading(withProgress);
         }
     }
     loadEntityProperty() {
@@ -81,15 +82,15 @@ class MasterDataManagement extends BaseComponent {
         this.showConfirmation("Print record? ")
             .then(ok => {
                 if (!ok) return;
-                const req:WebRequest = {
+                const req: WebRequest = Object.assign(new WebRequest(), {
                     entity: property.entityName,
                     filter: filter
-                }
+                });
                 this.commonAjaxWithProgress(
                     this.masterDataService.generateReport,
                     this.reportCreated,
                     this.showCommonErrorAlert,
-                    req); 
+                    req);
             })
     }
     reportCreated = (attachment: AttachmentInfo) => {
@@ -100,7 +101,7 @@ class MasterDataManagement extends BaseComponent {
                     target: '_blank',
                     download: attachment.name,
                     style: { display: 'none' },
-                    href: attachment.url,
+                    href: attachment.dataUrl,
                 }).click();
             })
 
@@ -110,15 +111,19 @@ class MasterDataManagement extends BaseComponent {
             return (
                 <div className=" container-fluid section-body" style={{ paddingTop: '20px' }}>
                     <div className="row">
-                        <div className="col-3 text-right"><div className="spinner-border" role="status" />
+                        <div className="col-4 text-right">
+                            <div className="spinner-border" role="status" />
                         </div>
-                        <div className="col-8"><h4>Loading configuration</h4></div>
+                        <div className="col-8"><h4>Loading configuration</h4>
+                        </div>
                     </div>
                 </div>)
         }
+        const title:string = this.state.entityProperty.alias;
         return (
             <div className="section-body container-fluid">
-                <h2>{this.state.entityProperty.alias}</h2>
+                <h2>{title}</h2>
+                <hr/>
                 <MasterDataList printRecord={this.printRecord} entityProperty={this.state.entityProperty} />
             </div>
         )

@@ -1,6 +1,6 @@
 
 import { commonAuthorizedHeader, commonHeader } from '../middlewares/Common';
-import WebResponse from '../models/WebResponse';
+import WebResponse from '../models/commons/WebResponse';
 import { updateAccessToken } from './../middlewares/Common';
 import AttachmentInfo from './../models/AttachmentInfo';
 

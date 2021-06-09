@@ -7,6 +7,7 @@ export default class User extends BaseEntity{
 	editPassword?:string;
 	profileImage?:string;
 	role?:AuthorityType;
-	requestId?:string; 
+	requestId?:string;
+	password?:string;
 
 }

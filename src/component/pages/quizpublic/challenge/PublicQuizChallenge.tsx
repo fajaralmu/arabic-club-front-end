@@ -1,9 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import BaseComponent from '../../../BaseComponent';
 import PublicQuizService from '../../../../services/PublicQuizService';
 import Quiz from '../../../../models/Quiz';
-import WebResponse from '../../../../models/WebResponse';
+import WebResponse from '../../../../models/commons/WebResponse';
 import SimpleError from '../../../alert/SimpleError';
 import Spinner from '../../../loader/Spinner';
 import AnchorButton from '../../../navigation/AnchorButton';
@@ -15,6 +14,7 @@ import QuizTimer from './QuizTimer';
 import { RertyPage, QuizResultInfo, StatusTImeout, QuizLanding } from './quizChallengeHalper';
 import QuizHistoryModel from './../../../../models/QuizHistory';
 import { doItLater } from './../../../../utils/EventUtil';
+import BasePage from './../../../BasePage';
 
 class IState {
     quiz: Quiz | undefined = undefined;
@@ -26,14 +26,14 @@ class IState {
     latestUpdate: Date | undefined;
 }
 
-class PublicQuizChallenge extends BaseComponent {
-    quizTemp?: Quiz = undefined;
+class PublicQuizChallenge extends BasePage {
+    quizTemp?: Quiz|undefined = undefined;
     publicQuizService: PublicQuizService;
     state: IState = new IState();
     timerRef: React.RefObject<QuizTimer> = React.createRef();
     quizBodyRef: React.RefObject<QuizBody> = React.createRef();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Quiz Challenge", true);
         this.publicQuizService = this.getServices().publicQuizService;
     }
     startLoading = (withProgress: boolean) => {
@@ -45,9 +45,11 @@ class PublicQuizChallenge extends BaseComponent {
         this.setState({ loading: false });
     }
     componentDidMount() {
-        document.title = "Quiz Challenge";
-        this.loadQuiz();
-        this.setWsUpdateHandlerOnQuestionChange();
+        this.validateLoginStatus(()=>{
+            this.scrollTop();
+            this.loadQuiz();
+            this.setWsUpdateHandlerOnQuestionChange();
+        })
     }
     setWsUpdateHandlerOnQuestionChange = () => {
         this.setWsUpdateHandler((response: WebResponse) => {

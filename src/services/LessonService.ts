@@ -1,5 +1,5 @@
 
-import WebRequest from '../models/WebRequest';
+import WebRequest from '../models/commons/WebRequest';
 import { contextPath } from '../constant/Url';
 import { commonAjaxPublicPostCalls } from './Promises'; 
 export default class LessonService {

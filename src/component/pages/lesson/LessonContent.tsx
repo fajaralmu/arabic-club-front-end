@@ -1,12 +1,11 @@
 import React, { ChangeEvent } from 'react'
-import BaseComponent from './../../BaseComponent';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import LessonService from './../../../services/LessonService';
 import Lesson from './../../../models/Lesson';
-import Filter from './../../../models/Filter';
-import WebResponse from './../../../models/WebResponse';
+import Filter from '../../../models/commons/Filter';
+import WebResponse from '../../../models/commons/WebResponse';
 import LessonCategory from '../../../models/LessonCategory';
 import Spinner from '../../loader/Spinner';
 import SimpleError from '../../alert/SimpleError';
@@ -15,7 +14,8 @@ import { uniqueId } from './../../../utils/StringUtil';
 import AnchorWithIcon from '../../navigation/AnchorWithIcon';
 import NavigationButtons from '../../navigation/NavigationButtons';
 import LessonDetail from './LessonDetail';
-import WebRequest from './../../../models/WebRequest';
+import WebRequest from '../../../models/commons/WebRequest';
+import BasePage from './../../BasePage';
 class IState {
     lessons: Lesson[] | undefined = undefined;
     loading: boolean = false;
@@ -28,12 +28,12 @@ class IState {
     category: LessonCategory | undefined = undefined;
     filterValue?: string
 }
-class LessonContent extends BaseComponent {
+class LessonContent extends BasePage {
     lessonService: LessonService;
     state: IState = new IState();
     categoryCode: string = "";
     constructor(props) {
-        super(props, false);
+        super(props, "Lessons", false);
         this.lessonService = this.getServices().lessonService;
     }
     startLoading = () => {
@@ -75,11 +75,15 @@ class LessonContent extends BaseComponent {
         );
     }
     componentDidMount() {
-        this.loadLessons();
+        this.validateLoginStatus(()=>{
+            this.loadLessons();
+            this.scrollTop();
+        });
     }
     componentDidUpdate() {
         if (this.categoryCode != this.props.categoryCode) {
             this.loadLessonsInPage(0);
+            this.scrollTop();
         }
     }
     loadLessonsInPage = (page) => {
@@ -130,15 +134,15 @@ class LessonContent extends BaseComponent {
         const category: LessonCategory = this.state.category;
         return (
             <div className="section-body container-fluid">
-                <h2>Lessons - {category.name}</h2>
+                {this.titleTag(" - "+category.name)}
                 <form className="row" onSubmit={(e) => { e.preventDefault(); this.loadLessons() }}>
 
                     <div className="input-group col-md-6">
                         <input value="Per Page" className="form-control" disabled />
-                        <input min={0} type="number" onChange={this.updateLimit} value={this.state.filter.limit} className="form-control" />
+                        <input min={0} type="number" onChange={this.updateLimit} value={this.state.filter.limit??5} className="form-control" />
                     </div>
                     <div className="input-group col-md-6">
-                        <input autoComplete="off" type="search" placeholder="Search..." onChange={this.setFilterValue} value={this.state.filterValue} className="form-control" />
+                        <input autoComplete="off" type="search" placeholder="Search..." onChange={this.setFilterValue} value={this.state.filterValue??""} className="form-control" />
                         <input type="submit" value="Reload" className="btn btn-info" />
                         <button type="reset" className="btn btn-warning" onClick={this.clearFilter} >Clear Filter</button>
                     </div>

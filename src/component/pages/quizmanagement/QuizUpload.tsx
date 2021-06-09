@@ -1,25 +1,22 @@
 import React, { ChangeEvent, FormEvent } from 'react'
-import BaseComponent from './../../BaseComponent';
 import QuizService from './../../../services/QuizService';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Card from '../../container/Card';
 import FormGroup from '../../form/FormGroup';
 import { getAttachmentInfo } from '../../../utils/ComponentUtil';
 import AttachmentInfo from './../../../models/AttachmentInfo';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
+import BasePage from './../../BasePage';
 class IState {
     attachment?:AttachmentInfo;
 }
-class QuizUpload extends BaseComponent {
+class QuizUpload extends BasePage {
     quizService: QuizService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props, true);
+        super(props, "Quiz Upload", true);
         this.quizService = this.getServices().quizService;
-    }
-    componentDidMount() {
     }
     submit = (e:FormEvent) => {
         e.preventDefault();
@@ -62,7 +59,7 @@ class QuizUpload extends BaseComponent {
         
         return (
             <div className="section-body container-fluid">
-            <h2>Quiz Upload</h2>
+                {this.titleTag()}
                 <form onSubmit={this.submit}>
                     <FormGroup label="File">
                         <input type="file" className="form-control"

@@ -10,16 +10,14 @@ import EntityProperty from '../../../../models/settings/EntityProperty';
 import EntityElement from '../../../../models/settings/EntityElement';
 import MasterDataService from '../../../../services/MasterDataService';
 import AnchorButton from '../../../navigation/AnchorButton';
-import WebResponse from '../../../../models/WebResponse';
+import WebResponse from '../../../../models/commons/WebResponse'; 
 import { FieldType } from '../../../../models/FieldType';
 import FormInputField from './FormInputField';
-import AttachmentInfo from './../../../../models/AttachmentInfo';
 
 class MasterDataForm extends BaseComponent {
     masterDataService: MasterDataService;
-    editMode: boolean = false;
-    recordToEdit?: {} = undefined;
-    formRef: React.RefObject<HTMLFormElement> = React.createRef();
+    editMode:boolean = false;
+    recordToEdit?:{} = undefined;
     constructor(props: any) {
         super(props, true);
         this.masterDataService = this.getServices().masterDataService;
@@ -28,7 +26,7 @@ class MasterDataForm extends BaseComponent {
             this.recordToEdit = props.recordToEdit;
         }
     }
-
+    
     getEntityProperty(): EntityProperty {
         return this.props.entityProperty;
     }
@@ -39,30 +37,28 @@ class MasterDataForm extends BaseComponent {
     }
     onSubmit = (e) => {
         e.preventDefault();
-        if (!this.formRef.current) return;
-
-        const form = this.formRef.current, app = this;
+        const form = e.target;
         this.showConfirmation("Save data?")
-            .then(function (ok) {
-                if (ok) { app.submit(form) }
+            .then((ok)=> {
+                if (ok) { this.submit(form) }
             });
     }
-    getEntityElement(key: string): EntityElement | undefined {
+    getEntityElement(key:string) :EntityElement |undefined {
         return EntityProperty.getEntityElement(this.getEntityProperty(), key);
     }
     submit = (form: HTMLFormElement) => {
         const formData: FormData = new FormData(form);
         const object: {} = {};
         const promises: Promise<any>[] = new Array();
-        const nulledFields: any[] = [];
-        let withRealtimeProgress: boolean = false;
+        const nulledFields:any[] = [];
+        let hasImageField:boolean = false;
 
         formData.forEach((value, key) => {
             console.debug("Form data ", key);
             if (!object[key]) {
                 object[key] = new Array();
             }
-            const element: EntityElement | undefined = this.getEntityElement(key);
+            const element:EntityElement|undefined = this.getEntityElement(key);
             if (!element) return false;
             switch (element.fieldType) {
                 case FieldType.FIELD_TYPE_CHECKBOX:
@@ -75,30 +71,14 @@ class MasterDataForm extends BaseComponent {
                         object[key].push({ [valueAttr]: value })
                     }
                     break;
-                case FieldType.FIELD_TYPE_DOCUMENT:
-                    console.debug(key, " is DOCUMENT");
+                case FieldType.FIELD_TYPE_IMAGE:
+                    console.debug(key, " is image");
                     if (value == "NULLED") {
                         console.debug("NULLED VALUE ADDED: ", key);
                         nulledFields.push(key);
                     } else {
-                        const fileName = formData.get(key+'-attachment-info');
-                        if (fileName && new String(value).startsWith("data:")) {
-                            withRealtimeProgress = true;
-                            const attachmentInfo:AttachmentInfo =   AttachmentInfo.instance(fileName, new String(value).toString());
-                            object["attachmentInfo"] = [(attachmentInfo)];
-                            object[key].push(fileName);
-                        }else {
-                            object[key].push(value);
-                        }
-                    }
-                    break;
-                case FieldType.FIELD_TYPE_IMAGE:
-                    console.debug(key, " is IMAGE");
-                    if (value == "NULLED") {
-                        nulledFields.push(key);
-                    } else {
                         if (new String(value).startsWith("data:image")) {
-                            withRealtimeProgress = true;
+                            hasImageField = true;
                         }
                         object[key].push(value);
                     }
@@ -108,23 +88,23 @@ class MasterDataForm extends BaseComponent {
                     break;
             }
             return true;
-
-        });
-        Promise.all(promises).then((val) => {
+            
+        });  
+        Promise.all(promises).then( (val) => {
             const objectPayload = this.generateRequestPayload(object, nulledFields);
-            console.debug("Record object to save: ", objectPayload, "realtimeProgress: ", withRealtimeProgress);
-            this.ajaxSubmit(objectPayload, withRealtimeProgress == true);
+            console.debug("Record object to save: ", objectPayload, "realtimeProgress: ", hasImageField);
+            this.ajaxSubmit(objectPayload, hasImageField);
         });
-
+        
     }
 
-    generateRequestPayload = (rawObject: {}, nulledFields: any[]): {} => {
-        const result: { nulledFields: Array<any> } = this.editMode && this.recordToEdit ?
-            { ...this.recordToEdit, nulledFields: nulledFields } :
-            { nulledFields: new Array() };
+    generateRequestPayload = (rawObject: {}, nulledFields:any[]): {} => { 
+        const result:{nulledFields:Array<any>} = this.editMode && this.recordToEdit? 
+        {...this.recordToEdit, nulledFields:nulledFields} : 
+        {nulledFields:new Array() };
         for (const key in rawObject) {
             const element: any[] = rawObject[key];
-            console.debug(key, " length: ", element.length);
+            // console.debug(key, " length: ", element.length);
             if (element.length == 1) {
                 result[key] = element[0];
             } else if (element.length > 1) {
@@ -136,14 +116,12 @@ class MasterDataForm extends BaseComponent {
     }
 
     ajaxSubmit = (object: any, realtimeProgress: boolean) => {
-        // console.debug("object: ",object);
-        // return;
-        if (this.getEntityProperty().withProgressWhenUpdated == true || realtimeProgress) {
+        if (this.getEntityProperty().withProgressWhenUpdated == true || realtimeProgress){
             this.commonAjaxWithProgress(
                 this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
                 this.getEntityProperty().entityName, object, this.editMode
             )
-        } else {
+        } else{
             this.commonAjax(
                 this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
                 this.getEntityProperty().entityName, object, this.editMode
@@ -152,17 +130,20 @@ class MasterDataForm extends BaseComponent {
     }
     recordSaved = (response: WebResponse) => {
         this.showInfo("Record saved");
+        if (this.props.recordSavedCallback) {
+            this.props.recordSavedCallback();
+        }
     }
     render() {
         const entityProperty: EntityProperty = this.getEntityProperty();
 
-        const editModeStr = this.editMode ? <span className="badge badge-warning">Edit Mode</span> : ""
-        return (
+        const editModeStr = this.editMode ?  <span className="badge badge-warning">Edit Mode</span>:""
+        return ( 
             <div id="MasterDataForm" >
                 <AnchorButton style={{ marginBottom: '5px' }} onClick={this.props.onClose} iconClassName="fas fa-angle-left">Back</AnchorButton>
-                <form ref={this.formRef} onSubmit={this.onSubmit} id="record-form">
-                    <Modal title={<span>{entityProperty.alias} Record Form {editModeStr}</span>} footerContent={<SubmitReset />}>
-                        <InputFields app={this.parentApp} recordToEdit={this.recordToEdit} entityProperty={entityProperty} />
+                <form onSubmit={this.onSubmit} id="record-form">
+                <Modal title={<span>{entityProperty.alias} Record Form {editModeStr}</span>} footerContent={<SubmitReset />}>
+                        <InputFields app={this.parentApp} recordToEdit={this.recordToEdit}  entityProperty={entityProperty} />
                     </Modal>
                 </form>
             </div>
@@ -180,7 +161,7 @@ const SubmitReset = (props) => {
 }
 
 
-const InputFields = (props: { app: any, entityProperty: EntityProperty, recordToEdit: {} | undefined }) => {
+const InputFields = (props: { app: any, entityProperty: EntityProperty, recordToEdit:{}|undefined }) => {
     const elements: EntityElement[] = props.entityProperty.elements;
     const groupedElements: Array<Array<EntityElement>> = new Array();
     let counter: number = 0;
@@ -198,9 +179,9 @@ const InputFields = (props: { app: any, entityProperty: EntityProperty, recordTo
         <div className="row">
             {groupedElements.map((elements, ei) => {
                 return (
-                    <div key={"GROUPED_ELEMENT_" + ei} className={hasTextEditor ? "col-lg-12" : "col-lg-6"}>
+                    <div key={"GROUPED_ELEMENT_"+ei} className={hasTextEditor?"col-lg-12":"col-lg-6"}>
                         {elements.map(element => {
-                            const key = "form-input-for-" + props.entityProperty.entityName + "-" + element.id;
+                            const key = "form-input-for-"+props.entityProperty.entityName+element.id;
                             return <FormInputField key={key} recordToEdit={props.recordToEdit} entityElement={element} />
                         })}
                     </div>

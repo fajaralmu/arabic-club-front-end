@@ -3,7 +3,7 @@ import * as url from '../constant/Url'
 import { contextPath } from '../constant/Url'; 
 import User from './../models/User';
 import ApplicationProfile from './../models/ApplicationProfile';
-import WebResponse from './../models/WebResponse';
+import WebResponse from '../models/commons/WebResponse';
 
 const usedHost = url.contextPath();
 const apiBaseUrl = usedHost + "api/public/"

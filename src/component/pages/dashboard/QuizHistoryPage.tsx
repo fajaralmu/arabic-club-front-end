@@ -8,28 +8,28 @@ import BaseMainMenus from '../../layout/BaseMainMenus';
 import User from './../../../models/User';
 import PublicQuizService from './../../../services/PublicQuizService';
 import QuizHistoryModel from './../../../models/QuizHistory';
-import Filter from './../../../models/Filter';
+import Filter from '../../../models/commons/Filter';
 import BaseComponent from './../../BaseComponent';
-import WebResponse from './../../../models/WebResponse';
+import WebResponse from '../../../models/commons/WebResponse';
 import NavigationButtons from './../../navigation/NavigationButtons';
 import Card from './../../container/Card';
 import Spinner from './../../loader/Spinner';
 import SimpleWarning from './../../alert/SimpleWarning';
 import AnchorWithIcon from '../../navigation/AnchorWithIcon';
 import ScrollDiv from '../../container/ScrollDiv';
+import BasePage from './../../BasePage';
 class IState {
     histories: QuizHistoryModel[] = new Array();
     loading: boolean = false;
     filter: Filter = new Filter();
     totalData: number = 0;
 }
-class QuizHistoryPage extends BaseComponent {
+class QuizHistoryPage extends BasePage {
     publicQuizService: PublicQuizService;
     state: IState = new IState();
     constructor(props: any) {
-        super(props,  true);
+        super(props,  "Quiz History",true);
         this.publicQuizService = this.getServices().publicQuizService;
-        document.title = "Quiz History";
     }
     startLoading = () => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }
@@ -63,7 +63,7 @@ class QuizHistoryPage extends BaseComponent {
         const startNumber = (filter.limit ?? 0) * (filter.page ?? 0);
         return (
             <div  className=" section-body container-fluid">
-                <h2>Quiz History</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome, <strong>{user.displayName}  </strong>
                     <p />

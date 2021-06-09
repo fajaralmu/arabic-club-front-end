@@ -5,12 +5,12 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../../constant/stores';
 import MasterDataService from '../../../../../services/MasterDataService';
-import WebResponse from '../../../../../models/WebResponse';
+import WebResponse from '../../../../../models/commons/WebResponse';
 import BaseComponent from '../../../../BaseComponent';
-import { uniqueId } from '../../../../../utils/StringUtil';
 import BaseField from './BaseField';
 import AnchorWithIcon from './../../../../navigation/AnchorWithIcon';
-import WebRequest from './../../../../../models/WebRequest';
+import WebRequest from '../../../../../models/commons/WebRequest';
+import Filter from '../../../../../models/commons/Filter';
 class IState {
     inputList: any[] = [];
     searchValue: string = ""
@@ -41,17 +41,18 @@ class FormInputDropDownDynamic extends BaseField {
         const code = element.entityReferenceClass;
         const searchKey = element.optionItemName;
         if (!searchKey)  { return; }
-        const request: WebRequest = {
+        const request: WebRequest = Object.assign(new WebRequest(), {
             entity: code,
-            filter: {
-                limit: 0, page: 0,
-                fieldsFilter: {
-                    [searchKey]:this.inputRef.current?.innerHTML
+            filter: Object.assign(new Filter(), {
+                    limit: 0, page: 0,
+                    fieldsFilter: {
+                        [searchKey]:this.inputRef.current?.innerHTML
+                    }
                 }
-            }
-        }
+            )
+        });
         this.commonAjax(
-            this.masterDataService.loadEntities,
+            this.masterDataService.loadItems,
             this.inputListLoaded,
             this.showCommonErrorAlert,
             request
@@ -111,10 +112,10 @@ class FormInputDropDownDynamic extends BaseField {
                     </div>
                 </div>
                 <select  {...this.getRequiredAttr()} ref={this.ref} className="form-control" name={element.id} >
-                    {options.map(option => {
+                    {options.map((option, i:number) => {
                         if (!optionItemName || !optionItemValue) { return null; }
                         return (
-                            <option key={"fid-" + uniqueId() + "-"} value={option[optionItemValue]} >{option[optionItemName]}</option>
+                            <option key={"fid-" + element.id + i} value={option[optionItemValue]} >{option[optionItemName]}</option>
                         )
                     })}
                 </select>

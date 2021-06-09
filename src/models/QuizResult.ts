@@ -1,13 +1,13 @@
 
 import Quiz from './Quiz';
-export default class QuizResult {
-    displayScore?: boolean;
+export default interface QuizResult {
+    displayScore:boolean,
 
-    submittedQuiz?: Quiz;
-    quiz?: Quiz;
-    correctAnswer: number = 0;
-    wrongAnswer: number = 0;
-    totalQuestion: number = 0;
-    score: number = 0;
-    message?: string;
+    submittedQuiz:Quiz,
+    quiz:Quiz,
+    correctAnswer: number, 
+    wrongAnswer: number,
+    totalQuestion: number,
+    score: number,
+    message: string
 }

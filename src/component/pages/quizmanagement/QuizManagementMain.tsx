@@ -1,14 +1,14 @@
 
 
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import BaseMainMenus from '../../layout/BaseMainMenus';
 import { mapCommonUserStateToProps } from './../../../constant/stores';
 import PublicQuizService from './../../../services/PublicQuizService';
 import Quiz from './../../../models/Quiz';
-import Filter from './../../../models/Filter';
-import WebResponse from './../../../models/WebResponse';
+import Filter from '../../../models/commons/Filter';
+import WebResponse from '../../../models/commons/WebResponse';
 import NavigationButtons from './../../navigation/NavigationButtons';
 import QuizList from './../quizshared/QuizList';
 class IState {
@@ -28,8 +28,10 @@ class QuizManagementMain extends BaseMainMenus {
     startLoading = (realtime: boolean) => { this.setState({ loading: true }); }
     endLoading = () => { this.setState({ loading: false }); }
     componentDidMount() {
-        super.componentDidMount();
-        this.loadRecords();
+        this.validateLoginStatus(()=>{
+            this.loadRecords();
+            this.scrollTop();
+        });
     }
     dataLoaded = (response: WebResponse) => {
         this.setState({ quizList: response.entities ?? [], totalData: response.totalData });
@@ -72,7 +74,7 @@ class QuizManagementMain extends BaseMainMenus {
         const filter = this.state.filter;
         return (
             <div className="section-body container-fluid">
-                <h2>Quiz Management</h2>
+                {this.titleTag()}
                 <div className="alert alert-info">
                     Welcome, <strong>{this.getLoggedUser()?.displayName}</strong>
                 </div>
