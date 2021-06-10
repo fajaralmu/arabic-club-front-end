@@ -10,19 +10,14 @@ import SideBar from '../navigation/SideBar';
 import './Layout.css';
 import Menu from '../../models/settings/Menu';
 import { getMenuByMenuPath, extractMenuPath } from './../../constant/Menus';
-interface IState {
-    showSidebar: boolean;
-    activeMenuCode: any;
-    menu?: Menu;
-    sidebarMenus?: Menu[]
+class IState {
+    showSidebar: boolean = false;
+    activeMenuCode: any = null;
+    menu?: undefined| Menu = undefined;
+    sidebarMenus?: Menu[] = [];
 };
 class MainLayout extends BaseComponent {
-    state: IState = {
-        showSidebar: false,
-        activeMenuCode: null,
-        menu: undefined,
-        sidebarMenus: []
-    };
+    state: IState = new IState();
     currentPathName: string = "";
     constructor(props: any) {
         super(props, false);

@@ -106,6 +106,7 @@ class LessonContent extends BasePage {
     setSelectedLessonUndefined = () => {
         document.title = "Lessons"
         this.setSelectedLesson(undefined);
+        this.scrollTop();
     }
     setFilterValue = (e) => {
         this.setState({ filterValue: e.target.value });
@@ -167,10 +168,12 @@ const LessonItem = (props: { lesson: Lesson, setSelectedLesson: Function }) => {
     const lesson: Lesson = props.lesson;
     const content: String = new String(lesson.content).length > 150 ? new String(lesson.content).substring(0, 150) + "..." :
         new String(lesson.content);
+    const date = lesson.createdDate?new Date(lesson.createdDate):new Date();
+    const time = date.toDateString()+" "+ date.toLocaleTimeString();
     return (<Card attributes={{ style: { marginBottom: '5px' } }}>
         <h3>{lesson.title}</h3>
         {/* <p className="text-dark"><i className="fas fa-edit" />&nbsp;{lesson.user?.displayName}</p> */}
-        <p><i className="fas fa-clock"/>&nbsp;{lesson.createdDate ? new Date(lesson.createdDate).toLocaleString() : ""}</p>
+        <p>{time}</p>
         <div dangerouslySetInnerHTML={{
             __html: content.toString()
         }} />
