@@ -19,11 +19,11 @@ class LessonDetail extends BaseMainMenus {
     render() {
         const lesson: Lesson | undefined = this.props.lesson;
         if (!lesson) return <></>;
-
+        const date = lesson.createdDate? new Date(lesson.createdDate):new Date();
         return (
             <div className="section-body container-fluid">
                 {this.titleTag()}
-                <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {lesson.createdDate ? new Date(lesson.createdDate).toDateString() +  " "+new Date(lesson.createdDate).toLocaleTimeString() : ""}</p>
+                <p className="text-dark"><i className="fas fa-edit" />{lesson.user?.displayName}, {date.toDateString() +  " "+date.toLocaleTimeString()}</p>
                 <AnchorWithIcon iconClassName="fas fa-angle-left" onClick={this.props.back}>Back</AnchorWithIcon>
                 
                 {lesson.bannerImages?
