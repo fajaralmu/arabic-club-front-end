@@ -23,7 +23,7 @@ export default class AnchorWithIcon extends Component<IProps, any>
             </Link>
         }
         return (
-            <a {...this.props.attributes} tyle={this.props.style} onClick={this.props.onClick} className={btnClassName} >
+            <a {...this.props.attributes} style={this.props.style} onClick={this.props.onClick} className={btnClassName} >
                 {this.props.iconClassName ?
                     <span style={{ marginRight: '5px' }}><i className={this.props.iconClassName} /></span>
                     :

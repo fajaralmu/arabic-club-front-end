@@ -86,11 +86,6 @@ class EditDeleteAction extends BaseComponent {
     }
 
 }
-const mapDispatchToProps = (dispatch: Function) => ({
-})
-
-
 export default withRouter(connect(
-    mapCommonUserStateToProps,
-    mapDispatchToProps
+    mapCommonUserStateToProps
 )(EditDeleteAction))
