@@ -1,23 +1,23 @@
 
 
-import React, { ChangeEvent, Component, Fragment, MouseEventHandler } from 'react';
+import React  from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../../constant/stores';
-import EntityElement from '../../../../../models/settings/EntityElement';
 import MasterDataService from '../../../../../services/MasterDataService';
 import './TextEditor.css'
-import BaseComponent from '../../../../BaseComponent';
 import AnchorWithIcon from '../../../../navigation/AnchorWithIcon';
 import BaseField from './BaseField';
 import { MyFonts } from './fontList';
+import { numericArray } from './../../../../../utils/StringUtil';
 class IState {
-    editMode: boolean = false;
-    fieldValue: string = "";
-    updated: boolean = false;
-    fontname: string = MyFonts[0];
+    editMode: boolean = false;fieldValue: string = "";updated: boolean = false;
+
+    //doc formats
+    fontname: string = MyFonts[0]; fontsize:number = 12;
     forecolor: string = '#000000'; backcolor:string = '#ffffff';
 }
+const fontSizes = numericArray(6, 40);
 class FormInputTextEditor extends BaseField {
     masterDataService: MasterDataService;
     state: IState = new IState();
@@ -32,7 +32,7 @@ class FormInputTextEditor extends BaseField {
             console.debug("oDOc is missing");
             return;
         }
-        console.debug("commmand: ", sCmd);
+        console.debug("commmand: ", sCmd, "=> ", sValue);
         if (this.validateMode()) { 
             const executed =  document.execCommand(sCmd, false, sValue); 
             console.debug("EXECUTED: ", executed, " editable: ", oDoc.contentEditable);
@@ -43,7 +43,7 @@ class FormInputTextEditor extends BaseField {
     }
 
     postExecuteCommand = (command:string, sValue?) => {
-        if (command === 'fontname' || command === 'forecolor' || command === 'backcolor') {
+        if (command === 'fontname' || command === 'forecolor' || command === 'backcolor' ||command==='fontsize') {
             this.setState({[command]: sValue})
         }
     }
@@ -111,7 +111,7 @@ class FormInputTextEditor extends BaseField {
     }
          
     componentDidUpdate(){
-        console.debug("component updated");
+        // console.debug("component updated");
     }
 
     setEditMode = (mode:boolean) => {
@@ -122,8 +122,8 @@ class FormInputTextEditor extends BaseField {
         const anchor:HTMLAnchorElement = e.target as HTMLAnchorElement;
         const commmand:string = anchor.dataset['command']??"";
         const value = anchor.dataset['value'];
-        if (commmand == 'clean') {
-            this.clean();
+        if (commmand == 'clean'   ) { 
+                this.clean(); 
         } else {
             this.formatDoc(commmand, value);
         }
@@ -134,7 +134,7 @@ class FormInputTextEditor extends BaseField {
         .then(function(ok){
             if (ok) {
                 if (app.contentRef.current) {
-                    app.contentRef.current.innerHTML = "";
+                    app.contentRef.current.innerHTML = "<p></p>";
                 }
             }
         })
@@ -156,7 +156,7 @@ class FormInputTextEditor extends BaseField {
                 <div id="toolBar1" className="input-group">
                     <FormattingList onChange={this.formatDoc} />
                     <FontList selected={this.state.fontname} onChange={this.formatDoc} />
-                    <FontSizeOption onChange={this.formatDoc} />
+                    <FontSizeOption selected={this.state.fontsize} onChange={this.formatDoc} />
                     <FontColorOption selected={this.state.forecolor} onChange={this.formatDoc} />
                     <BackgroundColorOption selected={this.state.backcolor} onChange={this.formatDoc} />
                 </div>
@@ -206,24 +206,11 @@ class FormInputTextEditor extends BaseField {
         )
     }
 }
-const FontSizeOption = (props: { onChange: Function }) => {
+const FontSizeOption = (props: { selected:number, onChange: (e:string, value?:any) => any}) => {
     return (
-        <select className="form-control"
-            onChange={
-                (e) => {
-                    const t = e.target;
-                    props.onChange("fontsize", t.value);
-                    t.value = "-";
-                }}>
-            {/* onChange="formatDoc('fontsize',this[this.selectedIndex].value);this.selectedIndex=0;"> */}
-            <option value ="-" className="heading">- size -</option>
-            <option value="1">Very small</option>
-            <option value="2">A bit small</option>
-            <option value="3">Normal</option>
-            <option value="4">Medium-large</option>
-            <option value="5">Big</option>
-            <option value="6">Very big</option>
-            <option value="7">Maximum</option>
+        <select value={props.selected} className="form-control"
+            onChange={(e) => props.onChange("fontsize", e.target.value)}>
+            {fontSizes.map(size=> <option value={size} key={"fontSize"+size}>{size}</option>)}
         </select>
     )
 }

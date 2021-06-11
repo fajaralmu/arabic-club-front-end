@@ -56,3 +56,11 @@ export const twoDigits = (value:number) :string => {
     }
     return "0"+value;
 }
+
+export const numericArray = (start:number, end:number): number [] => {
+	let result:number[] = [];
+	for (let i = start; i <= end; i++) {
+		result.push(i);
+	}
+	return result;
+}
