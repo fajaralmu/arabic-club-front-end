@@ -1,6 +1,6 @@
 
 
-import React, { Component, Fragment, MouseEventHandler } from 'react';
+import React, { ChangeEvent, Component, Fragment, MouseEventHandler } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { mapCommonUserStateToProps } from '../../../../../constant/stores';
@@ -10,10 +10,13 @@ import './TextEditor.css'
 import BaseComponent from '../../../../BaseComponent';
 import AnchorWithIcon from '../../../../navigation/AnchorWithIcon';
 import BaseField from './BaseField';
+import { MyFonts } from './fontList';
 class IState {
     editMode: boolean = false;
     fieldValue: string = "";
     updated: boolean = false;
+    fontname: string = MyFonts[0];
+    forecolor: string = '#000000'; backcolor:string = '#ffffff';
 }
 class FormInputTextEditor extends BaseField {
     masterDataService: MasterDataService;
@@ -23,7 +26,7 @@ class FormInputTextEditor extends BaseField {
         super(props);
         this.masterDataService = this.getServices().masterDataService;
     } 
-    formatDoc = (sCmd, sValue?) => {
+    formatDoc = (sCmd:string, sValue?) => {
         const oDoc = this.contentRef.current;
         if (!oDoc){
             console.debug("oDOc is missing");
@@ -34,6 +37,14 @@ class FormInputTextEditor extends BaseField {
             const executed =  document.execCommand(sCmd, false, sValue); 
             console.debug("EXECUTED: ", executed, " editable: ", oDoc.contentEditable);
             oDoc.focus(); 
+           
+        }
+        this.postExecuteCommand(sCmd, sValue);
+    }
+
+    postExecuteCommand = (command:string, sValue?) => {
+        if (command === 'fontname' || command === 'forecolor' || command === 'backcolor') {
+            this.setState({[command]: sValue})
         }
     }
 
@@ -109,7 +120,7 @@ class FormInputTextEditor extends BaseField {
     }
     paleteCommand = (e:any ) => {
         const anchor:HTMLAnchorElement = e.target as HTMLAnchorElement;
-        const commmand = anchor.dataset['command'];
+        const commmand:string = anchor.dataset['command']??"";
         const value = anchor.dataset['value'];
         if (commmand == 'clean') {
             this.clean();
@@ -139,10 +150,10 @@ class FormInputTextEditor extends BaseField {
                 <input type="hidden" value={this.state.fieldValue} name={element.id} />
                 <div id="toolBar1" className="input-group">
                     <FormattingList onChange={this.formatDoc} />
-                    <FontList onChange={this.formatDoc} />
+                    <FontList selected={this.state.fontname} onChange={this.formatDoc} />
                     <FontSizeOption onChange={this.formatDoc} />
-                    <FontColorOption onChange={this.formatDoc} />
-                    <BackgroundColorOption onChange={this.formatDoc} />
+                    <FontColorOption selected={this.state.forecolor} onChange={this.formatDoc} />
+                    <BackgroundColorOption selected={this.state.backcolor} onChange={this.formatDoc} />
                 </div>
                 <div id="toolBar2">
                     <i  onMouseDown={(e)=>e.preventDefault()} onClick={this.paleteCommand} data-command="clean" className="palete fas fa-broom"></i>
@@ -226,41 +237,36 @@ const FontSizeOption = (props: { onChange: Function }) => {
         </select>
     )
 }
-const BackgroundColorOption = (props: { onChange: Function }) => {
+const BackgroundColorOption = (props: {selected:string, onChange: Function }) => {
     return (
-        <select className="form-control"
-            onChange={
-                (e) => {
-                    const t = e.target;
-                    props.onChange("backcolor", t.value);
-                    t.value = "-";
-                }}>
-            {/* onChange="formatDoc('backcolor',this[this.selectedIndex].value);this.selectedIndex=0;"> */}
-            <option value="-" className="heading" selected>- background -</option>
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-            <option value="black">Black</option>
-        </select>
-    )
-}
-const FontColorOption = (props: { onChange: Function }) => {
-    return (
-        <select className="form-control" onChange={
-            (e) => {
-                const t = e.target;
-                props.onChange("forecolor", t.value);
-                t.value = "-";
+        <>
+         <span style={{paddingLeft:5, color: 'orange', paddingRight: 5}}>
+            <i className="fas fa-fill-drip"/>
+        </span>
+        <input placeholder="Font Color" type="color" value={props.selected} className="form-control form-control-sm" onChange={
+            (e:ChangeEvent) => {
+                const t = e.target as HTMLInputElement;
+                props.onChange("backcolor", t.value);
             }
-        }>
-            {/* onChange="formatDoc('forecolor',this[this.selectedIndex].value);this.selectedIndex=0;"> */}
-            <option className="heading" value="-" selected>- color -</option>
-            <option value="red">Red</option>
-            <option value="blue">Blue</option>
-            <option value="green">Green</option>
-            <option value="black">Black</option>
-        </select>
+        }/>
+        </>
     )
-}
+} 
+const FontColorOption = (props: {selected:string, onChange: Function }) => {
+    return (
+        <>
+        <span  style={{paddingLeft:5, color: 'red', paddingRight: 5}}>
+            <i className="fas fa-font"/>
+        </span>
+        <input placeholder="Font Color" type="color" value={props.selected} className="form-control form-control-sm" onChange={
+            (e:ChangeEvent) => {
+                const t = e.target as HTMLInputElement;
+                props.onChange("forecolor", t.value);
+            }
+        }/>
+        </>
+    )
+} 
 const FormattingList = (props: { onChange: Function }) => {
     return (
         <select className="form-control" onChange={
@@ -283,20 +289,18 @@ const FormattingList = (props: { onChange: Function }) => {
         </select>
     )
 }
-const FontList = (props: { onChange: Function }) => {
-    return (<select className="form-control" onChange={
+const FontList = (props: { onChange: Function, selected:string }) => {
+    return (<select value={props.selected} className="form-control" onChange={
         (e) => {
             const t = e.target;
             props.onChange("fontname", t.value);
             t.value = "-";
         }
     }>
-        {/* onChange="formatDoc('fontname',this[this.selectedIndex].value);this.selectedIndex=0;"> */}
         <option value="-" className="heading" selected>- font -</option>
-        <option value="Arial">Arial</option>
-        <option value="Arial Black">Arial Black</option>
-        <option value="Courier New">Courier New</option>
-        <option value="Times New Roman">Times New Roman</option>
+        {MyFonts.map((fontNamt, i)=>
+         <option style={{fontFamily:fontNamt}} value={fontNamt} key={fontNamt}>{fontNamt}</option>   
+        )}
     </select>)
 }
 

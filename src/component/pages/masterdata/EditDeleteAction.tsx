@@ -78,7 +78,9 @@ class EditDeleteAction extends BaseComponent {
            <Fragment>
               
                 <AnchorButton onClick={this.getRecordById} iconClassName="fas fa-edit" className="btn btn-warning btn-sm"></AnchorButton>
-                <AnchorButton show={property.deletable == true} onClick={this.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
+                <AnchorButton 
+                // show={property.deletable == true} 
+                onClick={this.delete} className="btn btn-danger btn-sm" iconClassName="fas fa-times"></AnchorButton>
             </Fragment>
         )
     }
