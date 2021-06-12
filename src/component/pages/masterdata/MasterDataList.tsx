@@ -41,7 +41,7 @@ class MasterDataList extends BaseComponent {
             filter: Object.assign(new Filter(), { limit: DEFAULT_LIMIT, page: 0, fieldsFilter: {} })
         };
     }
-    loadItems = (page: number | undefined) => {
+    loadItems = (page?: number | undefined) => {
         const filter = Object.assign(new Filter(), this.state.filter);
 
         const entityName = this.entityProperty.entityName;
@@ -135,7 +135,13 @@ class MasterDataList extends BaseComponent {
         this.setState({ filter: filter });
     }
     printRecord = () => this.props.printRecord(this.state.filter)
-    hideForm = (e) => this.setState({ showForm: false })
+    hideForm = () => this.setState({ showForm: false })
+    recordSavedCallback = (updateMode:boolean) => {
+        if (!updateMode) {
+            this.hideForm();
+        }
+        this.loadItems();
+    }
 
     render() {
         if (undefined == this.state.recordData) {
@@ -151,7 +157,7 @@ class MasterDataList extends BaseComponent {
 
         if (this.state.showForm == true) {
             return <MasterDataForm recordToEdit={this.recordToEdit} entityProperty={entityProp}
-                recordSavedCallback={this.loadItems}
+                recordSavedCallback={this.recordSavedCallback}
                 onClose={this.hideForm} />
         }
         const filter = this.state.filter;

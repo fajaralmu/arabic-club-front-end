@@ -16,6 +16,8 @@ class IState {
     //doc formats
     fontname: string = MyFonts[0]; fontsize:number = 12;
     forecolor: string = '#000000'; backcolor:string = '#ffffff';
+
+    bold:boolean = false; italic:boolean = false; underline:boolean = false;
 }
 const fontSizes = numericArray(6, 40);
 class FormInputTextEditor extends BaseField {

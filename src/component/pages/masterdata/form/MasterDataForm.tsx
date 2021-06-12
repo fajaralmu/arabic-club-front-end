@@ -13,16 +13,17 @@ import AnchorButton from '../../../navigation/AnchorButton';
 import WebResponse from '../../../../models/commons/WebResponse'; 
 import { FieldType } from '../../../../models/FieldType';
 import FormInputField from './FormInputField';
+import AttachmentInfo from './../../../../models/AttachmentInfo';
 
 class MasterDataForm extends BaseComponent {
     masterDataService: MasterDataService;
-    editMode:boolean = false;
+    editRecordMode:boolean = false;
     recordToEdit?:{} = undefined;
     constructor(props: any) {
         super(props, true);
         this.masterDataService = this.getServices().masterDataService;
         if (props.recordToEdit) {
-            this.editMode = true;
+            this.editRecordMode = true;
             this.recordToEdit = props.recordToEdit;
         }
     }
@@ -51,7 +52,7 @@ class MasterDataForm extends BaseComponent {
         const object: {} = {};
         const promises: Promise<any>[] = new Array();
         const nulledFields:any[] = [];
-        let hasImageField:boolean = false;
+        let withRealtimeProgress:boolean = false;
 
         formData.forEach((value, key) => {
             console.debug("Form data ", key);
@@ -71,6 +72,23 @@ class MasterDataForm extends BaseComponent {
                         object[key].push({ [valueAttr]: value })
                     }
                     break;
+                case FieldType.FIELD_TYPE_DOCUMENT:
+                    console.debug(key, " is DOCUMENT");
+                    if (value == "NULLED") {
+                        console.debug("NULLED VALUE ADDED: ", key);
+                        nulledFields.push(key);
+                    } else {
+                        const fileName = formData.get(key+'-attachment-info');
+                        if (fileName && new String(value).startsWith("data:")) {
+                            withRealtimeProgress = true;
+                            const attachmentInfo:AttachmentInfo =   AttachmentInfo.instance(fileName, new String(value).toString());
+                            object["attachmentInfo"] = [(attachmentInfo)];
+                            object[key].push(fileName);
+                        }else {
+                            object[key].push(value);
+                        }
+                    }
+                    break;
                 case FieldType.FIELD_TYPE_IMAGE:
                     console.debug(key, " is image");
                     if (value == "NULLED") {
@@ -78,7 +96,7 @@ class MasterDataForm extends BaseComponent {
                         nulledFields.push(key);
                     } else {
                         if (new String(value).startsWith("data:image")) {
-                            hasImageField = true;
+                            withRealtimeProgress = true;
                         }
                         object[key].push(value);
                     }
@@ -92,14 +110,14 @@ class MasterDataForm extends BaseComponent {
         });  
         Promise.all(promises).then( (val) => {
             const objectPayload = this.generateRequestPayload(object, nulledFields);
-            console.debug("Record object to save: ", objectPayload, "realtimeProgress: ", hasImageField);
-            this.ajaxSubmit(objectPayload, hasImageField);
+            console.debug("Record object to save: ", objectPayload, "realtimeProgress: ", withRealtimeProgress);
+            this.ajaxSubmit(objectPayload, withRealtimeProgress);
         });
         
     }
 
     generateRequestPayload = (rawObject: {}, nulledFields:any[]): {} => { 
-        const result:{nulledFields:Array<any>} = this.editMode && this.recordToEdit? 
+        const result:{nulledFields:Array<any>} = this.editRecordMode && this.recordToEdit? 
         {...this.recordToEdit, nulledFields:nulledFields} : 
         {nulledFields:new Array() };
         for (const key in rawObject) {
@@ -116,28 +134,30 @@ class MasterDataForm extends BaseComponent {
     }
 
     ajaxSubmit = (object: any, realtimeProgress: boolean) => {
-        if (this.getEntityProperty().withProgressWhenUpdated == true || realtimeProgress){
+        const property = this.getEntityProperty();
+        if (property.withProgressWhenUpdated == true || realtimeProgress){
             this.commonAjaxWithProgress(
                 this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
-                this.getEntityProperty().entityName, object, this.editMode
+                property.entityName, object, this.editRecordMode
             )
         } else{
             this.commonAjax(
                 this.masterDataService.save, this.recordSaved, this.showCommonErrorAlert,
-                this.getEntityProperty().entityName, object, this.editMode
+                property.entityName, object, this.editRecordMode
             )
         }
     }
     recordSaved = (response: WebResponse) => {
-        this.showInfo("Record saved");
+        const property = this.getEntityProperty();
+        this.showInfo(property.alias+ " has been "+(this.editRecordMode?"updated":"added"));
         if (this.props.recordSavedCallback) {
-            this.props.recordSavedCallback();
+            this.props.recordSavedCallback(this.editRecordMode);
         }
     }
     render() {
         const entityProperty: EntityProperty = this.getEntityProperty();
 
-        const editModeStr = this.editMode ?  <span className="badge badge-warning">Edit Mode</span>:""
+        const editModeStr = this.editRecordMode ?  <span className="badge badge-warning">Edit Mode</span>:""
         return ( 
             <div id="MasterDataForm" >
                 <AnchorButton style={{ marginBottom: '5px' }} onClick={this.props.onClose} iconClassName="fas fa-angle-left">Back</AnchorButton>
