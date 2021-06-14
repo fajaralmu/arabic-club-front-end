@@ -193,7 +193,8 @@ class FormInputTextEditor extends BaseField {
                     <i onMouseDown={this.preventDefault}  onClick={this.paleteCommand} data-command="copy" className="palete fas fa-copy" ></i>
                     <i onMouseDown={this.preventDefault}  onClick={this.paleteCommand} data-command="paste" className="palete fas fa-paste"></i>
                 </div>
-                <div onInput={this.contentOnChange} className="container-fluid" 
+                <div onInput={this.contentOnChange} className={"container-fluid border rounded "
+                    +(this.state.updated?"border-dark" :"border-danger")} 
                     ref={this.contentRef} id="textBox" 
                     suppressContentEditableWarning={true}
                     contentEditable="true"><p>Fill content</p></div>
