@@ -20,8 +20,7 @@ interface Props {
     onTimeout(): any, submit(): any
 }
 class State {
-    questionIndex: number = 0;
-    showAllQuestion: boolean = true;
+    questionIndex: number = 0; showAllQuestion: boolean = true;
 }
 export default class QuizBody extends Component<Props, State> {
 
@@ -53,8 +52,7 @@ export default class QuizBody extends Component<Props, State> {
         const nextIndex = this.state.questionIndex + 1;
         this.setQuestionIndex(nextIndex);
     }
-    setQuestionIndex = (index: number) => {
-        doItLater(() => {
+    setQuestionIndex = (index: number) =>  doItLater(() => {
             this.setState({ questionIndex: index }, () => {
                 this.resetTimer();
                 try {
@@ -62,8 +60,8 @@ export default class QuizBody extends Component<Props, State> {
                     this.props.setChoice(QuizQuestion.answer(question), index);
                 } catch (e) { }
             });
-        }, 300);
-    }
+        }, 300)
+        
     updateTimer = () => {
         if (this.questionTimerRef.current) {
             this.questionTimerRef.current.updateTimerLoop();

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { timerString } from './../../../../utils/DateUtil';
-
+const emojiNumbers = [128336,128337,128338,128339,128340,128341,128342,128343,128344,128345,128346,128347];
 interface Props {
     onTimeout(): any;
     duration: number; 
@@ -14,6 +14,8 @@ export default class QuizTimer extends Component<Props, State> {
 
     state: State = new State();
     timeout: any = undefined;
+
+    emojiTick:number = 0;
     constructor(props) {
         super(props);
     }
@@ -28,6 +30,10 @@ export default class QuizTimer extends Component<Props, State> {
             return;
         };
         tick++;
+        this.emojiTick ++;
+        if (this.emojiTick >= emojiNumbers.length) {
+            this.emojiTick = 0;
+        }
         this.setState({ tick: tick }, this.updateTimerLoop);
     }
 
@@ -47,18 +53,18 @@ export default class QuizTimer extends Component<Props, State> {
         const props = this.props;
          
         return (
-            <Timer latestUpdate={this.props.latestUpdate} duration={props.duration} tick={this.state.tick} />
+            <Timer emojiNumber={emojiNumbers[this.emojiTick]} latestUpdate={this.props.latestUpdate} duration={props.duration} tick={this.state.tick} />
         )
     }
 }
  
 
 
-const Timer = (props: { latestUpdate:undefined|Date,duration: number, tick: number }) => {
+const Timer = (props: { emojiNumber:number, latestUpdate:undefined|Date,duration: number, tick: number }) => {
 
     const seconds: number = props.duration - props.tick;
     let className;
-    let iconClassName = seconds % 2 == 0 ? "fas fa-hourglass-end" : "fas fa-hourglass-start";
+    let emoji = "&#"+props.emojiNumber+";";
     if (seconds <= 15) {
         className = "bg-danger text-warning";
 
@@ -66,12 +72,9 @@ const Timer = (props: { latestUpdate:undefined|Date,duration: number, tick: numb
         className = "bg-warning "
     }
     return <div className={className} style={{ fontSize: '1.7em', right: '10px', padding: '10px', position: 'fixed', zIndex: 1000 }}>
-        <span style={{ marginRight: '10px' }}>
-            <i className={iconClassName}></i>
-        </span>
+        <span style={{ marginRight: '10px' }} dangerouslySetInnerHTML={{__html: emoji}}/>
         <span>
             <b>{timerString(seconds)}</b>
-        
         </span>
         {props.latestUpdate? 
         <p style={{fontSize:'0.5em'}}>Last Update: {props.latestUpdate.toLocaleString()}</p>:null}
