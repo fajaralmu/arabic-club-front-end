@@ -8,6 +8,7 @@ import { getAttachmentInfo } from '../../../utils/ComponentUtil';
 import AttachmentInfo from './../../../models/AttachmentInfo';
 import WebResponse from '../../../models/commons/WebResponse';
 import BasePage from './../../BasePage';
+import { contextPath } from './../../../constant/Url';
 class IState {
     attachment?:AttachmentInfo;
 }
@@ -67,9 +68,14 @@ class QuizUpload extends BasePage {
                         onChange={this.setAttachmentInfo} />
                     </FormGroup>
                     <FormGroup label="Download Template">
-                        <a href="resources/assets/quiz_template.xlsx" className="btn btn-dark">
-                            Download
+                        <div className="btn-group">
+                        <a href={contextPath()+'assets/quiztemplate?mode=multiple_choice'} className="btn btn-dark">
+                            Multiple Choice
                         </a>
+                        <a href={contextPath()+'assets/quiztemplate?mode=essay'} className="btn btn-dark">
+                            Essay
+                        </a>
+                        </div>
                     </FormGroup>
                     <FormGroup>
                         {this.state.attachment?
