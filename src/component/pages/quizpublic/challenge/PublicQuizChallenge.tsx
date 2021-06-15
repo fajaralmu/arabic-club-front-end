@@ -134,13 +134,12 @@ class PublicQuizChallenge extends BasePage {
         const quiz: Quiz | undefined = this.state.quiz;
         if (!quiz) return;
         if (quiz.questions.length < questionNumber) return;
-        const timeout = setTimeout(() => {
+        doItLater(() => {
             if (this.quizBodyRef.current) {
                 this.quizBodyRef.current.updateQuestionIndex(questionNumber - 1);
             } else {
                 console.debug("Question Index Not Updated");
             }
-            clearTimeout(timeout);
         }, 500);
     }
     loadQuiz = () => {

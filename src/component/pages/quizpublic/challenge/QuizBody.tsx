@@ -12,8 +12,9 @@ import AnchorWithIcon from '../../../navigation/AnchorWithIcon';
 import { timerString } from './../../../../utils/DateUtil';
 import QuizTimerProgress from './QuizTimerProgress';
 import QuizResult from './../../../../models/QuizResult';
+import { doItLater } from './../../../../utils/EventUtil';
 interface Props {
-    result: undefined|QuizResult,
+    result: undefined | QuizResult,
     questionTimered: boolean, quiz: Quiz,
     setChoice(code: string | undefined, questionIndex: number): any,
     onTimeout(): any, submit(): any
@@ -53,12 +54,15 @@ export default class QuizBody extends Component<Props, State> {
         this.setQuestionIndex(nextIndex);
     }
     setQuestionIndex = (index: number) => {
-        this.setState({ questionIndex: index }, () => {
-            this.resetTimer();
-            try {
-                this.props.setChoice(this.props.quiz.questions[index].answerCode, index);
-            } catch (e) { }
-        });
+        doItLater(() => {
+            this.setState({ questionIndex: index }, () => {
+                this.resetTimer();
+                try {
+                    const question = this.props.quiz.questions[index];
+                    this.props.setChoice(QuizQuestion.answer(question), index);
+                } catch (e) { }
+            });
+        }, 300);
     }
     updateTimer = () => {
         if (this.questionTimerRef.current) {
@@ -70,8 +74,15 @@ export default class QuizBody extends Component<Props, State> {
             this.questionTimerRef.current.resetTick();
         }
     }
+    /**
+     * 
+     * @param code essayAnswer or multipleChoiceSelection
+     * @param index 
+     */
     setChoice = (code: string | undefined, index: number) => {
         this.props.setChoice(code, index);
+        const currentQuestion = this.props.quiz.questions[index];
+        if (!currentQuestion||currentQuestion.essay == true)  return;
         if (this.props.questionTimered) {
             if (this.props.quiz.questions.length > index + 1) {
                 const nextIndex = index + 1;
@@ -79,7 +90,7 @@ export default class QuizBody extends Component<Props, State> {
             } else {
                 this.onSubmit();
             }
-        } else if (!this.props.quiz.showAllQuestion) {
+        } else if (!this.props.quiz.showAllQuestion || !this.state.showAllQuestion) {
             if (this.props.quiz.questions.length > index + 1) {
                 const nextIndex = index + 1;
                 this.setQuestionIndex(nextIndex);
@@ -89,7 +100,7 @@ export default class QuizBody extends Component<Props, State> {
         }
     }
     onSubmit = () => {
-        if (this.questionTimerRef.current ) {
+        if (this.questionTimerRef.current) {
             this.questionTimerRef.current.stopTimer();
         }
         this.props.submit();
@@ -97,7 +108,7 @@ export default class QuizBody extends Component<Props, State> {
     componentDidMount() {
         this.updateTimer();
     }
-    
+
     render() {
 
         const props = this.props;
@@ -130,7 +141,7 @@ export default class QuizBody extends Component<Props, State> {
                     return (<QuestionBody setChoice={this.setChoice} index={i} question={question} key={"pqqs-" + i} />)
                 }) :
                     <Fragment>
-                        {props.questionTimered  ?
+                        {props.questionTimered ?
                             <QuizTimerProgress display="progress" onTimeout={this.nextQuestion} ref={this.questionTimerRef} duration={this.getCurrentQuestion().duration} />
                             : null
                         }
@@ -181,13 +192,12 @@ const QuestionBody = (props: { index: number, question: QuizQuestion, setChoice(
 
                     {question.image ? <img height="150" src={baseImageUrl() + question.image} /> : null}
                     <hr />
-                    {question.essay?
-                    <textarea value={question.answerEssay??""} onChange={(e)=>{
-                        props.setChoice(e.target.value, props.index);
-
-                    }
-                    } className="form-control" />
-                    :null}
+                    {question.essay ?
+                        <textarea value={question.answerEssay ?? ""} onChange={(e) => {
+                            props.setChoice(e.target.value, props.index);
+                        }
+                        } className="form-control" />
+                        : null}
                     {choices.map((choice, i) => {
                         return <ChoiceItem
                             correctChoice={question.correctChoice}
@@ -204,11 +214,7 @@ const ChoiceItem = (props: { choice: QuizChoice, index: number, setChoice(code?:
     //after submission
     if (props.correctChoice != undefined) {
         if (choice.answerCode == props.correctChoice) {
-            if (props.answered) {
-                choiceClass = "btn btn-primary";
-            } else {
-                choiceClass = "btn btn-success";
-            }
+            choiceClass = props.answered ? "btn btn-primary" : "btn btn-success";
         } else if (props.answered) {
             choiceClass = "btn btn-danger";
         }

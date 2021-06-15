@@ -18,7 +18,9 @@ export default class QuizQuestion extends BaseEntity {
 
 	
 	entered:boolean = false;
-
+	static answer = (question:QuizQuestion) => {
+		return question.essay == true? question.answerEssay : question.answerCode;
+	}
 	static publicQuizQuestion = (essay:boolean = false): QuizQuestion => {
 		const question: QuizQuestion = new QuizQuestion();
 		

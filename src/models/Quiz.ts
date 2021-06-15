@@ -20,7 +20,7 @@ export default class Quiz extends BaseEntity{
 	questions:QuizQuestion[] = [];
 	
 	image?:string = "";
-	startedDate?:Date = new Date();
+	startedDate?:Date |undefined= new Date();
 	submittedDate?:Date = new Date();
 	mappedAnswer?:{}; 
 	//

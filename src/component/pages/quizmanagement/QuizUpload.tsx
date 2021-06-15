@@ -68,14 +68,20 @@ class QuizUpload extends BasePage {
                         onChange={this.setAttachmentInfo} />
                     </FormGroup>
                     <FormGroup label="Download Template">
-                        <div className="btn-group">
-                        <a href={contextPath()+'assets/quiztemplate?mode=multiple_choice'} className="btn btn-dark">
-                            Multiple Choice
-                        </a>
-                        <a href={contextPath()+'assets/quiztemplate?mode=essay'} className="btn btn-dark">
-                            Essay
-                        </a>
-                        </div>
+                        <ol>
+                            <li> 
+                                Multiple Choice
+                                <a style={{marginLeft:10}} href={contextPath()+'assets/quiztemplate?mode=multiple_choice'}>
+                                    <i className="fas fa-file-download"/>
+                                </a>
+                            </li>
+                            <li>
+                                Essay
+                                <a style={{marginLeft:10}} href={contextPath()+'assets/quiztemplate?mode=essay'} >
+                                    <i className="fas fa-file-download"/>
+                                </a>
+                            </li>
+                        </ol>
                     </FormGroup>
                     <FormGroup>
                         {this.state.attachment?
