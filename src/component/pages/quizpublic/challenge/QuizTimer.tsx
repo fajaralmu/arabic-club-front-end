@@ -30,47 +30,41 @@ export default class QuizTimer extends Component<Props, State> {
             return;
         };
         tick++;
+        this.updateEmojiNumber();
+        this.setState({ tick: tick }, this.updateTimerLoop);
+    }
+
+    updateEmojiNumber = () => {
         this.emojiTick ++;
         if (this.emojiTick >= emojiNumbers.length) {
             this.emojiTick = 0;
         }
-        this.setState({ tick: tick }, this.updateTimerLoop);
     }
 
-    resetTick = () => {
-        this.setState({ tick: 0 }, this.updateTimerLoop);
-    }
+    resetTick = () =>  this.setState({ tick: 0 }, this.updateTimerLoop)
 
     resetTimeout = () => {
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
     }
-    updateTimerLoop = () => {
-        this.timeout = setTimeout(this.updateTick, 1000);
-    }
+    updateTimerLoop = () =>  this.timeout = setTimeout(this.updateTick, 1000)
+
     render() {
         const props = this.props;
          
         return (
-            <Timer emojiNumber={emojiNumbers[this.emojiTick]} latestUpdate={this.props.latestUpdate} duration={props.duration} tick={this.state.tick} />
+            <Timer emojiNumber={emojiNumbers[this.emojiTick]} latestUpdate={props.latestUpdate} duration={props.duration} tick={this.state.tick} />
         )
     }
 }
- 
-
 
 const Timer = (props: { emojiNumber:number, latestUpdate:undefined|Date,duration: number, tick: number }) => {
 
     const seconds: number = props.duration - props.tick;
-    let className;
-    let emoji = "&#"+props.emojiNumber+";";
-    if (seconds <= 15) {
-        className = "bg-danger text-warning";
+    const emoji:string = "&#"+props.emojiNumber+";";
+    const className:string = seconds <= 15 ? "bg-danger text-warning": "bg-warning ";
 
-    } else {
-        className = "bg-warning "
-    }
     return <div className={className} style={{ fontSize: '1.7em', right: '10px', padding: '10px', position: 'fixed', zIndex: 1000 }}>
         <span style={{ marginRight: '10px' }} dangerouslySetInnerHTML={{__html: emoji}}/>
         <span>
